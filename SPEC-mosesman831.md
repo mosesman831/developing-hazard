@@ -1,4 +1,4 @@
-# SPEC-AG1 - agent and scorer (AG1 = `mosesman831`)
+# SPEC-mosesman831 - agent and scorer (AG1 = `mosesman831`)
 
 Your slice of SPEC.md. Where this file and SPEC.md disagree on *who does what*, this file wins. Where they disagree on *how something works*, SPEC.md wins and you flag it in your status file.
 

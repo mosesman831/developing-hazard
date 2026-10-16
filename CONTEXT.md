@@ -26,7 +26,11 @@ Read this first, every phase. It says who owns what, what each agent may not tou
 
 ### Shared and frozen (no agent edits; Moses or a `contract-change` PR only)
 
-`README.md`, `SPEC.md`, `SUMMARY.md`, `NOTES-opus.md`, `CONTEXT.md`, `SPEC-AG1.md`, `SPEC-AG2.md`, `SPEC-AG3.md`, `contracts/**`, `Makefile`, `pyproject.toml`, `.gitignore`, `dh/__init__.py`, `dh/clients/__init__.py`, `dh/agents/__init__.py`, `dh/api/__init__.py`, `status/merge.md` (merge bot only).
+`README.md`, `SPEC.md`, `SUMMARY.md`, `NOTES-opus.md`, `CONTEXT.md`, `SPEC-mosesman831.md`, `SPEC-riyud1.md`, `SPEC-fmdplt.md`, `contracts/**`, `Makefile`, `pyproject.toml`, `.gitignore`, `dh/__init__.py`, `dh/clients/__init__.py`, `dh/agents/__init__.py`, `dh/api/__init__.py`, `status/merge.md` (merge bot only).
+
+### Shared, row-owned: `CHECKLIST.md`
+
+Every agent may edit `CHECKLIST.md`, but only its own rows (IDs starting `AG1-`, `AG2-`, `AG3-`) and only to tick `[ ]` to `[x]`. The merge bot ticks `M-` rows; humans tick timeline and `S-` rows. If two PRs conflict only in `CHECKLIST.md`, the merge bot resolves it by keeping every `[x]`.
 
 If you need a new dependency in `pyproject.toml`, say so in your PR body and status file; Moses adds it.
 

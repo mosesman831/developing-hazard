@@ -1,14 +1,14 @@
-# SPEC-AG3 - app and deploy (AG3 = `fmdplt33`)
+# SPEC-riyud1 - clips and labels (AG2 = `Riyu-D1`)
 
 Your slice of SPEC.md. Where this file and SPEC.md disagree on *who does what*, this file wins. Where they disagree on *how something works*, SPEC.md wins and you flag it in your status file.
 
 ## RULES - read before doing anything
 
 > 1. **Read `CONTEXT.md` first**, then this file, then `contracts/`.
-> 2. Work only on a branch named **`ag3/phase-X`** created from the latest `main`.
+> 2. Work only on a branch named **`ag2/phase-X`** created from the latest `main`.
 > 3. **ONLY open a pull request into `main`. NEVER push to `main`. NEVER merge any PR, your own or anyone else's.** The Hackathon PR merge bot merges.
 > 4. **Only edit the paths you own** (listed below and in CONTEXT.md). Touching any other path gets the PR rejected.
-> 5. Update **`status/ag3.md`** (your own file only) inside the same PR. Never edit CONTEXT.md, SPEC*.md, `contracts/`, `Makefile` or `pyproject.toml` in a phase PR.
+> 5. Update **`status/ag2.md`** (your own file only) inside the same PR. Never edit CONTEXT.md, SPEC*.md, `contracts/`, `Makefile` or `pyproject.toml` in a phase PR.
 > 6. Do only the current phase. **When the phase's acceptance checks pass, open the PR, then stop and wait** for Moses to start the next phase.
 > 7. Never commit secrets, tokens, `.env`, video, frames, or `data/clips/`, `data/frames/`.
 > 8. If you need another agent's code that is not merged yet, stub it inside your own files against `contracts/examples/`. If a contract is wrong, open a separate PR labelled `contract-change` touching only `contracts/` and your status file, then carry on with your stub.
@@ -17,84 +17,85 @@ Your slice of SPEC.md. Where this file and SPEC.md disagree on *who does what*, 
 
 ## Your paths
 
-Own: `dh/server.py`, `dh/api/health.py`, `dh/api/clips.py`, `dh/api/video.py`, `dh/api/runs.py`, `dh/api/human.py`, `dh/api/leaderboard.py`, `dh/api/_stubs.py`, `dh/snapshot.py`, `web/**` except `web/label.js`, `deploy/**`, `requirements-pod.txt`, `.env.example`, `scripts/smoke.sh`, `mk/ag3.mk`, `tests/ag3/**`, `data/humans.jsonl`, `data/snapshot/**`, `status/ag3.md`.
+Own: `dh/clients/vss.py`, `dh/clients/vastdb.py`, `dh/clients/embed.py`, `dh/mine.py`, `dh/clips.py`, `dh/frames.py`, `dh/store.py`, `dh/api/labels.py`, `web/label.js`, `scripts/secret_scan.sh`, `mk/ag2.mk`, `tests/ag2/**`, `data/candidates.jsonl`, `data/clips.json`, `data/hazards.json`, `data/testset_v*.json`, `SUBMISSION.md`, `status/ag2.md`.
 
-Read only: `dh/score.py`, `dh/config.py`, `dh/evals.py`, AG1 `data/` paths; `dh/clients/vss.py`, `dh/clips.py`, `dh/api/labels.py`, `web/label.js`, AG2 `data/` paths. Import, never copy or edit.
+Read only: `dh/score.py`, `dh/config.py`, `data/proposals/`, `data/tracks/` (AG1); `dh/server.py`, `web/player.js`, `web/sit.js` (AG3, import only).
 
-You provide to others: the dev server everyone labels and sits through, the deployed demo app, `web/player.js` (AG2 imports it), the `#/label/:clipId` route calling AG2's `mountLabel(el, clipId, api)`.
+You provide to others (contract in `contracts/python_interfaces.md`): `dh.clients.vss.VSS`, `dh.clips` loaders, `dh.api.labels.router`, `web/label.js` exporting `mountLabel(el, clipId, api)`, and the files under your `data/` paths.
 
-Your human also: sits every clip blind then is labeller B (as `fmd`), records the demo video, sets up the demo laptop.
+Your human also: scrubs the PIE sets, is labeller A on every clip, the only person who re-ingests anything (avoid it), writes the submission text, runs the secret scan.
 
-## Phase 1 - scaffolding, deploy path, stubs (09:30-10:30)
+Notes on the label screen: AG3 owns `web/index.html` and `web/app.js` and routes `#/label/:clipId` to your `mountLabel`. Reuse AG3's player by importing `./player.js`; do not copy or edit it. The server includes your router only in dev mode.
+
+## Phase 1 - scaffolding, probes, stubs (09:30-10:30)
 
 Tasks:
-1. Hello-world deploy to `/app` with `/deploy-app-no-registry` (SPEC 6.4, 20 row 09:30, risk 14). Install kubectl in `~/.local/bin` if missing.
-2. `dh/server.py`: FastAPI, `DH_MODE` dev or demo, listens on `0.0.0.0:$PORT` (pod) or `DH_PORT` (VM), `/health`, mounts your routers, and `dh.api.labels.router` in dev mode inside `try/except ImportError`.
-3. `dh/api/_stubs.py`: serves `contracts/examples/` when real modules or data are missing (scorer stub returns the example score). Every route in `contracts/api_routes.md` that you own answers with contract-shaped data.
-4. `web/index.html`, `app.js` (hash routes, relative URLs), `style.css` (16.1 colours, IBM Plex, no spinners), `player.js` (two `<video>` elements swapping on `ended`, 7.2), home screen (16.3). `index.html` loads `label.js` as a module; `app.js` routes `#/label/:clipId` to `mountLabel` if it exists, else shows "label screen not merged yet".
-5. Go/no-go question 4 (20.1): does a segment play through the pod's proxy? Try the in-cluster URL `http://video-backend-service.<team>.svc.cluster.local:8000`. Also check port forwarding from the VM to the laptop. Write results to `status/ag3.md`.
-6. `requirements-pod.txt` (fastapi, uvicorn, requests only), `deploy/k8s.yaml`, `deploy/deploy.sh` (ConfigMap, Secret, apply, restart, curl `/app/health`), `.env.example` (names only), `mk/ag3.mk` (`serve`, `snapshot`, `deploy`, `smoke`).
+1. `dh/clients/vss.py` (SPEC 11.4): login, `search`, `stream`, `detections`, re-login on 401, timeouts 30 s / 120 s for video. `requests` only (the pod imports it). Never log the JWT or password.
+2. `dh/clips.py`: loaders from `contracts/python_interfaces.md`, stdlib only, plus the 30 s chunk clip definition (7.2): six segments at offsets 0, 5, ... 25; onset at least 5 s in, else prepend the previous chunk.
+3. Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 1 and 4 with AG3): run the 10 queries from 7.1; open the VSS UI; count `pie_cam-3` chunks; start scrubbing set01 at 2x; count moving-ego developing hazards. Write numbers into `status/ag2.md`. If fewer than 8 usable hazards are likely, flag near-miss mode (20.2) to Moses by 10:00.
+4. `dh/api/labels.py` skeleton: `router = APIRouter()` with the routes in `contracts/api_routes.md` owned by you, reading and writing `contracts/examples/` copies in a temp dir under test.
+5. `web/label.js` v0: `export function mountLabel(el, clipId, api)` rendering the blind sit then timeline (16.4). Works against example data.
+6. `mk/ag2.mk`: `mine`, `build`, `freeze`.
 
 Files touched: only owned paths.
 
 Acceptance:
-- Deployed hello-world answers `/app/health`; URL in status file.
-- `pytest tests/ag3` passes: TestClient hits every owned route and checks contract shape against `contracts/examples/`.
-- `make serve` runs on the VM and the home screen loads through port forwarding.
+- `python -c "import dh.clients.vss, dh.clips"` works with only `requests` installed.
+- `pytest tests/ag2` passes: loaders read `contracts/examples/`; label routes round-trip a PUT and a POST with a FastAPI TestClient mounting only your router.
+- Probe numbers and go/no-go answers 1 (and 4 if AG3 has it) in `status/ag2.md`.
 
-Hands off: dev server and `web/player.js` to AG2; deployed URL to everyone.
+Hands off: `dh.clients.vss` to AG1 (detections) and AG3 (video proxy); `dh.clips` to both; `mountLabel` to AG3.
 
-## Phase 2 - MVP app (10:30-12:30)
+## Phase 2 - real clips and labels (10:30-12:30)
 
-Tasks (SPEC 20 rows 10:00-12:30, 16):
-1. `dh/api/video.py`: proxy to `/api/v1/videos/stream` via `dh.clients.vss` (AG2), Range passed through, JWT server-side, only sources in `data/clips.json`.
-2. `dh/api/clips.py` real: list, detail (`?blind=1` hides hazards), tracks from `data/tracks/` (AG1).
-3. Sit screen (16.5, `web/sit.js`): Start disabled until segments are blob URLs, Space or click registers, ignore auto-repeat, timing from `requestVideoFrameCallback` mediaTime plus segment offset. Used for the 11:00-11:15 blind sits.
-4. `dh/api/human.py`: `POST /api/human` scored with `dh.score.score_clip` (AG1), sessions in memory, one `HUMAN {...}` stdout line each, dev mode appends to `data/humans.jsonl`.
-5. Watch screen v0 (16.6, `web/watch.js`) from run files: boxes, windows, clicks, score.
-6. `dh/api/runs.py`: `GET /api/runs`, `GET /api/runs/{run_id}`.
-7. `dh/snapshot.py` (`make snapshot`): copy what the pod needs into `data/snapshot/`, fail over 900 KB (6.4, risk 16).
-8. Deploy the MVP (12:30-13:00).
+Tasks (SPEC 20 rows 10:00-12:30, 13):
+1. `dh/mine.py` (7.1): search plus scrubbing sets 2-6; 20+ candidate chunks (moving ego, onset >= 5 s) into `data/candidates.jsonl`. Never rank by YOLO risk.
+2. `make build`: `data/clips.json` with dev/test split (aim 6 dev, 14+ test), joined local clips (`data/clips/`, gitignored) via ffmpeg concat.
+3. `dh/frames.py` (7.3) at 5 fps into `data/frames/` (gitignored), for AG1's Cosmos inputs.
+4. Label routes for real: PUT/POST hazards, clip status, testset freeze. Only the API writes `data/hazards.json`; no hand edits while others label (17.2). `auto_window` and the other labeller's window stay hidden until the caller has saved.
+5. `web/label.js` full: blind sit first, then window drag handles, type, description, labeller select (riyu, fmd, moses), "Add hazard", "Save", "No hazard in this clip", "Reject clip"; J/L step 0.2 s; risk curve and proposal only after save.
+6. Labelling (13): label as labeller A, dev clips first. Track blindness in `Clip.seen_by`.
+7. Apply arbitration; freeze `testset_v1` (MVP set) by 12:30 via `POST /api/testset/freeze`.
 
 Acceptance:
-- MVP from 22.1: deployed app shows clip list, watch screen with boxes, windows, clicks and score from a real run.
-- A blind sit on the dev server produces a scored `HumanSession`.
-- Snapshot under budget; `scripts/smoke.sh` hits every endpoint on the VM and on `/app`.
+- 10+ clips with agreed windows (22.1) in `data/hazards.json`, validated against `contracts/hazard.schema.json` in `tests/ag2`.
+- `data/testset_v1.json` committed with its sha256.
+- Label screen works end to end on the dev server.
 
-Hands off: sit screen for blind sits (all humans); `data/humans.jsonl` to AG1 (human baseline).
+Hands off: `data/clips.json`, `data/hazards.json`, `data/testset_v1.json` to AG1 (runs) and AG3 (clip list, scoring windows).
 
-## Phase 3 - judge mode and leaderboard (12:30-14:00)
+## Phase 3 - more clips, test-set freeze (12:30-14:00)
 
-Tasks (SPEC 20 row 13:00-14:30, 16.5, 16.7):
-1. Judge mode in the pod: name, role, "seen before?", side-by-side agent clicks after the clip.
-2. `dh/api/leaderboard.py` serving AG1's `data/leaderboard.json`; leaderboard screen (16.7) with interval bars, lift over chance, the dashed 58.7% line labelled "for reference only", per-clip humans table, latency toggle.
-3. `POST /api/runs` (dev) calling `dh.evals.start_run` (AG1).
-4. Watch screen: agent tabs, event feed, risk meter, "Open in Weave" links, labelled "recorded run, replayed".
-5. Redeploy after each merge to `main` that changes data.
+Tasks (SPEC 20 row 13:00-14:30):
+1. Mine more; get blind sits from Moses and fmd; label 8-10 more (13.7, 13.8 mix).
+2. `GET /api/clips/{clip_id}/proposal` serving AG1's `data/proposals/` after both labellers saved.
+3. Agreement stats (13.5) into your status file.
+4. **Freeze `testset_v2` at 14:00** (10.6): commit file and hash. After this, no label or window changes.
+5. `dh/store.py` and `dh/clients/vastdb.py` (7.13, 10.10): schema `developing_hazard`, table `hazards`. Never write to `vss-collection`, `vss-prompts-events`, or the chunks or segments buckets.
+6. `dh/clients/embed.py` "more like this" (7.1 should) only if mining is short.
 
-Acceptance: judge mode works in the deployed pod on a test clip; leaderboard renders from real `data/leaderboard.json` or clearly marked example data; every URL relative.
+Acceptance: `data/testset_v2.json` merged by 14:05 with sha256; selection-bias rule (14.6) stated in the PR body.
 
-Hands off: judge mode to the humans for the demo.
+Hands off: frozen test set to AG1 (final runs) and AG3 (judge clips).
 
-## Phase 4 - polish, final deploy (14:00-15:30)
+## Phase 4 - checks, VastDB, submission (14:00-15:30)
 
-Tasks (SPEC 20 row 14:30-15:30, 16, 22.2, 24.3):
-1. Final snapshot from AG1's final runs (by 15:15) and final deploy.
-2. Polish dark UI for the projector (1920x1080, score numbers >= 48 px).
-3. Stretch only if time: miss panel (16.8) via `POST /api/explain/...` serving precomputed explanations; SSE replay (11.3) with ingress annotations `proxy-buffering: "off"` and a longer read timeout.
-4. `scripts/smoke.sh` on the deployed URL; every link opens logged out.
-5. No code after 15:30.
+Tasks (SPEC 20 row 14:30-15:30, 14.5, 25):
+1. Sanity checks (14.5) with AG1's numbers; write results in your status file.
+2. Write `runs` and `hazard_scores` tables to VastDB from AG1's run files (10.10), keyed by segment `source`.
+3. `scripts/secret_scan.sh` over the full history; result in the PR body. Decide repo access for reviewers with Moses.
+4. `SUBMISSION.md`: one-liner, 150-word description, stack, honest limitations line (25).
 
-Acceptance: deployed app passes smoke; snapshot under budget; no placeholder numbers on any screen (24.3).
+Acceptance: secret scan clean; `SUBMISSION.md` ready to paste; no label changes after 14:00.
 
-Hands off: deployed URL and screenshots to the humans for the demo video (15:30-16:00).
+Hands off: submission text to the humans for 15:30-16:20.
 
 
 ---
 
 # Reference: verbatim extracts from SPEC.md
 
-Everything below is copied unchanged from SPEC.md so this file stands alone. Headings keep their SPEC numbers. Ownership and file paths in these extracts are superseded by the "Your paths" section above and by CONTEXT.md (for example, `NOTES.md` becomes your status file, tests live under `tests/ag3/`, and `dh/cli.py` is replaced by `mk/ag3.mk` targets calling `python -m dh.<module>`).
+Everything below is copied unchanged from SPEC.md so this file stands alone. Headings keep their SPEC numbers. Ownership and file paths in these extracts are superseded by the "Your paths" section above and by CONTEXT.md (for example, `NOTES.md` becomes your status file, tests live under `tests/ag2/`, and `dh/cli.py` is replaced by `mk/ag2.mk` targets calling `python -m dh.<module>`).
 
 ### 0.1 Assumption markers
 
@@ -133,6 +134,30 @@ We do not cite any statistic we have not verified. No made-up users, quotes or n
 | `gpu/model-health`, `gpu/model-smoke-test` | Endpoint checks at 09:30 |
 | `deploy-app-no-registry` | Deploy (6.4) |
 | `reingest-videos` / `reingest-chunk` | Not planned. If ever: one chunk, scenario `live_driving` [S9], Riyu only |
+
+### 5.5 Footage [S9]
+
+| Source | `camera_id` | Location | Indexed | Our use |
+|---|---|---|---|---|
+| PIE drives | `pie_cam-3` | toronto | 6 drive sets (`set01`-`set06`) | **Primary.** Ego-vehicle dashcam |
+| I-24 / 3D traffic | `i24_cam-1` | nashville | ~51 multi-cam highway clips | Not ego view. Stretch: cross-source failure test |
+| Neighbourhood cars | `neighborhood_cam-1` | neighborhood | 2 day merges | Not ego view. Not used for scoring |
+| SF streets | `sf_streets_cam-1`..`4` | san_francisco | "ingesting soon" | Not ego view |
+| Warehouse | `sdg_warehouse_cam-2` | warehouse3 | ~178 clips | Not used |
+| Smart spaces | `smartspace_cam-1` | indoor | ~102 clips | Not used |
+
+What earlier teams found on `pie_cam-3` [PRIOR-EVENT]:
+
+- 180 chunks: 30 consecutive 30 s chunks per set, so about 90 minutes in all, named like `<timestamp>_set06_video_chunk_0003.mp4` [S21]. Evidence Atlas counted the same 1,080 clips [S33].
+- YOLO is noisy on this footage (it reports cows, kites and airplanes) and person counts are low [S21].
+- Captions rarely say what the camera car does. In one sample of 180 segments, 59% mentioned it, 18% said it slowed, 7% that it stopped and 2% that it yielded [S21].
+- The top pedestrian hit they quoted shows the camera car stopped at a junction while people cross [S21]. That is not a developing hazard (13.2).
+
+PIE is the Pedestrian Intention Estimation dataset (York University): downtown Toronto, daytime, a dashboard camera with a 157 degree lens, 1920x1080 at 30 fps [S28]. The paper describes pedestrian boxes, crossing intention and per-frame ego speed from an OBD sensor [S28]; the annotations repo is MIT-licensed [S29]. None of it is in our index, and we do not use it without organiser approval (26).
+
+The London corpus may differ. The `reingest-chunk` skill's example filename is a London walk, which hints at new sources [UNVERIFIED]. Check the dashboard at 09:30: UK driving footage would beat Toronto for a UK test.
+
+Rule: **Don't ingest videos from the internet.** [S7] We use only the provided corpus.
 
 ### 5.6 Hard constraints that shape the design
 
@@ -238,6 +263,35 @@ Pod budget: code plus JSON snapshot under 900 KB. Track overlays keep the top 3 
 
 Video never sits in the pod. The app proxies `/api/v1/videos/stream` with the JWT kept server-side and Range headers passed through, as CrossWise did [S20].
 
+### 7.1 Clip miner (`dh/mine.py`) - MVP
+
+**Purpose:** find 30 s chunks where the camera car is moving and something develops that would make a careful driver slow down or steer.
+
+**Inputs:** VSS search, `tools/segments` captions, VastDB rows via `vastdb-read`, human scrubbing.
+
+**Method:**
+
+1. Run a fixed list of text queries via `POST /api/v1/search` with `metadata_filters: {"camera_id": "pie_cam-3"}`, `top_k: 30`, `llm_top_n: 1` and `min_similarity: 0.3` [S12]. `llm_top_n: 0` was rejected with a 422 at SF [PRIOR-EVENT] [S21]. Captions are written in US English, so the queries say "curb":
+   - "the camera vehicle slows down as a pedestrian steps off the curb ahead"
+   - "pedestrian starts to cross the road in front of the moving car"
+   - "pedestrian walks out between parked cars"
+   - "car pulls out of a side street in front of the camera vehicle"
+   - "vehicle ahead brakes suddenly, brake lights on, gap closing"
+   - "cyclist moves out into the lane ahead"
+   - "the camera vehicle turns while pedestrians are crossing"
+   - "vehicle cuts in front of the camera vehicle"
+   - "parked car door opening into the road"
+   - "bus pulling away from a stop ahead"
+2. Group hits by parent chunk (`original_video`). Each search took about 6 s at SF [PRIOR-EVENT] [S21].
+3. Similarity scores for good hits sat at 0.34-0.39 at SF and did not separate good from bad [S21]. Rank by caption keywords instead, after dropping negated sentences ("No pedestrians ... are visible") [S21]. Prefer captions that say the camera car is moving.
+4. Output `candidates.jsonl`: one row per chunk, with the matching segment and second.
+
+**Reliable path:** scrub. Each set is 30 consecutive chunks, about 15 minutes [PRIOR-EVENT] [S21]. Riyu watches all six sets at 2x in the VSS UI, about 45 minutes, and notes the chunk and second of every candidate. Search runs alongside and adds to the list.
+
+**Should:** "more like this". Embed a confirmed hazard segment with Cosmos Embed1 (`request_type: "query"`, video as a base64 data URL [S11]) and rank `pie_cam-3` rows by cosine against their stored `vectors_visual`. Select that column explicitly: selecting all columns can crash the SDK [S14]. **[VERIFY-0930]** visual vectors exist for PIE rows.
+
+**Not allowed:** ranking candidates by our own YOLO risk score. That picks the clips our YOLO agents are good at and biases the test towards them.
+
 ### 7.2 Clip definition (`dh/clips.py`) - MVP
 
 **Purpose:** fix what a test clip is, without making new video files.
@@ -250,80 +304,61 @@ Video never sits in the pod. The app proxies `/api/v1/videos/stream` with the JW
 
 Why 30 s: TRL's trial tests ran 13 scenarios in 10-12 minutes [S5], so roughly 45-55 s each by our arithmetic. Windows are short against the clip. Short clips make random clicking pay (14.5). 30 s is the corpus unit, so it is also free.
 
-### 7.14 Backend API (`dh/server.py`) - MVP
+### 7.3 Frame extractor (`dh/frames.py`) - MVP
 
-FastAPI in two modes (6.4). See section 11.
+- ffmpeg at 5 fps to JPEG (quality 3, 960 px wide). Configurable `FPS_SAMPLE`.
+- Output `data/frames/<clip_id>/000001.jpg` plus `frames.json` with clip-time timestamps.
+- Needed only for Cosmos inputs, contact sheets and thumbnails. Detection does not need frames (7.4).
 
-### 7.15 Frontend (`web/`) - MVP
+### 7.7 Window proposer (`dh/windows.py`) - should
 
-See section 16.
+Auto-propose a scoring window per hazard from tracks. **Labellers do not see it until they have saved their own window.** That keeps labels free of YOLO's view and makes proposer-vs-human error an honest secondary result.
 
-### 9.1 Per-hazard points
+- **Hazard track:** the track whose risk peaks highest in the clip, above 0.6.
+- **Window start (onset):** first frame where the hazard track heads into the ego path (heading_in for 3 consecutive sampled frames, or enters the outer corridor margin).
+- **Window end:** first frame the hazard track is inside the inner corridor: the point where the hazard is obvious [S5], [S6]. Not closest approach; by then it has long been obvious.
+- Clamp window length to 1-7 s, the range used when the test was built [S5]. Flag anything outside.
+- Output proposed windows with confidence.
 
-Times are converted to integer milliseconds with `round(t * 1000)` before scoring, so band edges are exact. `int()` is wrong: `int(2.01 * 1000)` is 2009. The first draft's float version had a related bug: `(6.6 - 6.0) // 0.6` is 0.0 in floating point, so a click on a band edge scored 5 instead of 4.
+### 7.8 Blind sit and labelling UI (`/label` screen, dev mode) - MVP
 
-```python
-def hazard_points(clicks_ms: list[int], ws_ms: int, we_ms: int) -> int:
-    """First click inside [ws, we] scores 5..1 by fifth of the window (R2, R4)."""
-    if we_ms <= ws_ms:
-        raise ValueError("bad window")
-    inside = [t for t in sorted(clicks_ms) if ws_ms <= t <= we_ms]
-    if not inside:
-        return 0
-    band = min(4, 5 * (inside[0] - ws_ms) // (we_ms - ws_ms))   # 0..4
-    return 5 - band
-```
+See 13 for protocol and 16.4 for the screen. A labeller's first view of a clip is always a blind sit (13.3).
 
-Edges: a click exactly at `ws` scores 5. A click on an inner band edge scores the later band. A click at `we` scores 1. A click before `ws` scores 0 even if it was "right" early: same as DVSA.
+### 7.13 Persistence (`dh/store.py`) - should
 
-### 9.2 Per-clip score
+- Local: JSON files under `data/`. Always. This is the source of truth.
+- VastDB: the `vastdb-write` skill creates schemas and tables in the team bucket and recommends a new schema for app data [S14]. CrossWise wrote its decisions to its own table this way [S20]. We write schema `developing_hazard` (10.10) from the VM after each frozen run.
+- Key rows by segment `source` so they join with `vss-collection` (captions, embeddings). That is the VAST story: the benchmark is a dataset next to the index.
+- Never write to `vss-collection` or `vss-prompts-events` [S14].
 
-```python
-def clip_score(clicks_ms, hazards, flagged: bool) -> int:
-    if flagged:
-        return 0
-    return sum(hazard_points(clicks_ms, h.ws_ms, h.we_ms) for h in hazards)
-```
+## 8. DVSA rules as we implement them
 
-### 9.3 Anti-pattern detection (`PATTERN_V1`)
+### 8.1 Rules
 
-DVSA does not publish its algorithm, and its click allowance was withheld on purpose [S4], [S37]. We define a transparent one, show it in the UI, and freeze it before any test run. A clip is flagged if any rule fires:
-
-| ID | Rule | Default | Grounding |
+| # | Rule | Source | Our implementation |
 |---|---|---|---|
-| P1 | Too many clicks: more than 8 in the clip | 8 | a set allowance, the same for every clip [S4] |
-| P2 | Burst: more than 4 clicks in any 2.0 s span | 4 / 2 s | many clicks in a very short time [S4] |
-| P3 | Rhythm: at least 5 clicks with inter-click interval coefficient of variation < 0.15 | 0.15 | a pattern of clicks [S4] |
-| P4 | Coverage: more than 70% of 1 s bins contain a click | 70% | clicking continuously [S1] |
+| R1 | Each developing hazard has a scoring window, from the earliest sign it is developing to the point it is obvious | [S5], [S6] | `Hazard.window_start`, `Hazard.window_end` |
+| R2 | Window divided into five equal parts, 5 to 1 points | [S5] | integer-ms bands (9.1) |
+| R3 | Click outside the window scores 0 for that hazard | [S5] | yes |
+| R4 | Only the first response in the window is scored (it is also the best) | [S5] | first click in window |
+| R5 | Clicking continuously or in a pattern scores 0 for the clip | [S1], [S4] | pattern rules (9.3) |
+| R6 | The click allowance is a set number, the same for every clip | [S4] | P1 is a fixed cap, not tied to hazard count |
+| R7 | The candidate learns of R5 only at the end of the clip, when an X appears | [S4] | sit screen shows the X after the clip |
+| R8 | Every clip has at least one developing hazard; one has two | [S1], [S3] | every test clip has a hazard; at least one has two |
+| R9 | One viewing only | [S1] | replayer is one pass; sit screen has no controls |
 
-The rules see clicks and clip length only, never the labels. On clips of 12 s or more, P4 cannot fire unless P1 does too; it only matters for shorter clips.
+[ASSUMPTION] Live DVSA clips still use five equal bands. That is how the test was built [S5]; current clip parameters are not published.
 
-```python
-def pattern_flag(clicks: list[float], clip_len: float) -> tuple[bool, list[str]]:
-    reasons = []
-    c = sorted(clicks)
-    if len(c) > 8:
-        reasons.append("P1_too_many")
-    j = 0
-    for i in range(len(c)):
-        while c[i] - c[j] > 2.0:
-            j += 1
-        if i - j + 1 > 4:
-            reasons.append("P2_burst"); break
-    if len(c) >= 5:
-        gaps = [b - a for a, b in zip(c, c[1:])]
-        mu = sum(gaps) / len(gaps)
-        sd = (sum((g - mu) ** 2 for g in gaps) / len(gaps)) ** 0.5
-        if mu > 0 and sd / mu < 0.15:
-            reasons.append("P3_rhythm")
-    bins = max(1, int(clip_len))
-    hit = {int(t) for t in c if 0 <= t < clip_len}
-    if len(hit) / bins > 0.7:
-        reasons.append("P4_coverage")
-    return (len(reasons) > 0, reasons)
-```
+### 8.2 Things DVSA does that we do not
 
-Tune once against blind human clicks on dev clips, before 12:30, so a normal anxious human (3-5 clicks per clip) is not flagged. Then freeze as `PATTERN_V1`; every run records the version. If a judge gets flagged in judge mode, that is funny, not a bug; but check.
+- CGI clips since 2015 [S3]. Ours are real Toronto dashcam footage, 30 s each, with no UK road furniture.
+- Windows set from trial participants' responses plus expert judgement [S5]. Ours are set by two of us, blind to each other and to the auto proposal (13).
+- A pass mark: 44 of 75 for cars [S2]. Ours is not the DVSA test, so we never say "pass". The leaderboard shows 44/75 (58.7%) as a reference line labelled "DVSA car pass rate, for reference only".
+- A click allowance kept secret on purpose [S4], [S37]. Ours is published in the app (9.3), so ours can be gamed in a way DVSA's cannot. The matched-chance baseline (14.3) is how we show nobody is gaming it.
+
+### 8.3 Left-hand vs right-hand traffic
+
+Toronto drives on the right. Hazard perception concepts (pedestrian stepping out, car pulling out) are the same. The ego corridor is symmetric so it does not matter for the risk model. Mention once if asked.
 
 ## 10. Data model
 
@@ -514,10 +549,6 @@ data/
 
 Media is gitignored. JSON is committed so teammates share labels. `det/` and `grid/` are committed too: they are small, and anyone can re-run evals from them without the endpoints.
 
-## 11. API
-
-FastAPI, JSON. All paths relative to the app root (served under `/app` in the pod; the prefix is stripped [S13]). No auth (lab environment, demo only). **[ASSUMPTION]** the deployed app is only reachable through the workshop portal.
-
 ### 11.1 Endpoints
 
 | Method | Path | Purpose | Mode | MVP |
@@ -544,59 +575,6 @@ The pod scores judge-mode clicks with the same pure-Python scorer. It keeps sess
 
 The old `/api/live` (run an agent live in the pod) is dropped: it would need numpy, frames and endpoint access inside the pod. The SSE replay of a recorded run shows the same events. Label it "recorded run, replayed in clip time".
 
-### 11.2 Response examples
-
-`POST /api/human`
-
-```json
-// request
-{"name": "Judge 1", "role": "judge", "blind": true, "clip_id": "c07", "clicks": [16.9, 21.2]}
-// response
-{
-  "clip_score": 4,
-  "pattern": {"flag": false, "reasons": []},
-  "hazards": [{"hazard_id": "c07_h1", "window": [16.2, 19.0], "points": 4, "first_click": 16.9}],
-  "agents": {"yolo_naive": 0, "yolo_risk": 3, "yolo_cosmos_gate": 4}
-}
-```
-
-`GET /api/leaderboard`
-
-```json
-{
-  "testset_id": "testset_v2",
-  "max": 75,
-  "dvsa_reference_pct": 0.587,
-  "rows": [
-    {"name": "yolo_cosmos_gate", "kind": "agent", "score": 41, "pct": 0.547, "ci90": [0.44, 0.65], "lift_vs_chance": 0.31, "hit_rate": 0.8, "pattern_rate": 0.0, "reaction_s": 0.9, "latency_s": 1.4, "weave_url": "..."},
-    {"name": "yolo_naive", "kind": "agent", "score": 3, "pattern_rate": 0.86}
-  ]
-}
-```
-
-Numbers above are placeholders. Do not present them.
-
-### 11.3 SSE event format (`/api/runs/{run_id}/stream`)
-
-```
-event: risk
-data: {"t": 16.2, "risk": 0.52, "top_track": 4}
-
-event: cosmos_call
-data: {"t": 16.2, "status": "sent"}
-
-event: cosmos_call
-data: {"t": 16.2, "status": "done", "latency_s": 0.9, "verdict": "HAZARD", "reason": "pedestrian stepping into lane"}
-
-event: click
-data: {"t": 17.1}
-
-event: score
-data: {"clip_score": 4, "hazards": {...}}
-```
-
-The frontend draws these as they arrive. Nothing waits behind a spinner. Needs the ingress annotations in 6.4.
-
 ### 11.4 Internal clients
 
 | Client | File | Notes |
@@ -611,7 +589,108 @@ The frontend draws these as they arrive. Nothing waits behind a spinner. Needs t
 
 Every client: timeout (VSS 30 s, 120 s for video; Cosmos 30 s; LLM 30 s), 2 retries with jitter, wrapped in `@weave.op`. Never log a bearer token, JWT or password [S15].
 
-## 16. Frontend
+## 13. Labelling protocol
+
+### 13.1 Who
+
+- Riyu mines, so she has seen every clip. She is labeller A and never counts as a blind human.
+- fmdplt33 sits each clip blind, then labels it. Labeller B.
+- Moses sits each clip blind and does not label. He arbitrates disagreements, after his blind sit.
+
+Every clip gets two independent windows and two blind team runs. If roles change, keep the rule: nobody labels or arbitrates a clip before their blind sit of it.
+
+### 13.2 Definition of a developing hazard (our working definition)
+
+> Something that would make a careful driver of the camera car change speed or direction, and that develops over time in view (it does not appear from nowhere in the last few frames).
+
+Adapted in our own words from the DVSA definition [S1]. DVSA's own example: a parked car is not a developing hazard; once its indicator comes on and it starts to pull away, it is [S1]. Include:
+
+- Pedestrian moving from kerb into the road ahead.
+- Vehicle pulling out of a side road or driveway into or across our path.
+- Lead vehicle braking hard.
+- Cyclist moving out into our lane.
+- Vehicle turning across our path at a junction.
+- Pedestrian crossing the road we are turning into.
+
+Exclude (these are "potential" not "developing"):
+
+- Pedestrian standing on the pavement who does not move towards the road.
+- Parked cars that stay parked.
+- Traffic in other lanes keeping its lane.
+- Oncoming traffic that stays its side.
+- Anything that happens while our car is stopped and stays stopped, such as people crossing in front of us at a red light. We do not change speed or direction. If we are moving off, it counts.
+
+### 13.3 Blind first view
+
+Everyone's first view of a clip is a blind sit on the label screen: the clip plays once, no controls, Space to click, as in the real test [S1]. The clicks are saved as a `HumanSession` with `blind: true`. Only then does the labelling view open.
+
+Why: it costs about 35 s per clip per person and gives every test clip two blind human runs before anyone has seen a window. It also follows how the test was built: windows were checked against where people actually responded [S5].
+
+### 13.4 Window rules
+
+Use the definitions from when the test was built [S5], [S6]:
+
+- **Start:** the earliest frame at which a careful driver could see the hazard starting to develop: the pedestrian turns towards the road or steps to the kerb edge; the car's front starts to move out; the indicator starts; brake lights come on with the gap closing. If the hazard is hidden and then emerges, the first frame it can be seen [S5].
+- **End:** the frame at which the hazard has become obvious: the pedestrian is in the carriageway, the car is in our lane, the gap is visibly collapsing [S5], [S6]. Not closest approach, and not the last moment to brake.
+- Expect 1-7 s [S5]. The UI warns outside that range; the labeller can override with a note.
+- Play at 0.5x. J/L step 0.2 s. Drag handles.
+- Write a one-line description.
+- Do not look at the auto proposal or the other labeller's window until yours is saved.
+
+### 13.5 Agreement
+
+- Two windows agree if start differs by <= 0.6 s and end by <= 0.8 s. Final window = mean.
+- If they disagree, Moses picks one, edits it, or moves the hazard to dev. Record it in `arbitrated_by`.
+- If neither labeller finds a clear developing hazard, move the clip to `dev` as a no-hazard control or reject it. DVSA clips always contain a hazard [S1], so no-hazard clips never enter the test score. They measure false clicks on calm footage.
+- Report agreement simply as "x of y windows agreed within tolerance". Do not over-sell.
+- Keep both labellers' windows: 14.4 rescores every run with each.
+
+### 13.6 Blindness
+
+- Agents never see labels. `ClipMeta` has no hazard fields, scoring is a separate step that the sitting code never calls (12.1), and a test checks that nothing in `dh/agents/` imports the label store, the VSS client or caption fields (Appendix F).
+- Captions and segment-level counts summarise a whole 5 s segment, future included. No agent may read them.
+- Labellers label after their blind sit, and before seeing any agent result on that clip.
+
+### 13.7 Time budget
+
+- Blind sit: about 35 s per clip per person, so about 12 minutes each for Moses and fmdplt33 over 20 clips.
+- Labelling: target 3 minutes per clip per labeller including scrubbing. 20 clips x 2 labellers = 2 person-hours. That is why labelling is split across the morning (section 20).
+
+### 13.8 Mix of clip types (target)
+
+| Type | Target count |
+|---|---|
+| Pedestrian crossing / stepping out | 8 |
+| Vehicle pulling out / turning across | 5 |
+| Lead vehicle braking | 3 |
+| Cyclist | 1-2 if found |
+| Two-hazard clip | at least 1 |
+| No-hazard control (dev only) | 2-3 |
+
+Accept whatever the footage gives. PIE is pedestrian-heavy by design [S28]. At SF, Dashi's search found no convincing hits for pulling out from the kerb or following distance, and one for turning across a crossing [S21]. Vehicle hazards will come from scrubbing, if at all.
+
+### 14.4 Uncertainty and label noise
+
+With ~15-20 hazards, differences of a few points are noise. We show:
+
+- Bootstrap 90% interval on each agent's pct (1000 resamples over clips).
+- **Paired** bootstrap for every comparison that goes on stage: resample clips once, score both agents on the same sample, report the interval of the difference. Overlapping marginal intervals do not answer "is A better than B"; this does (Appendix E).
+- **Label sensitivity:** rescore every run with labeller A's windows and with labeller B's. Show the range. If two agents swap places between them, say so.
+- We say "small test set" out loud. It is more credible than pretending.
+
+### 14.5 Sanity checks before showing anything
+
+- **Gaming check, on dev, before 12:30.** Plot `random@k` against k. Our own simulation of one hazard in a random place: with 6 random clicks, a 15 s clip with a 5 s window gives about 3.4 of 5 points on average; a 30 s clip gives about 2.2 [UNVERIFIED: our simulation, not data]. That is why clips are 30 s (7.2). If `random@6` gets close to `yolo_risk` on dev, windows are too wide or clips too short. Fix it before freezing.
+- `yolo_naive` should have a high pattern_rate. If it does not, the corridor is too small or the rules too loose; check, but do not rig.
+- **Verifier false alarms.** On dev grid points with no labelled hazard within 3 s, what share does Cosmos call HAZARD? At NYC a team that asked Cosmos directly whether a clip showed a near miss got yes on 168 of 180 clips [S31]. If ours looks like that, the gate is useless, and we say so.
+- Blind humans should score reasonably. If blind teammates score near 0, our windows are wrong.
+- Window proposal vs human-agreed window: report mean absolute error of start and end. Valid only because labellers did not see the proposal (7.7). A secondary result: "YOLO tracks can propose a hazard window to within x s".
+
+### 14.6 Selection bias
+
+- Clips are found by caption search and human scrubbing, never by our YOLO risk (7.1).
+- Windows are set by humans who have not seen the proposal (13.4).
+- Hazards YOLO cannot see stay in the test. A detector scoring 0 on a hazard it never boxed is a finding.
 
 ### 16.1 Principles
 
@@ -623,24 +702,6 @@ Every client: timeout (VSS 30 s, 120 s for video; Cosmos 30 s; LLM 30 s), 2 retr
 - Keyboard first: Space = click (hazard), P = play/pause, J/L = step back/forward 0.2 s in label mode.
 - Every fetch and media URL is relative, and routes are hash routes (`#/sit/c07`), so the `/app` prefix cannot break them (6.4).
 
-### 16.2 Screens
-
-| # | Screen | Route | Mode | MVP |
-|---|---|---|---|---|
-| 1 | Home / test overview | `#/` | both | yes |
-| 2 | Sit the test (judge mode) | `#/sit/:clipId` | both | should |
-| 3 | Watch the agent | `#/watch/:runId/:clipId` | both | yes |
-| 4 | Blind sit, then label | `#/label/:clipId` | dev | yes |
-| 5 | Leaderboard | `#/leaderboard` | both | should |
-| 6 | Miss explained | panel inside 3 | both | could |
-
-### 16.3 Home
-
-- Title: "Developing Hazard". Subtitle: "An AI sits the hazard perception test."
-- Three cards: "Sit a clip yourself", "Watch the AI", "Leaderboard".
-- Test set summary: clips, hazards, frozen at, hash (short).
-- Health strip: VSS / Cosmos / W&B dots (green, amber, red), from `/api/health`.
-
 ### 16.4 Label screen
 
 - First view of each clip is a blind sit (13.3), using the sit screen's player. The labelling tools open after it ends.
@@ -649,140 +710,6 @@ Every client: timeout (VSS 30 s, 120 s for video; Cosmos 30 s; LLM 30 s), 2 retr
 - Fields: hazard type (select), description (one line), labeller (select: riyu, fmd; moses for arbitration).
 - Buttons: "Add hazard", "Save", "No hazard in this clip", "Reject clip".
 - Shows other labeller's window as a thin outline after you save (not before).
-
-### 16.5 Sit screen (judge mode)
-
-- Name box (optional), role (judge / guest), and "Have you seen this clip before?" "Start" stays disabled until every segment is fetched into a blob URL, so playback never stalls mid-clip. **[VERIFY-0930]** segment file size on event wifi.
-- Clip plays once, no controls, no scrubbing. Press Space or click the video to register a hazard click. Each click shows a small flag on the timeline at the bottom. Third-party guides say the real test shows a flag per click [UNVERIFIED]; the pattern X only appears at the end of the clip [S4].
-- At the end: the X if the pattern rule fired (R7), window bands revealed, your clicks plotted, points per hazard, the rule that fired.
-- Next to it, the agents' clicks on the same clip with their scores. The point of this screen in the demo is the side-by-side.
-- Timing: the media time of the frame on screen at keydown (`mediaTime` from `requestVideoFrameCallback`, else `video.currentTime`), plus the segment offset. Ignore auto-repeat keydown events.
-- The app may be framed inside the workshop portal. The Start click gives the page focus so Space reaches it [ASSUMPTION].
-
-### 16.6 Watch screen
-
-- Video with YOLO boxes; hazard track highlighted.
-- Live risk meter (vertical bar) and risk curve drawn as the clip plays.
-- Event feed on the right, newest at top:
-  - `16.20s  risk 0.52  person#4 heading into path`
-  - `16.20s  asking Cosmos...`
-  - `17.10s  Cosmos (0.90s): pedestrian stepping into lane - HAZARD`
-  - `17.10s  CLICK`
-- Agent selector tabs: naive / risk / gate / async / vlm. Switching replays that agent's recorded run on the same clip (from run files, instant). Labelled "recorded run, replayed".
-- "Open in Weave" link on each Cosmos call.
-- After clip: score card same as sit screen.
-
-### 16.7 Leaderboard
-
-- Table: rank, name, kind (agent/human), score / max, pct with interval bar, lift over chance, hit rate, pattern rate, median reaction, mean latency.
-- A dashed line at 58.7%: "DVSA car pass rate (44/75), for reference only" [S2].
-- Humans are shown on the full set only if they did the full set; otherwise a separate "per clip" table: clip, human, human score, best agent score.
-- Latency toggle: measured / 0.5 s / 1 s / 2 s / 4 s / zero.
-- Bar chart per hazard type (small multiples).
-
-### 16.8 Miss panel
-
-- For hazards where the selected agent scored 0-1: the window, the clicks, the explanation text, and a still at window start with boxes.
-
-### 16.9 Tech
-
-- MVP: plain HTML + vanilla JS modules + one CSS file. No build step. Fastest to deploy.
-- If someone is quick in React, fine, but then the build output goes in `web/dist` and the server serves that. It still has to fit the pod budget.
-- Charts: hand-drawn SVG or canvas. No chart library needed.
-- Player: two `<video>` elements, swapping on `ended`, for gapless segment playback (7.2).
-
-## 17. Repo layout
-
-```
-developing-hazard/
-  README.md
-  SUMMARY.md
-  SPEC.md
-  NOTES-opus.md
-  Makefile
-  pyproject.toml
-  requirements-pod.txt      # fastapi, uvicorn, requests only
-  .env.example              # variable names only, no values
-  .gitignore
-  deploy/
-    k8s.yaml                # Deployment + Service + Ingress /app, no secrets
-    deploy.sh               # ConfigMap -> Secret -> apply -> restart -> curl /app/health
-  dh/
-    __init__.py
-    config.py               # env and defaults
-    models.py               # pydantic models (section 10)
-    clients/
-      vss.py
-      vastdb.py
-      yolo.py
-      cosmos.py
-      embed.py
-      wandb_llm.py
-    mine.py
-    clips.py
-    frames.py
-    dets.py
-    track.py
-    risk.py
-    windows.py
-    grid.py                 # verdict grid (12.3)
-    replay.py
-    score.py                # stdlib only: the pod imports it too
-    baselines.py            # random@k, random@matched
-    agents/
-      __init__.py
-      base.py
-      yolo_naive.py
-      yolo_risk.py
-      yolo_cosmos.py        # gate and async
-      llm_wb.py
-    evals.py                # EvaluationLogger wiring, bootstrap
-    explain.py
-    store.py
-    snapshot.py             # builds data/snapshot for the pod; checks the budget
-    server.py               # FastAPI, dev and demo modes
-    cli.py                  # typer: mine, build, detect, grid, run, eval, freeze, snapshot
-  prompts/
-    cosmos_verify_v2.txt
-    vlm_verify_v1.txt
-    llm_decide_v1.txt
-    explain_miss_v1.txt
-  web/
-    index.html
-    app.js
-    player.js               # two-element segment player
-    label.js
-    sit.js
-    watch.js
-    leaderboard.js
-    style.css
-    fonts/
-  tests/
-    test_score.py
-    test_pattern.py
-    test_no_label_leak.py
-    test_replay_no_lookahead.py
-    test_baselines.py
-  data/                     # see 10.11; media gitignored
-  scripts/
-    smoke.sh                # hits every endpoint once, on the VM and on /app
-    secret_scan.sh          # run before the repo goes public
-```
-
-CrossWise's deploy script is a good model: ConfigMap, Secret, apply, restart, then curl `/app/health` [S20].
-
-### 17.1 `.gitignore`
-
-```
-data/clips/
-data/frames/
-data/cache/
-*.mp4
-.env
-.venv/
-__pycache__/
-web/dist/
-```
 
 ### 17.2 Branching
 
@@ -1010,71 +937,6 @@ Cut from the bottom of 22.2 upwards. Never cut: scorer tests, the matched-chance
 | 24 | "Internet video" rule ambiguity ([a prior team used Wikimedia footage](https://tokensand.com/p/vision-zero-agent-1)) | - | - | Do not use any. Ask organisers if we want to add anything | M |
 | 25 | Running out of Cursor credits | Low | Medium | Model on Auto; top-up form in README | all |
 
-## 24. Demo script
-
-The first judging round is at our table [S7]. A stage final is possible [UNVERIFIED]. Prepare both.
-
-### 24.1 Table walkthrough (90 s, then questions)
-
-1. "Every UK learner sits this test. Can an AI pass it?" Hand a judge the laptop on a test clip in judge mode. 30 s.
-2. Reveal their score and the window. Show the agents' clicks on the same clip.
-3. Leaderboard: agents, blind humans, chance at matched clicks, the pass-rate line.
-4. Let them drive: Weave, a trace, the latency curve.
-
-### 24.2 Stage version (3 minutes)
-
-Timings are targets. Rehearse with a timer twice.
-
-**0:00-0:15 Hook (Moses)**
-> "Every UK learner driver sits this test. You watch a clip and click when you see a developing hazard. Click early, up to five points. Click at everything, zero. Can an AI pass it?"
-
-**0:15-0:50 Judge clicks live (judge on the laptop)**
-- Open Sit screen on a pre-chosen 30 s test clip with a strong single pedestrian hazard. Hand the laptop to a judge or ask them to say "now" and we press Space.
-- Reveal: their score and the window.
-
-**0:50-1:30 The AI sits the same clip (Watch screen)**
-- Play the best Cosmos agent on the same clip. Point at: boxes, the risk curve rising, "asking Cosmos", the answer, the latency, the click.
-- One line: "Cosmos thinking time counts against it, like a driver's reaction time."
-
-**1:30-1:50 The punchline (Watch screen, naive tab)**
-- Switch to `yolo_naive`: clicks everywhere, the X, 0.
-> "YOLO sees everything. That's the problem. Seeing isn't the same as knowing when to act."
-- Then: "That one is a straw man on purpose. The fair detector is on the leaderboard."
-
-**1:50-2:30 Leaderboard and the latency curve**
-- Agents and blind humans, scores out of max, interval bars, and the line for a random clicker with the same number of clicks. Say how many clips, that the test set was frozen before evaluation, and that thresholds were tuned on a separate dev split.
-- The dashed line is the DVSA car pass rate: "this isn't the DVSA test, so we don't call it a pass".
-- The points-versus-latency curve: "this is how fast verification has to be to be worth it". Read whatever the data says.
-
-**2:30-2:50 One miss explained**
-- Pick a real miss. Show the still and the 2-line explanation, checked by us first.
-
-**2:50-3:00 Close**
-> "Built on VAST's index, Cosmos and YOLO on CoreWeave, scored and traced in Weave, written in Cursor. Any video agent that has to act in time can sit this test."
-
-### 24.3 Demo prep checklist
-
-- [ ] Demo clip chosen; every agent has a recorded run on it.
-- [ ] Judge clip is a test clip, *not* in the dev set used for tuning, and new to the judge.
-- [ ] Browser zoom set; dark theme readable on projector.
-- [ ] Weave tab pre-opened and logged in.
-- [ ] Demo video uploaded; the link opens logged out. It is also the backup.
-- [ ] Every number on screen is from a real run. No placeholders.
-
-### 24.4 Likely judge questions and honest answers
-
-| Question | Answer |
-|---|---|
-| Who set the windows? | Two of us, independently, before seeing the auto proposal, with the start and end definitions the test was built with; x of y agreed. Scores under each labeller's windows are shown. |
-| Isn't the footage Canadian? | Yes. Hazards are the same idea; we use DVSA scoring, not DVSA clips. |
-| How is the anti-pattern rule defined? | DVSA does not publish theirs. A 2012 FOI answer says it is a fixed click allowance plus checks for bursts and patterns; the numbers were withheld in 2007 so candidates could not game them. Ours is four transparent rules shown in the app, tuned on blind human clicks and frozen before testing. |
-| Isn't YOLO-only a straw man? | The naive one is, on purpose. The fair detector is `yolo_risk`, and every agent is shown against a random clicker with the same number of clicks. |
-| Why not just run Cosmos on every frame? | Too slow and too costly; latency counts. That trade-off is the point, and the latency curve shows it. |
-| Did the AI pass? | It scored X% against the DVSA car pass rate of 58.7%, but this is not the DVSA test, so we do not call it a pass. |
-| How big is the test set? | n clips, n hazards. Small. Intervals shown, paired for the comparisons we make. |
-| What would you do next? | More clips, more labellers, test other agents, publish the harness. |
-| Could this be a product? | Possibly a test harness for alerting systems. We have not validated that with customers. |
-
 ## 25. Submission checklist
 
 Submit at https://tokensand.com/vastlondon -> "Submit your project". Deadline 16:30 BST [S16].
@@ -1100,6 +962,39 @@ Ours:
 - [ ] Stack used: VAST AI OS (VSS search, videos, VastDB), Cosmos3-Reason, Cosmos Embed1, YOLO11 on CoreWeave, W&B inference + Weave, Cursor
 - [ ] Short description (150 words, drafted in SUMMARY.md style)
 - [ ] Honest limitations line: small test set, our own windows, non-UK footage
+
+## Appendix D. Window proposer pseudocode
+
+```python
+def propose(tracks_by_id, corridor, clip_len):
+    best = None
+    for tid, states in tracks_by_id.items():
+        peak = max(states, key=lambda s: s.risk)
+        if peak.risk < 0.6:
+            continue
+        if best is None or peak.risk > best[1].risk:
+            best = (tid, peak)
+    if not best:
+        return None
+    tid, peak = best
+    states = tracks_by_id[tid]
+    onset, run = None, 0
+    for s in states:
+        run = run + 1 if (s.heading_in or s.in_outer_margin) else 0
+        if run >= 3:
+            onset = s.t - 0.4   # back to the first of the 3 frames at 5 fps
+            break
+    if onset is None:
+        onset = peak.t - 3.0
+    # end = first moment the hazard is obvious: inside the inner corridor [S5], [S6]
+    obvious = next((s for s in states if s.t > onset and s.in_inner_corridor), peak)
+    ws, we = max(0.0, onset), min(clip_len, obvious.t)
+    conf = 1.0
+    if not (1.0 <= we - ws <= 7.0):
+        conf = 0.4
+        we = min(ws + 7.0, max(we, ws + 1.0))
+    return {"track_id": tid, "window": [ws, we], "confidence": conf}
+```
 
 ## Sources
 

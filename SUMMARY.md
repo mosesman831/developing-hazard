@@ -54,9 +54,9 @@ Full detail is in [SPEC.md](SPEC.md).
 Each of us runs one coding agent, and each agent has its own spec:
 
 - [CONTEXT.md](CONTEXT.md): who owns which files, what each agent must not touch, the phase times and links to each agent's status file. Every agent reads it first.
-- [SPEC-AG1.md](SPEC-AG1.md) (mosesman831): the AI agents and the scorer.
-- [SPEC-AG2.md](SPEC-AG2.md) (Riyu-D1): finding clips and labelling them.
-- [SPEC-AG3.md](SPEC-AG3.md) (fmdplt33): the app and deployment.
+- [SPEC-mosesman831.md](SPEC-mosesman831.md) (mosesman831): the AI agents and the scorer.
+- [SPEC-riyud1.md](SPEC-riyud1.md) (Riyu-D1): finding clips and labelling them.
+- [SPEC-fmdplt.md](SPEC-fmdplt.md) (fmdplt33): the app and deployment.
 - [contracts/](contracts/): the shared data formats, agreed in advance so all three can start at once.
 
 The day runs in four phases (09:30, 10:30, 12:30, 14:00). Each agent works on its own `agN/phase-X` branch, opens a PR and stops. Agents never push to main or merge; the merge bot does that once it has checked each PR only touches that agent's own files. Status lives in `status/ag1.md`, `ag2.md` and `ag3.md`, one file per agent, so the PRs never clash.
