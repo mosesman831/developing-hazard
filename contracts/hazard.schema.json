@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hazard (label)",
+  "description": "SPEC 10.5. Written by AG2 (labels API) to data/hazards.json (array). auto_window filled only after both labellers save.",
+  "type": "object",
+  "required": [
+    "hazard_id",
+    "clip_id",
+    "type",
+    "window_start",
+    "window_end",
+    "labellers",
+    "agreed"
+  ],
+  "properties": {
+    "hazard_id": {
+      "type": "string"
+    },
+    "clip_id": {
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "pedestrian_crossing",
+        "vehicle_pulling_out",
+        "vehicle_cut_in",
+        "lead_vehicle_braking",
+        "cyclist",
+        "vehicle_turning_across",
+        "other"
+      ]
+    },
+    "window_start": {
+      "type": "number"
+    },
+    "window_end": {
+      "type": "number"
+    },
+    "labellers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      }
+    },
+    "agreed": {
+      "type": "boolean"
+    },
+    "arbitrated_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "auto_window": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "number"
+      }
+    },
+    "track_id": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "segment_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    }
+  }
+}

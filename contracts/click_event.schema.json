@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Click and call events",
+  "description": "SPEC 10.8 clicks[] / calls[] and the SSE events in 11.3. Written by AG1 run files, read by AG3.",
+  "$defs": {
+    "click": {
+      "type": "object",
+      "required": [
+        "t"
+      ],
+      "properties": {
+        "t": {
+          "type": "number"
+        },
+        "t_trigger": {
+          "type": "number"
+        },
+        "latency_s": {
+          "type": "number"
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "call": {
+      "type": "object",
+      "required": [
+        "kind",
+        "t_sent",
+        "latency_s",
+        "blocking"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "cosmos",
+            "vlm",
+            "llm"
+          ]
+        },
+        "t_sent": {
+          "type": "number"
+        },
+        "grid_t": {
+          "type": "number"
+        },
+        "latency_s": {
+          "type": "number"
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "verdict": {
+          "enum": [
+            "HAZARD",
+            "NO_HAZARD",
+            "ERROR"
+          ]
+        }
+      }
+    },
+    "sse": {
+      "type": "object",
+      "required": [
+        "event",
+        "data"
+      ],
+      "properties": {
+        "event": {
+          "enum": [
+            "risk",
+            "cosmos_call",
+            "click",
+            "score"
+          ]
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

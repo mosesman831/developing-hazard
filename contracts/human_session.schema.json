@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "HumanSession",
+  "description": "SPEC 10.9. data/humans.jsonl, written by AG3's server. No emails.",
+  "type": "object",
+  "required": [
+    "session_id",
+    "name",
+    "role",
+    "blind",
+    "clip_id",
+    "clicks",
+    "created_at"
+  ],
+  "properties": {
+    "session_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "role": {
+      "enum": [
+        "team",
+        "judge",
+        "guest"
+      ]
+    },
+    "blind": {
+      "type": "boolean"
+    },
+    "clip_id": {
+      "type": "string"
+    },
+    "clicks": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      }
+    },
+    "ua": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    }
+  }
+}

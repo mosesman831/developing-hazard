@@ -1,0 +1,27 @@
+{
+  "run_id": "r_EXAMPLE_yolo_risk",
+  "agent": "yolo_risk",
+  "agent_config": {
+    "theta_up": 0.6,
+    "theta_down": 0.4
+  },
+  "testset_id": "testset_v0",
+  "testset_sha256": "EXAMPLE",
+  "scorer_version": "score_v1",
+  "pattern_version": "PATTERN_V1",
+  "latency_mode": "zero",
+  "git_sha": "EXAMPLE",
+  "mode": "fast",
+  "started_at": "2026-10-17T10:00:00+01:00",
+  "weave_url": "",
+  "totals": {
+    "score": 4,
+    "max": 5,
+    "pct": 0.8,
+    "hit_rate": 1.0,
+    "pattern_rate": 0.0,
+    "lift_vs_chance": 0.0,
+    "median_reaction_s": 0.7,
+    "mean_latency_s": 0.0
+  }
+}

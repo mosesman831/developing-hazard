@@ -1,0 +1,8 @@
+data/clips/
+data/frames/
+data/cache/
+*.mp4
+.env
+.venv/
+__pycache__/
+web/dist/

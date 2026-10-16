@@ -1,0 +1,13 @@
+{
+  "testset_id": "testset_v0",
+  "frozen_at": "2026-10-17T10:00:00+01:00",
+  "clips": [
+    "c07"
+  ],
+  "hazards": [
+    "c07_h1"
+  ],
+  "scorer_version": "score_v1",
+  "pattern_version": "PATTERN_V1",
+  "sha256": "EXAMPLE"
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Candidate",
+  "description": "SPEC 10.1. data/candidates.jsonl, AG2.",
+  "type": "object",
+  "required": [
+    "candidate_id",
+    "camera_id",
+    "original_video",
+    "segments",
+    "found_by",
+    "status"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string"
+    },
+    "camera_id": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "original_video": {
+      "type": "string"
+    },
+    "set": {
+      "type": "string"
+    },
+    "chunk_index": {
+      "type": "integer"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "found_by": {
+      "enum": [
+        "search",
+        "scrub",
+        "embed"
+      ]
+    },
+    "queries": {
+      "type": "array"
+    },
+    "hit_second": {
+      "type": "number"
+    },
+    "search_score": {
+      "type": "number"
+    },
+    "caption_snippet": {
+      "type": "string"
+    },
+    "ego_moving": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "new",
+        "rejected",
+        "sat_blind",
+        "labelled",
+        "frozen"
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ClipMeta",
+  "description": "What an agent may see (7.9, App F). Must never contain hazard or window fields.",
+  "type": "object",
+  "required": [
+    "clip_id",
+    "duration_s",
+    "fps_sample",
+    "segments"
+  ],
+  "properties": {
+    "clip_id": {
+      "type": "string"
+    },
+    "duration_s": {
+      "type": "number"
+    },
+    "fps_sample": {
+      "type": "number"
+    },
+    "segments": {
+      "type": "array"
+    }
+  },
+  "not": {
+    "anyOf": [
+      {
+        "required": [
+          "hazards"
+        ]
+      },
+      {
+        "required": [
+          "window_start"
+        ]
+      },
+      {
+        "required": [
+          "window_end"
+        ]
+      }
+    ]
+  }
+}

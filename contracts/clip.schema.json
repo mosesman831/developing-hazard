@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Clip",
+  "description": "SPEC 10.2. Written by AG2 to data/clips.json (array). Clip time in seconds, 3 decimals.",
+  "type": "object",
+  "required": [
+    "clip_id",
+    "candidate_id",
+    "camera_id",
+    "original_video",
+    "segments",
+    "duration_s",
+    "fps_native",
+    "fps_sample",
+    "split",
+    "seen_by"
+  ],
+  "properties": {
+    "clip_id": {
+      "type": "string"
+    },
+    "candidate_id": {
+      "type": "string"
+    },
+    "camera_id": {
+      "type": "string"
+    },
+    "original_video": {
+      "type": "string"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "source",
+          "start_s",
+          "end_s"
+        ],
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "start_s": {
+            "type": "number"
+          },
+          "end_s": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "duration_s": {
+      "type": "number"
+    },
+    "fps_native": {
+      "type": "number"
+    },
+    "fps_sample": {
+      "type": "number"
+    },
+    "local_path": {
+      "type": "string"
+    },
+    "split": {
+      "enum": [
+        "dev",
+        "test"
+      ]
+    },
+    "seen_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

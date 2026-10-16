@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Det and Track rows",
+  "description": "SPEC 10.3/10.4. data/det/<clip>.jsonl and data/tracks/<clip>.jsonl, AG1. AG3 reads tracks for overlays.",
+  "$defs": {
+    "det": {
+      "type": "object",
+      "required": [
+        "t",
+        "frame",
+        "cls",
+        "conf",
+        "xyxy"
+      ],
+      "properties": {
+        "t": {
+          "type": "number"
+        },
+        "frame": {
+          "type": "integer"
+        },
+        "cls": {
+          "type": "string"
+        },
+        "conf": {
+          "type": "number"
+        },
+        "xyxy": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "track": {
+      "type": "object",
+      "required": [
+        "track_id",
+        "t",
+        "cls",
+        "xyxy",
+        "risk"
+      ],
+      "properties": {
+        "track_id": {
+          "type": "integer"
+        },
+        "t": {
+          "type": "number"
+        },
+        "cls": {
+          "type": "string"
+        },
+        "xyxy": {
+          "type": "array"
+        },
+        "vx": {
+          "type": "number"
+        },
+        "vy": {
+          "type": "number"
+        },
+        "h_rate": {
+          "type": "number"
+        },
+        "in_corridor": {
+          "type": "boolean"
+        },
+        "heading_in": {
+          "type": "boolean"
+        },
+        "ttc": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "t_lat": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "risk": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TestSet",
+  "description": "SPEC 10.6. data/testset_vN.json, written by AG2, frozen at 14:00.",
+  "type": "object",
+  "required": [
+    "testset_id",
+    "frozen_at",
+    "clips",
+    "hazards",
+    "scorer_version",
+    "pattern_version",
+    "sha256"
+  ],
+  "properties": {
+    "testset_id": {
+      "type": "string"
+    },
+    "frozen_at": {
+      "type": "string"
+    },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "hazards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scorer_version": {
+      "type": "string"
+    },
+    "pattern_version": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string"
+    }
+  }
+}

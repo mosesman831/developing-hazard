@@ -1,0 +1,1 @@
+{"run_id": "r_EXAMPLE_yolo_risk", "clip_id": "c07", "clicks": [{"t": 16.9, "t_trigger": 16.9, "latency_s": 0.0, "reason": "risk 0.61"}], "calls": [], "pattern": {"flag": false, "reasons": []}, "hazard_points": {"c07_h1": 4}, "clip_score": 4, "risk_curve": [[0.0, 0.05], [16.8, 0.61]], "explanation": null}

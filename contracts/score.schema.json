@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Scores",
+  "description": "ClipResult (10.8), Run (10.7), human response (11.2). Produced by dh.score (AG1); served by AG3.",
+  "$defs": {
+    "pattern": {
+      "type": "object",
+      "required": [
+        "flag",
+        "reasons"
+      ],
+      "properties": {
+        "flag": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "clip_result": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "clip_id",
+        "clicks",
+        "pattern",
+        "hazard_points",
+        "clip_score"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "clip_id": {
+          "type": "string"
+        },
+        "clicks": {
+          "type": "array"
+        },
+        "calls": {
+          "type": "array"
+        },
+        "pattern": {
+          "$ref": "#/$defs/pattern"
+        },
+        "hazard_points": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          }
+        },
+        "clip_score": {
+          "type": "integer"
+        },
+        "risk_curve": {
+          "type": "array"
+        },
+        "explanation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "agent",
+        "testset_id",
+        "testset_sha256",
+        "scorer_version",
+        "pattern_version",
+        "latency_mode",
+        "totals"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "agent_config": {
+          "type": "object"
+        },
+        "testset_id": {
+          "type": "string"
+        },
+        "testset_sha256": {
+          "type": "string"
+        },
+        "scorer_version": {
+          "type": "string"
+        },
+        "pattern_version": {
+          "type": "string"
+        },
+        "latency_mode": {
+          "type": "string"
+        },
+        "git_sha": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "weave_url": {
+          "type": "string"
+        },
+        "totals": {
+          "type": "object"
+        }
+      }
+    },
+    "human_response": {
+      "type": "object",
+      "required": [
+        "clip_score",
+        "pattern",
+        "hazards"
+      ],
+      "properties": {
+        "clip_score": {
+          "type": "integer"
+        },
+        "pattern": {
+          "$ref": "#/$defs/pattern"
+        },
+        "hazards": {
+          "type": "array"
+        },
+        "agents": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
