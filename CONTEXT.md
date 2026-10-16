@@ -30,7 +30,7 @@ Read this first, every phase. It says who owns what, what each agent may not tou
 
 ### Shared, row-owned: `CHECKLIST.md`
 
-Every agent may edit `CHECKLIST.md`, but only its own rows (IDs starting `AG1-`, `AG2-`, `AG3-`) and only to tick `[ ]` to `[x]`. The merge bot ticks `M-` rows; humans tick timeline and `S-` rows. If two PRs conflict only in `CHECKLIST.md`, the merge bot resolves it by keeping every `[x]`.
+Every agent may edit `CHECKLIST.md`, but only the Agent and PR cells of its own rows (IDs starting `AG1-`, `AG2-`, `AG3-`): tick Agent `[ ]` to `[x]` when a task is done, and write the PR number (e.g. `#5`) in PR, which can go in a follow-up commit after the PR is open. The merge bot owns the Gate and Merged cells and the `M-` rows; humans tick timeline and `S-` rows. If two PRs conflict only in `CHECKLIST.md`, the merge bot resolves it by keeping every `[x]` and every PR number.
 
 If you need a new dependency in `pyproject.toml`, say so in your PR body and status file; Moses adds it.
 
