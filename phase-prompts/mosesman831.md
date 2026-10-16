@@ -12,7 +12,7 @@ Run Phase 1 of SPEC-mosesman831.md, and only Phase 1.
 2. Create branch ag1/phase-1 from main.
 3. Do every task in Phase 1. Edit ONLY the paths CONTEXT.md lists as owned by AG1. Do not edit contracts/, pyproject.toml, the Makefile or any other agent's files. If you need one of those changed, write it in the PR description instead.
 4. Run every acceptance check listed for Phase 1 and make sure they pass (make test plus the phase checks).
-5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick ([ ] to [x]) each of your AG1-P1-* rows as you finish it, including AG1-P1-PR. Edit only your own rows. If a task will miss its due time, say so in the status file and the PR description.
+5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick the Agent cell ([ ] to [x]) of each of your AG1-P1-* rows as you finish it, including AG1-P1-PR. Once the PR is open, write its number (e.g. #5) in the PR cell of those rows in a follow-up commit on the same branch. Edit only the Agent and PR cells of your own rows; Gate and Merged belong to the merge bot. If a task will miss its due time, say so in the status file and the PR description.
 6. Push the branch and open ONE PR into main titled "[AG1] Phase 1: <one-line summary>". List the tasks done, the checks run, and any handoffs or blockers in the description.
 7. NEVER push to main. NEVER merge any PR, yours or anyone else's. The merge bot reviews and merges.
 8. If the merge bot comments that something failed, fix it on the same branch and push again.
@@ -29,7 +29,7 @@ Run Phase 2 of SPEC-mosesman831.md, and only Phase 2.
 2. Create branch ag1/phase-2 from main.
 3. Do every task in Phase 2. Edit ONLY the paths CONTEXT.md lists as owned by AG1. Do not edit contracts/, pyproject.toml, the Makefile or any other agent's files. If you need one of those changed, write it in the PR description instead.
 4. Run every acceptance check listed for Phase 2 and make sure they pass (make test plus the phase checks).
-5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick ([ ] to [x]) each of your AG1-P2-* rows as you finish it, including AG1-P2-PR. Edit only your own rows. If a task will miss its due time, say so in the status file and the PR description.
+5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick the Agent cell ([ ] to [x]) of each of your AG1-P2-* rows as you finish it, including AG1-P2-PR. Once the PR is open, write its number (e.g. #5) in the PR cell of those rows in a follow-up commit on the same branch. Edit only the Agent and PR cells of your own rows; Gate and Merged belong to the merge bot. If a task will miss its due time, say so in the status file and the PR description.
 6. Push the branch and open ONE PR into main titled "[AG1] Phase 2: <one-line summary>". List the tasks done, the checks run, and any handoffs or blockers in the description.
 7. NEVER push to main. NEVER merge any PR, yours or anyone else's. The merge bot reviews and merges.
 8. If the merge bot comments that something failed, fix it on the same branch and push again.
@@ -46,7 +46,7 @@ Run Phase 3 of SPEC-mosesman831.md, and only Phase 3.
 2. Create branch ag1/phase-3 from main.
 3. Do every task in Phase 3. Edit ONLY the paths CONTEXT.md lists as owned by AG1. Do not edit contracts/, pyproject.toml, the Makefile or any other agent's files. If you need one of those changed, write it in the PR description instead.
 4. Run every acceptance check listed for Phase 3 and make sure they pass (make test plus the phase checks).
-5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick ([ ] to [x]) each of your AG1-P3-* rows as you finish it, including AG1-P3-PR. Edit only your own rows. If a task will miss its due time, say so in the status file and the PR description.
+5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick the Agent cell ([ ] to [x]) of each of your AG1-P3-* rows as you finish it, including AG1-P3-PR. Once the PR is open, write its number (e.g. #5) in the PR cell of those rows in a follow-up commit on the same branch. Edit only the Agent and PR cells of your own rows; Gate and Merged belong to the merge bot. If a task will miss its due time, say so in the status file and the PR description.
 6. Push the branch and open ONE PR into main titled "[AG1] Phase 3: <one-line summary>". List the tasks done, the checks run, and any handoffs or blockers in the description.
 7. NEVER push to main. NEVER merge any PR, yours or anyone else's. The merge bot reviews and merges.
 8. If the merge bot comments that something failed, fix it on the same branch and push again.
@@ -63,7 +63,7 @@ Run Phase 4 of SPEC-mosesman831.md, and only Phase 4.
 2. Create branch ag1/phase-4 from main.
 3. Do every task in Phase 4. Edit ONLY the paths CONTEXT.md lists as owned by AG1. Do not edit contracts/, pyproject.toml, the Makefile or any other agent's files. If you need one of those changed, write it in the PR description instead.
 4. Run every acceptance check listed for Phase 4 and make sure they pass (make test plus the phase checks).
-5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick ([ ] to [x]) each of your AG1-P4-* rows as you finish it, including AG1-P4-PR. Edit only your own rows. If a task will miss its due time, say so in the status file and the PR description.
+5. Update status/ag1.md with what you did, what passed, and anything blocked. In CHECKLIST.md tick the Agent cell ([ ] to [x]) of each of your AG1-P4-* rows as you finish it, including AG1-P4-PR. Once the PR is open, write its number (e.g. #5) in the PR cell of those rows in a follow-up commit on the same branch. Edit only the Agent and PR cells of your own rows; Gate and Merged belong to the merge bot. If a task will miss its due time, say so in the status file and the PR description.
 6. Push the branch and open ONE PR into main titled "[AG1] Phase 4: <one-line summary>". List the tasks done, the checks run, and any handoffs or blockers in the description.
 7. NEVER push to main. NEVER merge any PR, yours or anyone else's. The merge bot reviews and merges.
 8. If the merge bot comments that something failed, fix it on the same branch and push again.
