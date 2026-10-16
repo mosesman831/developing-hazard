@@ -18,14 +18,14 @@ Developing Hazard makes an AI sit that test on real dashcam footage from the hac
 5. **Think before clicking.** When risk rises, the agent checks Cosmos Reason's verdict on "is this a real developing hazard?". Cosmos is slow (seconds per call), so we run it once per clip on a time grid and reuse the answers. Its thinking time still counts against the agent, like a driver's reaction time.
 6. **Mark it the DVSA way.** 5 to 1 points by which fifth of the window the first click lands in, 0 outside it, and 0 for the clip if the click-spam rules fire. Times are exact to the millisecond.
 7. **Leaderboard.** In Weights & Biases Weave we compare YOLO alone, YOLO plus risk, YOLO plus Cosmos, and blind human sits (including judges) on 15-20 clips. Every result sits next to a random clicker with the same number of clicks, which is the line an agent has to beat.
-8. **Explain the misses.** If time allows, an LLM writes a short note on why the agent missed a hazard, using the trace. We check it before showing it.
+8. **Explain the misses (spare half hour).** If there is a spare ~30 minutes in the afternoon, the W&B serverless LLM writes a plain-English explanation of each miss from the Weave trace. We check each one before showing it. That puts W&B's hosted model visibly in the demo for the W&B judge. It is a quick win, not core.
 
 ## Why it is interesting
 
 - Everyone in the room has either taken this test or knows someone who has. The question "can an AI pass it?" needs no explanation.
 - It is an honest evaluation of a video agent, with a real, published scoring rule, not a vibe check.
 - The headline result is counter-intuitive: a raw object detector that "sees everything" scores 0, because seeing everything means clicking at everything. We say on stage that this one is a straw man on purpose, and the fair comparison is on the leaderboard.
-- It uses the whole sponsor stack: VAST index and database, NVIDIA Cosmos and YOLO on CoreWeave, W&B inference and Weave, built in Cursor.
+- It uses the sponsor stack end to end (see Sponsor fit below).
 
 ## The demo (3 minutes)
 
@@ -34,6 +34,14 @@ Developing Hazard makes an AI sit that test on real dashcam footage from the hac
 ## The day
 
 Code freezes at 15:30. We record the required demo video from 15:30 to 16:00 and submit before the 16:30 deadline.
+
+## Sponsor fit
+
+- **VAST:** search the video index; write results back.
+- **NVIDIA:** Cosmos Embed to find clips, Cosmos Reason to confirm hazards, YOLO for detections.
+- **W&B:** Weave traces every click, the leaderboard lives there, and the serverless LLM writes miss explanations if we have half an hour spare.
+- **Cursor:** we build in it over Remote-SSH.
+- **CoreWeave:** the GPUs underneath everything; every team uses them, so this is not a demo feature.
 
 ## What it is not
 
