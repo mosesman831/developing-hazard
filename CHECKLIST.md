@@ -125,17 +125,17 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 
 | ID | Task | Owner | Due | Agent | PR | Gate | Merged |
 |---|---|---|---|---|---|---|---|
-| AG1-P4-1 | After AG2 freezes `testset_v2` at 14:00: final runs of every agent on test via EvaluationLogger; rebuild... | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-2 | Sanity checks in 14.5 with AG2. | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-3 | Stretch, in order, only if time: miss explanations via W&B LLM (`dh/explain.py`, 7.12, cached in... | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-4 | Pick the demo clip and the miss for the demo (24.3). | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-5 | Numbers final by 15:30. No code after 15:30. | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-PR | Phase 4 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-1 | Sanity checks (14.5) with AG1's numbers; write results in your status file. | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-2 | Write `runs` and `hazard_scores` tables to VastDB from AG1's run files (10.10), keyed by segment `source`. | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-3 | `scripts/secret_scan.sh` over the full history; result in the PR body. Decide repo access for reviewers with... | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-4 | `SUBMISSION.md`: one-liner, 150-word description, stack, honest limitations line (25). | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-PR | Phase 4 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
+| AG1-P4-1 | After AG2 freezes `testset_v2` at 14:00: final runs of every agent on test via EvaluationLogger; rebuild... | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG1-P4-2 | Sanity checks in 14.5 with AG2. | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG1-P4-3 | Stretch, in order, only if time: miss explanations via W&B LLM (`dh/explain.py`, 7.12, cached in... | AG1 (mosesman831) | 15:30 | [x] | #30 | [x] | [x] |
+| AG1-P4-4 | Pick the demo clip and the miss for the demo (24.3). | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG1-P4-5 | Numbers final by 15:30. No code after 15:30. | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG1-P4-PR | Phase 4 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG2-P4-1 | Sanity checks (14.5) with AG1's numbers; write results in your status file. | AG2 (Riyu-D1) | 15:30 | [ ] | #29 | [ ] | [ ] |
+| AG2-P4-2 | Write `runs` and `hazard_scores` tables to VastDB from AG1's run files (10.10), keyed by segment `source`. | AG2 (Riyu-D1) | 15:30 | [ ] | #29 | [ ] | [ ] |
+| AG2-P4-3 | `scripts/secret_scan.sh` over the full history; result in the PR body. Decide repo access for reviewers with... | AG2 (Riyu-D1) | 15:30 | [x] | #29 | [x] | [x] |
+| AG2-P4-4 | `SUBMISSION.md`: one-liner, 150-word description, stack, honest limitations line (25). | AG2 (Riyu-D1) | 15:30 | [x] | #29 | [x] | [x] |
+| AG2-P4-PR | Phase 4 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 15:30 | [x] | #29 | [x] | [x] |
 | AG3-P4-1 | Final snapshot from AG1's final runs (by 15:15) and final deploy. | AG3 (fmdplt33) | 15:30 | [ ] | #32 | [ ] | [ ] |
 | AG3-P4-2 | Polish dark UI for the projector (1920x1080, score numbers >= 48 px). | AG3 (fmdplt33) | 15:30 | [x] | #32 | [ ] | [ ] |
 | AG3-P4-3 | Stretch only if time: miss panel (16.8) via `POST /api/explain/...` serving precomputed explanations; SSE... | AG3 (fmdplt33) | 15:30 | [x] | #32 | [ ] | [ ] |

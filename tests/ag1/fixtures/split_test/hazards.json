@@ -1,0 +1,9 @@
+[
+  {
+    "hazard_id": "fix_h1",
+    "clip_id": "fixclip",
+    "window_start": 10.0,
+    "window_end": 14.0,
+    "description": "fixture hazard"
+  }
+]
