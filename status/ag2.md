@@ -21,14 +21,12 @@ Numbers below are copied from `status/ag1.md` on this branch and from `data/runs
 
 | Check | Result (dev) | Source |
 |---|---|---|
-| `yolo_risk` (tuned) | score 6, max 15, pct 0.4, `lift_vs_chance` 0.3202000000000003, `pattern_rate` 0.0 | `status/ag1.md`; `data/runs/r_yolo_risk_20261017T122620/run.json` totals |
-| `yolo_naive` | score 0, max 15, pct 0.0, `pattern_rate` 0.8333333333333334 | `status/ag1.md`; `data/runs/r_yolo_naive_20261017T122551/run.json` totals |
-| `yolo_cosmos_gate` | score 0, max 15, pct 0.0; AG1 notes mean latency 0.94 s on dev | `status/ag1.md` |
-| `yolo_cosmos_async` | score 0, max 15, pct 0.0, `lift_vs_chance` -0.13 | `status/ag1.md` |
-| Gaming (`random@6` vs tuned risk) | `random@6` pct 0.284; tuned `yolo_risk` pct 0.40 on dev; random does not come close | `status/ag1.md` gaming table |
-| Verifier false alarms on dev grid | 4 of 270 points (1.5%); grid 1518 points, 23 HAZARD (1.5%), median latency 0.953 s | `status/ag1.md` Phase 3 grid |
-| Blind humans | `fmd` 4/5 (pct 0.8); `smoke` 0/5 | `status/ag1.md`; `data/leaderboard.json` rows |
-| Window proposal vs agreed MAE | **BLOCKED** | No paired agreed windows: 0 of 0 paired within tolerance (`status/ag2.md` agreement line). fmd labeller B pass not done. |
+| `yolo_risk` (tuned) | score 6, max 15, pct 0.4, `lift_vs_chance` 0.3202000000000003, `pattern_rate` 0.0. Clicks on c01 to c06: 0, 1, 3, 1, 1, 1 | `status/ag1.md` Phase 4; `data/runs/r_yolo_risk_20261017T122620/run.json` totals |
+| Gaming | `random_at_k` seed 0, 200 draws: k=1 0.07566666666666666, k=2 0.1589999999999998, k=4 0.22833333333333333, k=6 0.3310000000000002, k=8 0.4613333333333334. `matched_chance` on the run's own counts, seed 0, 1000 draws: 0.07979999999999972 | `status/ag1.md` Phase 4 sanity |
+| `yolo_naive` | `pattern_rate` 0.8333333333333334. Five of six clips flagged | `status/ag1.md`; `data/runs/r_yolo_naive_20261017T122551/run.json` totals |
+| Verifier false alarms | Dev grid c01 to c06: 315 points, 270 with no labelled hazard within 3 s, 4 of those `is_hazard` true. Share 4/270 = 0.014814814814814815. Not yes on everything | `status/ag1.md` Phase 4 sanity |
+| Blind humans | `fmd` session `h_92a39e35` on c01, `clip_score` 4. `smoke` session `h_74f0758e` is a test entry, not a human | `status/ag1.md`; `data/humans.jsonl` |
+| Window proposal vs agreed MAE | **BLOCKED** | No agreed windows. All 21 hazards have only labeller riyu. fmd pass parked |
 
 ## VastDB runs and hazard_scores (AG2-P4-2)
 
@@ -45,7 +43,7 @@ That calls `write_runs_and_scores(testset_id="dev")` and inserts into `developin
 ## Secret scan (AG2-P4-3)
 
 From `/home/mosesman831/dh-ag2`: `bash scripts/secret_scan.sh`  
-Summary: `files_scanned=300`, `hits=0` (script stdout on 2026-10-17).
+Summary after the scanner stopped matching its own pattern file: `files_scanned=302`, `hits=0`. The earlier hit was the pattern line inside `scripts/secret_scan.sh`, not a stored key.
 
 ## Blocked on the fmd pass
 
