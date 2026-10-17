@@ -169,18 +169,22 @@ def test_thin_tracks_keeps_overlay_schema_every_nth_frame(tmp_path):
     )
 
 
-def test_c30_c33_tracks_use_the_overlay_schema():
+def test_demo_and_late_clips_use_the_overlay_schema():
     root = Path(__file__).resolve().parents[2] / "data" / "tracks"
     template = json.loads(
         (root / "c02.jsonl").read_text(encoding="utf-8").splitlines()[0]
     )
     assert set(template) == {"t", "xyxy"}
-    for clip_id in ("c30", "c31", "c32", "c33"):
+    for clip_id in ("c01", "c27", "c28", "c29", "c30", "c31", "c32", "c33", "c34"):
         lines = (root / f"{clip_id}.jsonl").read_text(encoding="utf-8").splitlines()
         assert lines
         row = json.loads(lines[0])
         assert set(row) == {"t", "xyxy"}
         assert len(row["xyxy"]) == 4
+    # c01 is the demo clip, so it keeps a sample twice as often as the others.
+    assert len((root / "c01.jsonl").read_text(encoding="utf-8").splitlines()) > len(
+        (root / "c30.jsonl").read_text(encoding="utf-8").splitlines()
+    )
 
 
 def test_run_clip_keeps_three_rows_ordered_by_time_and_id():
