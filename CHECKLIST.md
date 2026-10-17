@@ -52,13 +52,13 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG2-P1-5 | `web/label.js` v0: `export function mountLabel(el, clipId, api)` rendering the blind sit then timeline... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-6 | `mk/ag2.mk`: `mine`, `build`, `freeze`. | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-PR | Phase 1 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [ ] | [ ] |
-| AG3-P1-1 | Hello-world deploy to `/app` with `/deploy-app-no-registry` (SPEC 6.4, 20 row 09:30, risk 14). Install... | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG3-P1-2 | `dh/server.py`: FastAPI, `DH_MODE` dev or demo, listens on `0.0.0.0:$PORT` (pod) or `DH_PORT` (VM),... | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG3-P1-3 | `dh/api/_stubs.py`: serves `contracts/examples/` when real modules or data are missing (scorer stub returns... | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG3-P1-4 | `web/index.html`, `app.js` (hash routes, relative URLs), `style.css` (16.1 colours, IBM Plex, no spinners),... | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG3-P1-5 | Go/no-go question 4 (20.1): does a segment play through the pod's proxy? Try the in-cluster URL... | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG3-P1-6 | `requirements-pod.txt` (fastapi, uvicorn, requests only), `deploy/k8s.yaml`, `deploy/deploy.sh` (ConfigMap,... | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG3-P1-PR | Phase 1 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 10:30 | [ ] |  | [ ] | [ ] |
+| AG3-P1-1 | Hello-world deploy to `/app` with `/deploy-app-no-registry` (SPEC 6.4, 20 row 09:30, risk 14). Install... | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
+| AG3-P1-2 | `dh/server.py`: FastAPI, `DH_MODE` dev or demo, listens on `0.0.0.0:$PORT` (pod) or `DH_PORT` (VM),... | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
+| AG3-P1-3 | `dh/api/_stubs.py`: serves `contracts/examples/` when real modules or data are missing (scorer stub returns... | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
+| AG3-P1-4 | `web/index.html`, `app.js` (hash routes, relative URLs), `style.css` (16.1 colours, IBM Plex, no spinners),... | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
+| AG3-P1-5 | Go/no-go question 4 (20.1): does a segment play through the pod's proxy? Try the in-cluster URL... | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
+| AG3-P1-6 | `requirements-pod.txt` (fastapi, uvicorn, requests only), `deploy/k8s.yaml`, `deploy/deploy.sh` (ConfigMap,... | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
+| AG3-P1-PR | Phase 1 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 10:30 | [x] |  | [ ] | [ ] |
 | M-P1 | All three Phase 1 PRs reviewed, tested and merged | Merge bot | 10:30 | - |  | - | [ ] |
 
 ## Phase 2 (due 12:30)
