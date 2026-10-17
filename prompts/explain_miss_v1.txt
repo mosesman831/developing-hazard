@@ -1,0 +1,9 @@
+An AI agent sat a hazard perception clip and scored {points}/5 on this hazard.
+Hazard: {description}, window {ws}s-{we}s.
+Agent clicks: {clicks}.
+Risk around the window: {risk_summary}.
+Cosmos verdicts: {verdicts}.
+Top tracks at window start: {tracks}.
+
+In 2 short sentences, plain English, say why the agent was late or missed it.
+Do not speculate beyond the data given.

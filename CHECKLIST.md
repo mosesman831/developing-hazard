@@ -37,14 +37,14 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 
 | ID | Task | Owner | Due | Agent | PR | Gate | Merged |
 |---|---|---|---|---|---|---|---|
-| AG1-P1-1 | `dh/config.py`: every default in SPEC 19 plus the env vars in 18.5 that you use. Stdlib only. Read env... | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-2 | `dh/models.py`: pydantic models for Candidate, Clip, ClipMeta, Det, Track, Hazard, TestSet, Run, ClipResult,... | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-3 | `dh/score.py` skeleton with the exact signature from `contracts/python_interfaces.md`, constants set, stdlib... | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-4 | Clients `dh/clients/cosmos.py`, `yolo.py`, `wandb_llm.py` (SPEC 11.4): timeouts, 2 retries with jitter,... | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-5 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 2 and 3): stored detections on 2 PIE segments (fps, are... | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-6 | `prompts/cosmos_verify_v2.txt`, `llm_decide_v1.txt`, `explain_miss_v1.txt`, `vlm_verify_v1.txt` copied from... | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-7 | `mk/ag1.mk`: targets `detect`, `grid`, `propose`, `run`, `eval` (stubs that print "not yet" are fine). | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
-| AG1-P1-PR | Phase 1 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 10:30 | [ ] |  | [ ] | [ ] |
+| AG1-P1-1 | `dh/config.py`: every default in SPEC 19 plus the env vars in 18.5 that you use. Stdlib only. Read env... | AG1 (mosesman831) | 10:30 | [x] | #6 | [ ] | [ ] |
+| AG1-P1-2 | `dh/models.py`: pydantic models for Candidate, Clip, ClipMeta, Det, Track, Hazard, TestSet, Run, ClipResult,... | AG1 (mosesman831) | 10:30 | [x] | #6 | [ ] | [ ] |
+| AG1-P1-3 | `dh/score.py` skeleton with the exact signature from `contracts/python_interfaces.md`, constants set, stdlib... | AG1 (mosesman831) | 10:30 | [x] | #6 | [ ] | [ ] |
+| AG1-P1-4 | Clients `dh/clients/cosmos.py`, `yolo.py`, `wandb_llm.py` (SPEC 11.4): timeouts, 2 retries with jitter,... | AG1 (mosesman831) | 10:30 | [x] | #6 | [ ] | [ ] |
+| AG1-P1-5 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 2 and 3): stored detections on 2 PIE segments (fps, are... | AG1 (mosesman831) | 10:30 | [ ] | #6 | [ ] | [ ] |
+| AG1-P1-6 | `prompts/cosmos_verify_v2.txt`, `llm_decide_v1.txt`, `explain_miss_v1.txt`, `vlm_verify_v1.txt` copied from... | AG1 (mosesman831) | 10:30 | [x] | #6 | [ ] | [ ] |
+| AG1-P1-7 | `mk/ag1.mk`: targets `detect`, `grid`, `propose`, `run`, `eval` (stubs that print "not yet" are fine). | AG1 (mosesman831) | 10:30 | [x] | #6 | [ ] | [ ] |
+| AG1-P1-PR | Phase 1 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 10:30 | [ ] | #6 | [ ] | [ ] |
 | AG2-P1-1 | `dh/clients/vss.py` (SPEC 11.4): login, `search`, `stream`, `detections`, re-login on 401, timeouts 30 s /... | AG2 (Riyu-D1) | 10:30 | [ ] |  | [ ] | [ ] |
 | AG2-P1-2 | `dh/clips.py`: loaders from `contracts/python_interfaces.md`, stdlib only, plus the 30 s chunk clip... | AG2 (Riyu-D1) | 10:30 | [ ] |  | [ ] | [ ] |
 | AG2-P1-3 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 1 and 4 with AG3): run the 10 queries from 7.1; open the... | AG2 (Riyu-D1) | 10:30 | [ ] |  | [ ] | [ ] |
