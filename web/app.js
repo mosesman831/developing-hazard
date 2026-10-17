@@ -157,6 +157,7 @@ function renderHome(root) {
   const header = document.createElement("header");
   header.className = "home-header";
   header.innerHTML = `
+    <p class="kicker">Instrument</p>
     <h1>Developing Hazard</h1>
     <p class="subtitle">An AI sits the hazard perception test.</p>
   `;
