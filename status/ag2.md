@@ -4,7 +4,7 @@ Only AG2 edits this file, inside its own PR.
 
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
-| 1 | Both halves on branch | ag2/phase-1 | opening | 2026-10-17 10:54 |
+| 1 | Both halves on branch | ag2/phase-1 | #4 | 2026-10-17 10:54 |
 | 2 | Not started | ag2/phase-2 | | |
 | 3 | Not started | ag2/phase-3 | | |
 | 4 | Not started | ag2/phase-4 | | |
