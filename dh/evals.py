@@ -677,18 +677,34 @@ def _latest_runs(root: Path, testset_id: str, agents: list[str] | None) -> dict[
     return latest
 
 
+def _testset_v2_clip_ids(root: Path) -> set[str]:
+    """Clip ids frozen in testset_v2. A missing file counts no clips."""
+    path = root / "testset_v2.json"
+    if not path.is_file():
+        return set()
+    payload = _read_json(path)
+    clips = payload.get("clips") if isinstance(payload, dict) else None
+    if not isinstance(clips, list):
+        return set()
+    return {clip_id for clip_id in clips if isinstance(clip_id, str)}
+
+
 def _human_rows(root: Path) -> tuple[list[dict], int]:
     path = root / "humans.jsonl"
     if not path.is_file():
         return [], 0
+    test_clips = _testset_v2_clip_ids(root)
     sessions: list[dict] = []
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
             continue
         item = json.loads(line)
-        if isinstance(item, dict) and item.get("blind") is True:
-            sessions.append(item)
+        if not isinstance(item, dict) or item.get("blind") is not True:
+            continue
+        if item.get("clip_id") not in test_clips:
+            continue
+        sessions.append(item)
     if not sessions:
         return [], 0
 
@@ -756,7 +772,8 @@ def build_leaderboard(
     Agent rows come from data/runs/*/run.json with this testset_id, latest
     run per agent. ci90 is a clip bootstrap. lift_vs_chance comes from the
     run totals when present, otherwise 0. Blind humans are added only when
-    humans.jsonl exists. A missing file adds no human rows.
+    humans.jsonl exists and the session clip is in testset_v2.json. A missing
+    file adds no human rows.
     """
     root = Path(data_dir) if data_dir is not None else Path(dh_config.DATA_DIR)
     latest = _latest_runs(root, testset_id, agents)
