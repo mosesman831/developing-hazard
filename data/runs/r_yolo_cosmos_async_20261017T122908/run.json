@@ -1,0 +1,30 @@
+{
+  "run_id": "r_yolo_cosmos_async_20261017T122908",
+  "agent": "yolo_cosmos_async",
+  "agent_config": {
+    "split": "dev"
+  },
+  "testset_id": "dev",
+  "testset_sha256": "unfrozen",
+  "scorer_version": "score_v1",
+  "pattern_version": "PATTERN_V1",
+  "latency_mode": "measured",
+  "git_sha": "12b80e8",
+  "mode": "fast",
+  "started_at": "2026-10-17T12:29:08+01:00",
+  "weave_url": "https://wandb.ai/vastdata/team-36/r/call/01a1499f-8129-7d6b-95d6-7b63cee224df",
+  "totals": {
+    "score": 0,
+    "max": 15,
+    "pct": 0.0,
+    "hit_rate": 0.0,
+    "mean_points_when_hit": 0.0,
+    "pattern_rate": 0.0,
+    "clicks_per_clip": 2.1666666666666665,
+    "false_clicks": 13,
+    "median_reaction_s": null,
+    "median_lead_s": null,
+    "mean_latency_s": 0.9514986974614797,
+    "lift_vs_chance": -0.1279999999999988
+  }
+}

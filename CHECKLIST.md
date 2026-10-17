@@ -99,13 +99,13 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 
 | ID | Task | Owner | Due | Agent | PR | Gate | Merged |
 |---|---|---|---|---|---|---|---|
-| AG1-P3-1 | Verdict grid finished for every dev and candidate test clip (`data/grid/cosmos_verify_v2/<clip>.jsonl`), 2 in... | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-2 | `dh/agents/yolo_cosmos.py`: `yolo_cosmos_gate` then `yolo_cosmos_async` (7.10.3, 7.10.4, 12.3). Latency sweep. | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-3 | `vlm_wb` (7.10.5) only if Cosmos is slow or says HAZARD to everything (risk 6). | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-4 | `dh/evals.py`: Weave EvaluationLogger (section 15), bootstrap, paired difference, matched chance (App E),... | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-5 | `dh/windows.py` (7.7, App D) writing `data/proposals/<clip_id>.json`. AG2's labels API reveals it only after... | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-6 | Threshold tuning on dev only (12.6). Nothing tuned on test. | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-PR | Phase 3 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
+| AG1-P3-1 | Verdict grid finished for every dev and candidate test clip (`data/grid/cosmos_verify_v2/<clip>.jsonl`), 2 in... | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
+| AG1-P3-2 | `dh/agents/yolo_cosmos.py`: `yolo_cosmos_gate` then `yolo_cosmos_async` (7.10.3, 7.10.4, 12.3). Latency sweep. | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
+| AG1-P3-3 | `vlm_wb` (7.10.5) only if Cosmos is slow or says HAZARD to everything (risk 6). | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
+| AG1-P3-4 | `dh/evals.py`: Weave EvaluationLogger (section 15), bootstrap, paired difference, matched chance (App E),... | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
+| AG1-P3-5 | `dh/windows.py` (7.7, App D) writing `data/proposals/<clip_id>.json`. AG2's labels API reveals it only after... | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
+| AG1-P3-6 | Threshold tuning on dev only (12.6). Nothing tuned on test. | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
+| AG1-P3-PR | Phase 3 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 14:00 | [x] |  | [ ] | [ ] |
 | AG2-P3-1 | Mine more; get blind sits from Moses and fmd; label 8-10 more (13.7, 13.8 mix). | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG2-P3-2 | `GET /api/clips/{clip_id}/proposal` serving AG1's `data/proposals/` after both labellers saved. | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [x] | [x] |
 | AG2-P3-3 | Agreement stats (13.5) into your status file. | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [x] | [x] |

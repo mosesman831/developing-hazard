@@ -5,15 +5,66 @@ Only AG1 edits this file, inside its own PR.
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
 | 1 | Merged | ag1/phase-1 | #6 | 2026-10-17 11:05 |
-| 2 | PR open | ag1/phase-2 | #9 | 2026-10-17 11:47 |
-| 3 | Not started | ag1/phase-3 | | |
+| 2 | Merged | ag1/phase-2 | #9 | 2026-10-17 11:47 |
+| 3 | PR open | ag1/phase-3 | | 2026-10-17 12:42 |
 | 4 | Not started | ag1/phase-4 | | |
 
 ## Now
 
-Doing: Phase 2 PR is open. Waiting for the merge bot.
-Next: do not start Phase 3.
-Blocked: blind human sits (AG1-P2-8). The 11:00-11:15 BST window has passed and this session has no AG3 sit screen. No blind clicks exist, so `PATTERN_V1` was not retuned.
+Doing: Phase 3 PR.
+Next: stop. Do not start Phase 4.
+Blocked: no blind human file (`data/humans.jsonl` is absent) and only labeller `riyu` has windows, so label sensitivity has no second labeller. `vlm_wb` was not built: Cosmos is not slow and it does not call HAZARD on everything.
+
+## Phase 3
+
+Verdict grids, Cosmos agents, dev-only tuning, and `data/leaderboard.json`. Test clips were not used for tuning or for the leaderboard scores. `testset_v2` is not frozen. AG3 Phase 2 is not merged; this phase started because AG1 Phase 2 and AG2 Phase 2 are on `main` and the dev clips are there.
+
+`COSMOS3_REASON_URL` is unset in the team config. The grid used the GPU skill's Cosmos port 8001 and model `nvidia/cosmos3-nano-reasoner`. Two calls in flight. Prompt `cosmos_verify_v2`.
+
+### Grid
+
+`data/grid/cosmos_verify_v2/` has one jsonl for each of the 26 clips (c01-c26). 1518 points, 0 errors, 23 HAZARD (1.5%), median latency 0.953 s. Dev false-alarm points (no labelled window within 3 s): 4 of 270 (1.5%). That is not "HAZARD to everything", and the median is under 3 s, so `vlm_wb` stays unbuilt.
+
+c01 stored detections failed for all six segments (cache is empty). Its grid is the 10 dev checkpoint times, from streamed frames.
+
+### Dev scores (not the test set)
+
+Tuning grid on dev only (`theta_up` in {0.5, 0.6, 0.7}, EMA weight in {0.4, 0.7}). Best: `theta_up` 0.7, `ema_weight` 0.7. The published default 0.6 / 0.4 scored 0 on the same six dev clips. `yolo_cosmos_gate` `theta_trig` in {0.35, 0.45, 0.55} all scored 0 on dev, so the published 0.45 stays. No test clip was loaded.
+
+| Agent | Score | pct | ci90 | lift vs chance | Notes |
+|---|---|---|---|---|---|
+| `yolo_risk` (tuned) | 6/15 | 0.40 | 0.00 to 0.60 | 0.32 | `pattern_rate` 0. Run `r_yolo_risk_20261017T122620` |
+| `yolo_naive` | 0/15 | 0 | 0 to 0 | 0 | `pattern_rate` 0.83 |
+| `yolo_cosmos_gate` | 0/15 | 0 | 0 to 0 | 0 | measured mean latency 0.94 s |
+| `yolo_cosmos_async` | 0/15 | 0 | 0 to 0 | -0.13 | clicks outside the windows |
+
+Latency sweep for the gate on dev (`zero`, `fixed:0.5`, `fixed:1`, `fixed:2`, `fixed:4`) stayed at score 0. Latency did not move the score; the verdicts did not land scoring clicks. Those runs use `testset_id` `dev-latency` so they do not replace the headline rows.
+
+Label sensitivity for the tuned `yolo_risk` run: `riyu` pct 0.40. `fmd` has no windows, so that labeller was skipped.
+
+### Weave
+
+Project `vastdata/team-36`. Headline traces:
+
+- `yolo_risk`: https://wandb.ai/vastdata/team-36/r/call/01a1499c-e4b1-765a-8306-26fbd6469e24
+- `yolo_cosmos_gate`: https://wandb.ai/vastdata/team-36/r/call/01a1499f-733b-7758-af66-49f6c2042b1c
+- `yolo_cosmos_async`: https://wandb.ai/vastdata/team-36/r/call/01a1499f-8129-7d6b-95d6-7b63cee224df
+- `yolo_naive`: https://wandb.ai/vastdata/team-36/r/call/01a1499c-7947-7f59-9210-6433c2d3caba
+
+## Handoffs
+
+- `data/leaderboard.json` (`testset_id` `dev`, max 15). Every agent row has `ci90` and `lift_vs_chance`. No human rows: `data/humans.jsonl` is missing.
+- `data/grid/cosmos_verify_v2/`, `data/tracks/`, `data/proposals/`, `data/det/`.
+- `dh.evals.start_run` now runs `yolo_cosmos_gate` and `yolo_cosmos_async` and looks up the grid. `build_leaderboard` writes the file above.
+
+## Checks
+
+- `.venv/bin/python -m pytest -q tests/ag1`: 113 passed. `make` is still not installed, so `make test` was the pytest recipe.
+
+## Log (newest first)
+
+- 2026-10-17 12:42 BST: Phase 3 grids and dev leaderboard. Tuning did not touch test clips.
+- 2026-10-17 11:47 BST: Phase 2 PR #9 opened.
 
 ## Phase 2
 
