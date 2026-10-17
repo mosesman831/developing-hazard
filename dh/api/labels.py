@@ -13,12 +13,65 @@ import re
 from datetime import datetime, timezone
 from typing import Literal
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import JSONResponse
+from fastapi.routing import APIRoute
 from pydantic import BaseModel
 
 from dh.clips import data_dir, load_clips, load_hazards, write_json
 
-router = APIRouter()
+
+def _has_lone_surrogate(value: object) -> bool:
+    """True when a parsed JSON value contains a lone UTF-16 surrogate."""
+    if isinstance(value, str):
+        return any(0xD800 <= ord(char) <= 0xDFFF for char in value)
+    if isinstance(value, dict):
+        return any(
+            _has_lone_surrogate(key) or _has_lone_surrogate(item)
+            for key, item in value.items()
+        )
+    if isinstance(value, list):
+        return any(_has_lone_surrogate(item) for item in value)
+    return False
+
+
+def _json_has_lone_surrogate(raw: bytes) -> bool:
+    try:
+        payload = json.loads(raw)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return False
+    return _has_lone_surrogate(payload)
+
+
+def _rejects_surrogate_input(method: str, path: str) -> bool:
+    if method != "POST":
+        return False
+    if path.rstrip("/") == "/api/hazards":
+        return True
+    parts = [part for part in path.split("/") if part]
+    return len(parts) == 4 and parts[:2] == ["api", "clips"] and parts[3] == "status"
+
+
+class _SurrogateGuardRoute(APIRoute):
+    """Reject lone surrogates before the response encoder sees them."""
+
+    def get_route_handler(self):
+        original = super().get_route_handler()
+
+        async def handler(request: Request):
+            if _rejects_surrogate_input(request.method, request.url.path):
+                raw = await request.body()
+                if raw and _json_has_lone_surrogate(raw):
+                    return JSONResponse(
+                        status_code=422,
+                        content={"detail": "input contains a lone UTF-16 surrogate"},
+                    )
+            return await original(request)
+
+        return handler
+
+
+router = APIRouter(route_class=_SurrogateGuardRoute)
 
 HazardType = Literal[
     "pedestrian_crossing",

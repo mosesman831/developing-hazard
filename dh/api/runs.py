@@ -12,7 +12,6 @@ from dh.api._stubs import (
     current_mode,
     example_clip_results,
     example_run,
-    example_score,
 )
 from dh.clips import data_dir
 
@@ -104,6 +103,9 @@ def get_run(run_id: str) -> dict:
 def post_run(body: dict) -> dict:
     if current_mode() != "dev":
         raise HTTPException(status_code=404, detail="not found")
+    agent = body.get("agent")
+    if not isinstance(agent, str) or not agent:
+        raise HTTPException(status_code=422, detail="agent is required")
     config = body.get("config")
     if not isinstance(config, dict):
         config = {}
@@ -112,7 +114,7 @@ def post_run(body: dict) -> dict:
     except ImportError:
         return {"run_id": example_run()["run_id"], "stub": True}
     run_id = start_run(
-        body.get("agent"),
+        agent,
         config,
         body.get("testset_id"),
         body.get("latency_mode"),
@@ -122,7 +124,11 @@ def post_run(body: dict) -> dict:
 
 def _approved_explanation(run_id: str, hazard_id: str) -> dict | None:
     path = data_dir() / "cache" / "explain" / run_id / f"{hazard_id}.json"
-    if not path.is_file():
+    try:
+        found = path.is_file()
+    except OSError:
+        return None
+    if not found:
         return None
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -180,14 +186,12 @@ def stream_run(run_id: str, clip: str | None = None) -> StreamingResponse:
             continue
         chosen = row
         break
+    if clip and chosen is None:
+        raise HTTPException(status_code=404, detail="clip not in run")
     if chosen is None and rows and not clip:
         chosen = rows[0]
     score = chosen.get("clip_score") if chosen else None
-    if score is None:
-        try:
-            score = example_score()["clip_score"]
-        except (OSError, IndexError, KeyError):
-            score = None
+
     def events():
         yield from _stream_events(chosen, score)
 

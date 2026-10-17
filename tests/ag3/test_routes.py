@@ -254,6 +254,16 @@ def test_post_run_calls_start_run(api, monkeypatch):
     assert called["args"] == ("yolo_risk", {"split": "dev"}, "testset_v0", "zero")
 
 
+def test_post_run_missing_agent_is_422(api, monkeypatch):
+    def start_run(*_args, **_kwargs):
+        raise AssertionError("start_run must not run without an agent")
+
+    monkeypatch.setattr("dh.evals.start_run", start_run)
+    response = api.post("/api/runs", json={})
+    assert response.status_code == 422
+    assert response.json()["detail"] == "agent is required"
+
+
 def test_leaderboard_adds_blind_humans(api, tmp_path):
     (tmp_path / "humans.jsonl").write_text(
         json.dumps(
@@ -467,6 +477,52 @@ def test_explain_and_stream(api, tmp_path, monkeypatch):
     assert stream.status_code == 200
     assert "event: score" in stream.text
     assert "clip_score" in stream.text
+
+
+def test_stream_missing_clip_is_404_and_recorded_score_is_kept(api, tmp_path):
+    run_dir = tmp_path / "runs" / "r_score"
+    run_dir.mkdir(parents=True)
+    (run_dir / "run.json").write_text(
+        json.dumps({"run_id": "r_score"}),
+        encoding="utf-8",
+    )
+    rows = [
+        {
+            "run_id": "r_score",
+            "clip_id": "c07",
+            "clip_score": 5,
+            "clicks": [],
+            "calls": [],
+            "risk_curve": [],
+        },
+        {
+            "run_id": "r_score",
+            "clip_id": "c08",
+            "clicks": [],
+            "calls": [],
+            "risk_curve": [],
+        },
+    ]
+    (run_dir / "clips.jsonl").write_text(
+        "".join(json.dumps(row) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+    missing = api.get("/api/runs/r_score/stream", params={"clip": "zz"})
+    assert missing.status_code == 404
+    assert missing.json()["detail"] == "clip not in run"
+    found = api.get("/api/runs/r_score/stream", params={"clip": "c07"})
+    assert found.status_code == 200
+    assert '"clip_score": 5' in found.text
+    unscored = api.get("/api/runs/r_score/stream", params={"clip": "c08"})
+    assert unscored.status_code == 200
+    assert '"clip_score": null' in unscored.text
+
+
+def test_explain_overlong_run_id_is_404(api, tmp_path):
+    (tmp_path / "cache" / "explain").mkdir(parents=True)
+    response = api.post("/api/explain/" + ("r" * 300) + "/c07_h1")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "explanation not approved"
 
 
 def test_real_clip_without_tracks_is_empty(monkeypatch, tmp_path):
