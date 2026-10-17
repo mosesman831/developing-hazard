@@ -103,9 +103,11 @@ const q = new URLSearchParams(location.search);
 const usePreset = q.get('src') === 'preset';
 const $ = (id) => document.getElementById(id);
 let presetId = presetById(q.get('preset')).id;
-let clipId = usePreset ? presetId : (q.get('clip') || 'c07');
+const clipParam = q.get('clip');
+let clipId = usePreset ? presetId : (clipParam || 'c07');
 let src = usePreset ? 'preset' : (q.get('src') || 'app');
-let runId = usePreset ? 'preview' : q.get('run');
+// Bare /spatial/ opens c07 on the demo run. An explicit ?run= always wins.
+let runId = usePreset ? 'preview' : (q.get('run') || (!clipParam ? 'r_yolo_risk_20261017T145932' : null));
 const fileApi = devApi();
 const api = {
   async getJSON(rel) {
