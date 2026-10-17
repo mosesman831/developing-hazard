@@ -98,13 +98,16 @@ import { createPlayer, segmentUrls } from './video.js';
 import { devApi } from './data.js';
 import { PRESETS, presetById, loadPreset, paintPreview } from './presets.js';
 const q = new URLSearchParams(location.search);
-// no params: a hazard preset. ?clip=<id> still opens fixture or dev data.
-const usePreset = !q.get('clip');
+// Served under a path prefix (…/spatial/ or …/app/spatial/). App mode is the default.
+// Presets and fixtures only when src says so. No ?clip opens c07 against the API.
+const usePreset = q.get('src') === 'preset';
 const $ = (id) => document.getElementById(id);
 let presetId = presetById(q.get('preset')).id;
-let clipId = usePreset ? presetId : q.get('clip');
-let src = usePreset ? 'preset' : (q.get('src') || 'dev');
-let runId = usePreset ? 'preview' : q.get('run');
+const clipParam = q.get('clip');
+let clipId = usePreset ? presetId : (clipParam || 'c07');
+let src = usePreset ? 'preset' : (q.get('src') || 'app');
+// Bare /spatial/ opens c07 on the demo run. An explicit ?run= always wins.
+let runId = usePreset ? 'preview' : (q.get('run') || (!clipParam ? 'r_yolo_risk_20261017T145932' : null));
 const fileApi = devApi();
 const api = {
   async getJSON(rel) {
@@ -115,7 +118,10 @@ const api = {
       const part = body[kind];
       return kind === 'tracks' || kind === 'det' || kind === 'run' ? { rows: part } : part;
     }
-    return fileApi.getJSON(rel);
+    // Relative to this page, not site-root absolute: /spatial/index.html and /app/spatial/ both reach <prefix>/api.
+    let path = String(rel);
+    if (path.startsWith('api/')) path = `../${path}`;
+    return fileApi.getJSON(path);
   },
 };
 function title() {
@@ -129,7 +135,7 @@ function title() {
   document.body.classList.add('banner');
 }
 title();
-let panel, dur = 30, t = 0, sim = null;
+let panel, dur = 30, t = 0, sim = null, segmented = false;
 const PLAY = 'M3.5 1.5v11l9-5.5z', PAUSE = 'M2.5 1.5h3v11h-3zM8.5 1.5h3v11h-3z';
 const icon = (p) => { $('icon').firstElementChild.setAttribute('d', p ? PAUSE : PLAY); $('play').classList.toggle('on', p); $('play').setAttribute('aria-pressed', String(p)); };
 function setDur(next) {
@@ -160,8 +166,17 @@ function drawPreview() {
 }
 const player = createPlayer($('vbox'), {
   onTime: setT,
-  onError: (m) => { $('err').textContent = m; },
-  onMeta: (m) => { $('err').textContent = ''; $('cam').classList.add('loaded'); setDur(player.video().duration); panel && panel.setFrame(m); setT(player.time); },
+  onError: () => {
+    $('err').textContent = 'Video unavailable';
+    $('emptyb').textContent = 'Video unavailable';
+    $('blurb').textContent = 'The timeline still plays without it.';
+  },
+  onMeta: (m) => {
+    $('err').textContent = ''; $('cam').classList.add('loaded');
+    // each streamed segment is ~5s; the scrubber stays on the clip, not the file
+    if (!segmented) setDur(player.video().duration);
+    panel && panel.setFrame(m); setT(player.time);
+  },
 });
 // without a video, Play advances a wall-clock timeline so the panels can still be reviewed
 function toggle() {
@@ -209,6 +224,14 @@ function mount() {
       const vid = player.video().duration;
       setDur(Number.isFinite(vid) && vid > 1 ? vid : clipDur);
       marks(m); riskChart(m); setT(Math.min(t, dur));
+      // App mode asks the backend for the clip's segments immediately. ../video stays beside /spatial under a path prefix.
+      if (src === 'app' && !q.get('video') && !player.loaded && m.clip && (m.clip.segments || []).length) {
+        segmented = (m.clip.segments || []).length > 1;
+        player.loadSegments(segmentUrls(m.clip, q.get('vbase') || '../video?source='));
+        const playing = player.video().play();
+        if (playing && typeof playing.catch === 'function') playing.catch(() => {});
+        icon(true);
+      }
     },
   });
 }
@@ -246,7 +269,7 @@ if (usePreset) {
 mount();
 if (usePreset) loadRecording(presetById(presetId));
 $('file').onchange = (e) => { const f = e.target.files[0]; if (f) { player.loadFile(f); $('err').textContent = ''; } };
-$('seg').onclick = () => { const m = panel.model; if (!m || !m.clip) { $('err').textContent = 'No clip metadata, so no segment URLs to stream.'; return; } player.loadSegments(segmentUrls(m.clip, q.get('vbase') || 'video?source=')); };
+$('seg').onclick = () => { const m = panel.model; if (!m || !m.clip) { $('err').textContent = 'No clip metadata, so no segment URLs to stream.'; return; } segmented = (m.clip.segments || []).length > 1; player.loadSegments(segmentUrls(m.clip, q.get('vbase') || '../video?source=')); };
 $('play').onclick = toggle;
 // ?video=<relative url> plays one local file without the picker (dev only)
 if (q.get('video')) player.loadSegments([{ url: q.get('video'), start: 0, end: Infinity }]);
