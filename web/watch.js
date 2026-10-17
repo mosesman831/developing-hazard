@@ -67,7 +67,9 @@ export function mountWatch(el, runId, clipId, api = {}) {
   weave.className = "weave-link";
   const feed = document.createElement("ol");
   feed.className = "event-feed";
-  side.append(scoreEl, meterWrap, weave, feed);
+  const misses = document.createElement("section");
+  misses.className = "miss-panel";
+  side.append(scoreEl, meterWrap, weave, feed, misses);
 
   const state = {
     player: null,
@@ -113,6 +115,7 @@ export function mountWatch(el, runId, clipId, api = {}) {
     state.run = run;
     state.row = run ? (run.clips || []).find((item) => item.clip_id === clipId) || null : null;
     scoreEl.textContent = state.row ? String(state.row.clip_score) : "-";
+    paintMiss(misses, state.row, nextRunId);
     paintFeed(feed, state.row, run);
     paintWeave(weave, state.row, run);
     const existing = stage.querySelector(".timeline-bar");
@@ -280,6 +283,42 @@ async function loadTracks(clipId) {
     return Array.isArray(body) ? body : [];
   } catch {
     return [];
+  }
+}
+
+function paintMiss(host, row, runId) {
+  host.replaceChildren();
+  const heading = document.createElement("h2");
+  heading.textContent = "Misses";
+  host.append(heading);
+  const points = row && row.hazard_points && typeof row.hazard_points === "object" ? row.hazard_points : {};
+  const ids = Object.keys(points).filter((id) => points[id] === 0 || points[id] === 1);
+  if (!ids.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No hazard scored 0 or 1 on this clip.";
+    host.append(empty);
+    return;
+  }
+  for (const id of ids) {
+    const item = document.createElement("p");
+    item.textContent = `${id}: ${points[id]} points.`;
+    host.append(item);
+    fetch(`api/explain/${encodeURIComponent(runId)}/${encodeURIComponent(id)}`, { method: "POST" })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body) => {
+        const line = document.createElement("p");
+        line.className = "muted";
+        line.textContent =
+          body && typeof body.explanation === "string" ? body.explanation : "Not approved for display.";
+        item.append(line);
+      })
+      .catch(() => {
+        const line = document.createElement("p");
+        line.className = "muted";
+        line.textContent = "Not approved for display.";
+        item.append(line);
+      });
   }
 }
 

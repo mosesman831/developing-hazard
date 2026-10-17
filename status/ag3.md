@@ -7,13 +7,25 @@ Only AG3 edits this file, inside its own PR.
 | 1 | Merged | ag3/phase-1 | #11 | 2026-10-17 11:59 |
 | 2 | Merged | ag3/phase-2 | #15 | 2026-10-17 12:15 |
 | 3 | Merged | ag3/phase-3 | #17 | 2026-10-17 12:27 |
-| 4 | Not started | ag3/phase-4 | | |
+| 4 | In progress | ag3/phase-4 | | 2026-10-17 14:20 |
 
 ## Now
 
-Doing: waiting on the merge bot for #27.
-Next: wait for the merge bot. Do not start Phase 4.
-Blocked: `make snapshot` wrote 927524 bytes. That is over 900 KB (921600). `dh/snapshot.py` was not changed. `pod_budget_kb` on main is 1024, so the snapshot command exited 0.
+Doing: Phase 4 polish on `ag3/phase-4`.
+Next: open the PR. Final test runs stay blocked on the parked `testset_v2` freeze.
+Blocked: AG3-P4-1 final snapshot and deploy. AG3-P4-4 smoke against the deployed URL needs the lab VM. AG3-P4-PR stays unticked until that deploy passes.
+
+## Phase 4
+
+Interim snapshot from this branch, after #20 merged: `python -m dh.snapshot` wrote **930,673 bytes** (budget 1,048,576). Not a final snapshot. `data/humans.jsonl` no longer has the smoke test row. The remaining sit is fmd on c01, clip_score 4. `GET /api/leaderboard` drops a row named smoke, including the smoke human still stored in `data/leaderboard.json` until AG1 rebuilds that file.
+
+Projector check at 1920x1080, headless Chrome against `http://127.0.0.1:8765` (the Cursor browser could not open the VM address). Home, leaderboard, and watch rendered. No page JavaScript errors. Score class is 64px IBM Plex Mono. Leaderboard shows interval bars, the dashed line at 58.7% titled "DVSA car pass rate (44/75), for reference only", and a separate per-clip human table (fmd, c01, 4). Watch `r_yolo_risk_20261017T122620` / c01 shows the miss panel for `c01_h1` (0 points) and "Not approved for display." `#/label/c01` still loads the label module.
+
+`POST /api/explain/{run_id}/{hazard_id}` returns 404 unless `data/cache/explain/<run_id>/<hazard_id>.json` has `"approved": true`. The snapshot copies only those approved files. `GET /api/runs/{run_id}/stream` emits `risk`, `click`, `cosmos_call`, and `score` from the recorded clip, and does not invent fields. Ingress annotations: `proxy-buffering: "off"` and `proxy-read-timeout: "3600"`.
+
+`python -m pytest -q tests` after rebase onto main: 176 passed. Snapshot rebuilt: 930,673 bytes.
+
+Deploy command for the lab VM, after this branch is on main: `bash deploy/deploy.sh`. Then `DH_BASE=http://video-lab-team-36.cosmos.vastdata.com/app bash scripts/smoke.sh`.
 
 ## Handoffs ready for others
 

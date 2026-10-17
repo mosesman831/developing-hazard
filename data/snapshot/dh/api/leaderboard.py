@@ -49,6 +49,8 @@ def _blind_humans() -> list[dict]:
         score = row.get("clip_score")
         clip_id = row.get("clip_id")
         name = row.get("name")
+        if name == "smoke":
+            continue
         if (
             isinstance(clip_id, str)
             and isinstance(name, str)
@@ -146,10 +148,17 @@ def _full_set_humans(humans: list[dict], clip_ids: list[str]) -> list[dict]:
 def get_leaderboard(latency: str | None = None) -> dict:
     payload = _load_board()
     humans = _blind_humans()
-    if latency is None and not humans:
-        return payload
-
     body = dict(payload)
+    rows = body.get("rows")
+    if isinstance(rows, list):
+        body["rows"] = [
+            row
+            for row in rows
+            if not (isinstance(row, dict) and row.get("name") == "smoke")
+        ]
+    if latency is None and not humans:
+        return body
+
     if humans:
         clip_rows = recorded_clip_rows()
         body["per_clip"] = _per_clip(humans, clip_rows)
