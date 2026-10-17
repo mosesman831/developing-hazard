@@ -107,10 +107,10 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG1-P3-6 | Threshold tuning on dev only (12.6). Nothing tuned on test. | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG1-P3-PR | Phase 3 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG2-P3-1 | Mine more; get blind sits from Moses and fmd; label 8-10 more (13.7, 13.8 mix). | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-2 | `GET /api/clips/{clip_id}/proposal` serving AG1's `data/proposals/` after both labellers saved. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-3 | Agreement stats (13.5) into your status file. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
+| AG2-P3-2 | `GET /api/clips/{clip_id}/proposal` serving AG1's `data/proposals/` after both labellers saved. | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [ ] | [ ] |
+| AG2-P3-3 | Agreement stats (13.5) into your status file. | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [ ] | [ ] |
 | AG2-P3-4 | Freeze `testset_v2` at 14:00 (10.6): commit file and hash. After this, no label or window changes. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-5 | `dh/store.py` and `dh/clients/vastdb.py` (7.13, 10.10): schema `developing_hazard`, table `hazards`. Never... | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
+| AG2-P3-5 | `dh/store.py` and `dh/clients/vastdb.py` (7.13, 10.10): schema `developing_hazard`, table `hazards`. Never... | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [ ] | [ ] |
 | AG2-P3-6 | `dh/clients/embed.py` "more like this" (7.1 should) only if mining is short. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG2-P3-PR | Phase 3 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG3-P3-1 | Judge mode in the pod: name, role, "seen before?", side-by-side agent clicks after the clip. | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
