@@ -31,34 +31,62 @@ def _load_board() -> dict:
         }
 
 
+def _usable_blind_row(row: object) -> dict | None:
+    """Keep a sit only when the client sent blind=true and the row is scored."""
+    if not isinstance(row, dict) or row.get("blind") is not True:
+        return None
+    score = row.get("clip_score")
+    clip_id = row.get("clip_id")
+    name = row.get("name")
+    if name == "smoke":
+        return None
+    if (
+        isinstance(clip_id, str)
+        and isinstance(name, str)
+        and isinstance(score, int)
+        and not isinstance(score, bool)
+    ):
+        return row
+    return None
+
+
 def _blind_humans() -> list[dict]:
     path = data_dir() / "humans.jsonl"
-    if not path.is_file():
-        return []
-    sessions: list[dict] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        stripped = line.strip()
-        if not stripped:
+    chosen: list[dict] = []
+    seen: set[str] = set()
+    if path.is_file():
+        for line in path.read_text(encoding="utf-8").splitlines():
+            stripped = line.strip()
+            if not stripped:
+                continue
+            try:
+                row = json.loads(stripped)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(row, dict):
+                session_id = row.get("session_id")
+                if isinstance(session_id, str):
+                    seen.add(session_id)
+            accepted = _usable_blind_row(row)
+            if accepted is not None:
+                chosen.append(accepted)
+
+    # Demo sits stay in memory. Dev also appends the same session to the file.
+    from dh.api.human import sessions as live_sessions
+
+    for row in live_sessions:
+        if not isinstance(row, dict):
             continue
-        try:
-            row = json.loads(stripped)
-        except json.JSONDecodeError:
+        session_id = row.get("session_id")
+        if isinstance(session_id, str) and session_id in seen:
             continue
-        if not isinstance(row, dict) or row.get("blind") is not True:
+        accepted = _usable_blind_row(row)
+        if accepted is None:
             continue
-        score = row.get("clip_score")
-        clip_id = row.get("clip_id")
-        name = row.get("name")
-        if name == "smoke":
-            continue
-        if (
-            isinstance(clip_id, str)
-            and isinstance(name, str)
-            and isinstance(score, int)
-            and not isinstance(score, bool)
-        ):
-            sessions.append(row)
-    return sessions
+        chosen.append(accepted)
+        if isinstance(session_id, str):
+            seen.add(session_id)
+    return chosen
 
 
 def _test_clip_ids() -> list[str]:
