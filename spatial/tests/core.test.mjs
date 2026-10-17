@@ -269,3 +269,22 @@ test('loadModel auto-calibrates a known fixed camera that has no calibration fil
   assert.equal(m.status.camera.state, 'partial'); assert.match(m.status.camera.detail, /auto-calibrated/);
   assert.ok(m.trackRows.some((r) => Array.isArray(r.g)));
 });
+
+test('app mode reads the routes exactly as the merged AG3 server returns them', async () => {
+  // shapes from dh/api/clips.py and dh/api/runs.py on main (2026-10-17): clip + embedded hazards, tracks as a plain array, run detail with clips[]
+  const routes = {
+    'api/clips/c07': { clip_id: 'c07', camera_id: 'pie_cam-3', segments: [{ source: 's3://x/seg1.mp4', start_s: 0, end_s: 5 }], duration_s: 30,
+      hazards: [{ hazard_id: 'c07_h1', clip_id: 'c07', type: 'pedestrian_crossing', window_start: 20.5, window_end: 24, track_id: null, agreed: false, description: 'A pedestrian crosses' }] },
+    'api/clips/c07/tracks': [{ track_id: 4, t: 16.8, cls: 'person', xyxy: [812, 402, 861, 540], risk: 0.61, in_corridor: false, heading_in: true }],
+    'api/runs/r1': { run_id: 'r1', agent: 'yolo_risk', clips: [{ run_id: 'r1', clip_id: 'c07', clicks: [{ t: 21.0, reason: 'risk 0.61' }], risk_curve: [[0, 0]] }] },
+  };
+  const m = await loadModel({ clipId: 'c07', runId: 'r1', mode: 'app', api: { getJSON: async (u) => routes[u] ?? null } });
+  assert.equal(m.status.clip.state, 'ok'); assert.equal(m.status.hazards.state, 'ok'); assert.equal(m.hazards.length, 1);
+  assert.equal(m.status.camera.state, 'ok'); assert.equal(m.camera.kind, 'dashcam');
+  assert.equal(m.status.tracks.state, 'ok'); assert.equal(m.tracks.get(4)[0]._line, 1);
+  assert.equal(m.status.run.state, 'ok'); assert.equal(m.clicks.length, 1);
+  for (const k of ['det', 'grid']) assert.equal(m.status[k].state, 'missing', `${k} has no route on main yet`);
+  assert.equal(m.status.explain.state, 'optional');
+  const ev = (await import('../core.js')).buildEvents({ tracks: m.tracks, hazards: m.hazards, clicks: m.clicks });
+  assert.deepEqual(ev.map((e) => e.prov).sort(), ['AGENT', 'HUMAN', 'MEASURED', 'MODEL']);
+});

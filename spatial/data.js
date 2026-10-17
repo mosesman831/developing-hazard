@@ -152,7 +152,7 @@ export async function loadModel({ clipId, api, frame = { w: 1920, h: 1080 }, mod
     const list = Array.isArray(ex) ? ex : Array.isArray(ex.rows) ? ex.rows : [ex];
     explain = list.map((x) => ({ t: num(x.t) ? x.t : null, text: x.text || x.explanation || x.summary })).filter((x) => typeof x.text === 'string');
     set('explain', explain.length ? 'ok' : 'empty', `${explain.length} cached explanations`);
-  } else set('explain', 'missing', 'Optional. Generated text appears only if data/cache/explain/ has it.');
+  } else set('explain', 'optional', 'optional: generated text appears only if data/cache/explain/ has it.');
 
   return { clip, camera, hazards: hv, tracks: byId, trackRows: tracks, dets, norm, dnorm, clicks, riskCurve, grid, explain, status, frame, paths: P, mode };
 }

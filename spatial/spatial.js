@@ -22,7 +22,7 @@ const FILL = { red: 'rgba(248,81,73,.30)', amber: 'rgba(227,160,8,.24)', grey: '
 const RING = { green: '#3fb950', amber: '#e3a008' };
 const HZC = { red: '#f85149', amber: '#e3a008', grey: '#8b929c' };
 const PROV = { MEASURED: '#6ea0ff', MODEL: '#bc8cff', HUMAN: '#3fb950', AGENT: '#e3a008', GENERATED: '#98a0aa' };
-const STATE_CLS = { ok: 'ok', partial: 'warn', empty: 'warn', missing: 'bad', malformed: 'bad' };
+const STATE_CLS = { ok: 'ok', partial: 'warn', empty: 'warn', missing: 'bad', malformed: 'bad', optional: 'opt' };
 // 16 px stroke icons, one per tool, so every control reads at a glance
 const ICON = {
   camera: 'M2 5h8v6H2zM10 7.2l4-2v5.6l-4-2', persp: 'M8 2l5 3v6l-5 3-5-3V5zM3 5l5 3 5-3M8 8v6', top: 'M2.5 2.5h11v11h-11zM8 6.5v3M6.5 8h3',
@@ -400,7 +400,7 @@ export function mountSpatial(el, ctx) {
     model = m;
     events = C.buildEvents({ tracks: m.tracks, hazards: m.hazards, clicks: m.clicks, grid: m.grid, explain: m.explain });
     sources.replaceChildren(...Object.entries(m.status).map(([k, v]) => h('span', { class: 'sp-in ' + STATE_CLS[v.state], role: 'listitem', title: `${k}: ${v.detail}` }, h('i'), k)));
-    const notes = Object.entries(m.status).filter(([, v]) => v.state !== 'ok' && !(v.state === 'missing' && v.detail.startsWith('Optional')));
+    const notes = Object.entries(m.status).filter(([, v]) => v.state !== 'ok' && v.state !== 'optional');
     note.hidden = !notes.length;
     note.replaceChildren(...notes.slice(0, 3).map(([k, v]) => h('div', {}, h('b', { text: k }), v.detail)), ...(notes.length > 3 ? [h('div', { class: 'sp-muted', text: `+${notes.length - 3} more: hover the input chips above` })] : []));
     for (const k in memo) memo[k] = null;
