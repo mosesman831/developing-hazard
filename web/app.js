@@ -165,16 +165,21 @@ function renderHome(root) {
   const grid = document.createElement("div");
   grid.className = "card-grid";
   grid.innerHTML = `
-    <a class="card" href="#/sit/c07"><span class="card-title">Sit a clip yourself</span></a>
-    <a class="card" href="#/watch/r_EXAMPLE_yolo_risk/c07"><span class="card-title">Watch the AI</span></a>
+    <a class="card" data-link="sit" href="#/sit/c01"><span class="card-title">Sit a clip yourself</span></a>
+    <a class="card" data-link="watch" href="#/watch/run/c01"><span class="card-title">Watch the AI</span></a>
     <a class="card" href="#/leaderboard"><span class="card-title">Leaderboard</span></a>
   `;
   shell.append(grid);
 
   const devLink = document.createElement("p");
   devLink.className = "dev-link";
-  devLink.innerHTML = '<a href="#/label/c07">Label a clip</a> (dev)';
+  devLink.innerHTML = '<a data-link="label" href="#/label/c01">Label a clip</a> (dev)';
   shell.append(devLink);
+
+  const listPanel = document.createElement("section");
+  listPanel.className = "panel";
+  listPanel.innerHTML = `<h2>Clips</h2><p class="muted" data-clip-list>Loading the clip list.</p>`;
+  shell.append(listPanel);
 
   const panel = document.createElement("section");
   panel.className = "panel";
@@ -229,6 +234,64 @@ function renderHome(root) {
     setStat("hazards", hazardCount != null ? String(hazardCount) : "-");
     setStat("frozen", frozenAt != null ? String(frozenAt) : "-");
     setStat("hash", hash != null ? shortHash(hash) : "-");
+
+    let runId = "";
+    let runClip = "";
+    try {
+      const res = await fetch("api/runs");
+      if (res.ok) {
+        const runs = await res.json();
+        if (Array.isArray(runs) && runs[0] && runs[0].run_id) {
+          runId = runs[0].run_id;
+          const detail = await fetch(`api/runs/${encodeURIComponent(runId)}`);
+          if (detail.ok) {
+            const body = await detail.json();
+            runClip = body.clips && body.clips[0] ? body.clips[0].clip_id : "";
+          }
+        }
+      }
+    } catch {
+      /* leave the placeholder links */
+    }
+
+    const firstClip = Array.isArray(clipList) && clipList[0] ? clipList[0].clip_id : "";
+    const sitId = firstClip || "c01";
+    const watchClip = runClip || sitId;
+    const sitLink = shell.querySelector('[data-link="sit"]');
+    const watchLink = shell.querySelector('[data-link="watch"]');
+    const labelLink = shell.querySelector('[data-link="label"]');
+    if (sitLink) {
+      sitLink.href = `#/sit/${encodeURIComponent(sitId)}`;
+    }
+    if (labelLink) {
+      labelLink.href = `#/label/${encodeURIComponent(sitId)}`;
+    }
+    if (watchLink && runId) {
+      watchLink.href = `#/watch/${encodeURIComponent(runId)}/${encodeURIComponent(watchClip)}`;
+    }
+
+    const listHost = listPanel.querySelector("[data-clip-list]");
+    if (!Array.isArray(clipList) || !clipList.length) {
+      if (listHost) {
+        listHost.textContent = "No clips yet.";
+      }
+      return;
+    }
+    const table = document.createElement("ul");
+    table.className = "clip-list";
+    for (const clip of clipList) {
+      const item = document.createElement("li");
+      const id = clip.clip_id;
+      item.innerHTML = `<span class="mono">${id}</span> ${clip.split || "-"} ${clip.duration_s ?? "-"}s hazards ${clip.n_hazards ?? "-"} <a href="#/sit/${encodeURIComponent(id)}">Sit</a>`;
+      if (runId) {
+        const watch = document.createElement("a");
+        watch.href = `#/watch/${encodeURIComponent(runId)}/${encodeURIComponent(id)}`;
+        watch.textContent = "Watch";
+        item.append(" ", watch);
+      }
+      table.append(item);
+    }
+    listHost.replaceWith(table);
   })();
 }
 
@@ -247,6 +310,42 @@ function renderOneLine(root, text) {
       updateHealthStrip(strip);
     }
   });
+}
+
+async function renderSit(root, clipId) {
+  root.replaceChildren();
+  const shell = document.createElement("div");
+  shell.className = "app-shell";
+  renderHealthStrip(shell);
+  const mountPoint = document.createElement("div");
+  shell.append(mountPoint);
+  root.append(shell);
+  void fetchHealth().then(() => {
+    const strip = shell.querySelector(".health-strip");
+    if (strip) {
+      updateHealthStrip(strip);
+    }
+  });
+  const mod = await import("./sit.js");
+  mod.mountSit(mountPoint, clipId, api);
+}
+
+async function renderWatch(root, runId, clipId) {
+  root.replaceChildren();
+  const shell = document.createElement("div");
+  shell.className = "app-shell";
+  renderHealthStrip(shell);
+  const mountPoint = document.createElement("div");
+  shell.append(mountPoint);
+  root.append(shell);
+  void fetchHealth().then(() => {
+    const strip = shell.querySelector(".health-strip");
+    if (strip) {
+      updateHealthStrip(strip);
+    }
+  });
+  const mod = await import("./watch.js");
+  mod.mountWatch(mountPoint, runId, clipId, api);
 }
 
 async function renderLabel(root, clipId) {
@@ -290,10 +389,10 @@ function renderRoute() {
       void renderLabel(appEl, route.clipId);
       break;
     case "sit":
-      renderOneLine(appEl, "Sit screen arrives in Phase 2.");
+      void renderSit(appEl, route.clipId);
       break;
     case "watch":
-      renderOneLine(appEl, "Watch screen arrives in Phase 2.");
+      void renderWatch(appEl, route.runId, route.clipId);
       break;
     case "leaderboard":
       renderOneLine(appEl, "Leaderboard arrives in Phase 3.");

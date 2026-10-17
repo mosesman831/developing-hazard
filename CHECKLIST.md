@@ -84,15 +84,15 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG2-P2-6 | Labelling (13): label as labeller A, dev clips first. Track blindness in `Clip.seen_by`. | AG2 (Riyu-D1) | 12:30 | [x] | #8 | [x] | [x] |
 | AG2-P2-7 | Apply arbitration; freeze `testset_v1` (MVP set) by 12:30 via `POST /api/testset/freeze`. | AG2 (Riyu-D1) | 12:30 | [ ] | #8 | [ ] | [ ] |
 | AG2-P2-PR | Phase 2 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 12:30 | [ ] | #8 | [ ] | [ ] |
-| AG3-P2-1 | `dh/api/video.py`: proxy to `/api/v1/videos/stream` via `dh.clients.vss` (AG2), Range passed through, JWT... | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-2 | `dh/api/clips.py` real: list, detail (`?blind=1` hides hazards), tracks from `data/tracks/` (AG1). | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-3 | Sit screen (16.5, `web/sit.js`): Start disabled until segments are blob URLs, Space or click registers,... | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-4 | `dh/api/human.py`: `POST /api/human` scored with `dh.score.score_clip` (AG1), sessions in memory, one `HUMAN... | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-5 | Watch screen v0 (16.6, `web/watch.js`) from run files: boxes, windows, clicks, score. | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-6 | `dh/api/runs.py`: `GET /api/runs`, `GET /api/runs/{run_id}`. | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-7 | `dh/snapshot.py` (`make snapshot`): copy what the pod needs into `data/snapshot/`, fail over 900 KB (6.4,... | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-8 | Deploy the MVP (12:30-13:00). | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG3-P2-PR | Phase 2 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 12:30 | [ ] |  | [ ] | [ ] |
+| AG3-P2-1 | `dh/api/video.py`: proxy to `/api/v1/videos/stream` via `dh.clients.vss` (AG2), Range passed through, JWT... | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-2 | `dh/api/clips.py` real: list, detail (`?blind=1` hides hazards), tracks from `data/tracks/` (AG1). | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-3 | Sit screen (16.5, `web/sit.js`): Start disabled until segments are blob URLs, Space or click registers,... | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-4 | `dh/api/human.py`: `POST /api/human` scored with `dh.score.score_clip` (AG1), sessions in memory, one `HUMAN... | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-5 | Watch screen v0 (16.6, `web/watch.js`) from run files: boxes, windows, clicks, score. | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-6 | `dh/api/runs.py`: `GET /api/runs`, `GET /api/runs/{run_id}`. | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-7 | `dh/snapshot.py` (`make snapshot`): copy what the pod needs into `data/snapshot/`, fail over 900 KB (6.4,... | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-8 | Deploy the MVP (12:30-13:00). | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
+| AG3-P2-PR | Phase 2 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 12:30 | [x] | #15 | [ ] | [ ] |
 | M-P2 | All three Phase 2 PRs reviewed, tested and merged | Merge bot | 12:30 | - |  | - | [ ] |
 
 ## Phase 3 (due 14:00)

@@ -208,6 +208,9 @@ export function mountPlayer(host, options) {
       v.currentTime = next;
       latestMediaTime = next;
     },
+    getActiveVideo() {
+      return activeVideo();
+    },
   };
 }
 
@@ -222,5 +225,8 @@ function stubPlayer() {
     pause: noop,
     togglePlay: noop,
     step: noop,
+    getActiveVideo() {
+      return null;
+    },
   };
 }

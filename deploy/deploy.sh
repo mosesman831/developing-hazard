@@ -38,9 +38,19 @@ TEAM_N="${USERNAME#team-}"
 APP_HOST="video-lab-team-${TEAM_N}.cosmos.vastdata.com"
 APP_NAME="developing-hazard"
 
+if [ -x "${ROOT}/.venv/bin/python" ]; then
+  PYTHON="${ROOT}/.venv/bin/python"
+else
+  PYTHON="python3"
+fi
+"${PYTHON}" -m dh.snapshot
+
+ARCHIVE="$(mktemp --suffix=.tar.gz)"
+tar -C "${ROOT}/data/snapshot" -czf "${ARCHIVE}" .
+trap 'rm -f "${MANIFEST:-}" "${ARCHIVE}"' EXIT
+
 kubectl -n "${NS}" create configmap "${APP_NAME}-code" \
-  --from-file=main.py=deploy/hello/main.py \
-  --from-file=requirements.txt=requirements-pod.txt \
+  --from-file=app.tar.gz="${ARCHIVE}" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 kubectl -n "${NS}" create secret generic "${APP_NAME}-vss-creds" \
@@ -50,7 +60,7 @@ kubectl -n "${NS}" create secret generic "${APP_NAME}-vss-creds" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 MANIFEST="$(mktemp)"
-trap 'rm -f "${MANIFEST}"' EXIT
+trap 'rm -f "${MANIFEST}" "${ARCHIVE}"' EXIT
 sed -e "s/NS_PLACEHOLDER/${NS}/g" -e "s/APP_HOST_PLACEHOLDER/${APP_HOST}/g" \
   deploy/k8s.yaml > "${MANIFEST}"
 kubectl apply -f "${MANIFEST}"

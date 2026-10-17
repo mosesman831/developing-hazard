@@ -12,16 +12,19 @@ from dh.clips import load_testset
 router = APIRouter()
 
 
-def _testset_id() -> str:
-    example = example_testset()
-    fallback = example.get("testset_id")
+def _testset_id() -> str | None:
     try:
         payload = load_testset()
     except (OSError, ValueError, json.JSONDecodeError):
-        return fallback
+        payload = None
     if isinstance(payload, dict) and isinstance(payload.get("testset_id"), str):
         return payload["testset_id"]
-    return fallback
+    try:
+        example = example_testset()
+    except OSError:
+        return None
+    testset_id = example.get("testset_id")
+    return testset_id if isinstance(testset_id, str) else None
 
 
 @router.get("/api/health")
