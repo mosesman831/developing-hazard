@@ -56,6 +56,7 @@ Re-checked against VSS on 17 Oct, about 12:05 BST. Counts are from this run.
 
 ## Log (newest first)
 
+- 2026-10-17 13:55 BST. The VastDB and embed clients now refuse a protected table or a media bucket before connecting, and error text redacts the keys. `pytest tests`: 170 passed, 1 warning. No live write and no live embed search.
 - 2026-10-17 13:35 BST. Phase 3 PR is #22. Agent cells ticked for the proposal route, the agreement line, and the VastDB writer. Freeze, labeller B, and arbitration stay open.
 - 2026-10-17 12:40 BST. Re-ingested five parent chunks, `chunk_count` 1, custom prompt, metadata unchanged. Each still has segments 1 to 6. Dashboard `duplicate_segment_rows` is 0 and `segment_rows` is still 3537. The progress URL returned 404 before a `completed` status; caption text had changed by then. `c01`'s chunk (`20261001_061917_set02_video_chunk_0002.mp4`) was submitted twice because the first progress record disappeared while its captions were still the old text. The other four were submitted once. `testset_v1` was not frozen.
 - 2026-10-17 12:20 BST. Phase 2-b probes and eight more set01 clips (`c27` to `c34`, test). `pytest tests/ag2`: 33 passed, 1 warning. Re-ingest not started. `testset_v1` not frozen. Hazards file not edited.
