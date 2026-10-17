@@ -1,0 +1,255 @@
+"""Label routes owned by AG2 (contracts/api_routes.md).
+
+Skeleton for Phase 1. Reads and writes the JSON files in ``DH_DATA_DIR``
+(default ``data``). Tests point that directory at a copy of
+``contracts/examples/`` so the contract files stay untouched.
+"""
+
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+from datetime import datetime, timezone
+from typing import Literal
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+
+from dh.clips import data_dir, load_clips, load_hazards, write_json
+
+router = APIRouter()
+
+HazardType = Literal[
+    "pedestrian_crossing",
+    "vehicle_pulling_out",
+    "vehicle_cut_in",
+    "lead_vehicle_braking",
+    "cyclist",
+    "vehicle_turning_across",
+    "other",
+]
+ClipStatus = Literal["no_hazard", "rejected"]
+
+_AGREE_START_S = 0.6
+_AGREE_END_S = 0.8
+_HAZARD_SUFFIX = re.compile(r"_h(\d+)$")
+_STATUS_NOTE = re.compile(r"\s*\[status:(?:no_hazard|rejected)\]$")
+_TESTSET_NAME = re.compile(r"testset_v(\d+)")
+
+
+class HazardBody(BaseModel):
+    labeller: str
+    ws: float
+    we: float
+    type: HazardType
+    description: str
+
+
+class HazardCreate(HazardBody):
+    clip_id: str
+
+
+class ClipStatusBody(BaseModel):
+    status: ClipStatus
+
+
+@router.put("/api/hazards/{hazard_id}")
+def put_hazard(hazard_id: str, body: HazardBody) -> dict:
+    """Save one labeller window onto an existing hazard."""
+    _check_window(body.ws, body.we)
+    hazards = _hazards()
+    for index, hazard in enumerate(hazards):
+        if hazard.get("hazard_id") == hazard_id:
+            hazards[index] = _apply_labeller(hazard, body)
+            write_json("hazards.json", hazards)
+            return hazards[index]
+    raise HTTPException(status_code=404, detail="hazard not found")
+
+
+@router.post("/api/hazards", status_code=201)
+def post_hazard(body: HazardCreate) -> dict:
+    """Add a hazard to a clip."""
+    _check_window(body.ws, body.we)
+    if not body.clip_id or not body.labeller:
+        raise HTTPException(status_code=422, detail="clip_id and labeller are required")
+    hazards = _hazards()
+    hazard = {
+        "hazard_id": _next_hazard_id(hazards, body.clip_id),
+        "clip_id": body.clip_id,
+        "type": body.type,
+        "window_start": body.ws,
+        "window_end": body.we,
+        "labellers": {body.labeller: [body.ws, body.we]},
+        "agreed": False,
+        "arbitrated_by": None,
+        "auto_window": None,
+        "track_id": None,
+        "segment_sources": [],
+        "description": body.description,
+    }
+    hazards.append(hazard)
+    write_json("hazards.json", hazards)
+    return hazard
+
+
+@router.post("/api/clips/{clip_id}/status")
+def post_clip_status(clip_id: str, body: ClipStatusBody) -> dict:
+    """Mark a clip ``no_hazard`` (moved to dev) or ``rejected``."""
+    try:
+        clips = load_clips()
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="clips.json is missing")
+    for clip in clips:
+        if clip.get("clip_id") != clip_id:
+            continue
+        notes = _STATUS_NOTE.sub("", clip.get("notes") or "")
+        clip["notes"] = f"{notes} [status:{body.status}]".strip()
+        if body.status == "no_hazard":
+            clip["split"] = "dev"
+        write_json("clips.json", clips)
+        return clip
+    raise HTTPException(status_code=404, detail="clip not found")
+
+
+@router.post("/api/testset/freeze")
+def post_testset_freeze() -> dict:
+    """Freeze agreed hazards into the next ``testset_vN`` file."""
+    try:
+        hazards = load_hazards()
+        clips = load_clips()
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="clips or hazards are missing") from exc
+    known_clips = {clip.get("clip_id") for clip in clips}
+    agreed = [hazard for hazard in hazards if hazard.get("agreed") is True]
+    clip_ids: list[str] = []
+    hazard_ids: list[str] = []
+    for hazard in agreed:
+        clip_id = hazard.get("clip_id")
+        hazard_id = hazard.get("hazard_id")
+        if clip_id in known_clips and clip_id not in clip_ids:
+            clip_ids.append(clip_id)
+        if isinstance(hazard_id, str):
+            hazard_ids.append(hazard_id)
+    testset_id = f"testset_v{_next_testset_version()}"
+    payload = {
+        "testset_id": testset_id,
+        "frozen_at": datetime.now(timezone.utc).isoformat(),
+        "clips": clip_ids,
+        "hazards": hazard_ids,
+        "scorer_version": "score_v1",
+        "pattern_version": "PATTERN_V1",
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    payload["sha256"] = hashlib.sha256(canonical).hexdigest()
+    write_json(f"{testset_id}.json", payload)
+    return payload
+
+
+@router.get("/api/clips/{clip_id}/proposal")
+def get_proposal(clip_id: str) -> dict:
+    """Auto window only after both labellers have saved, and only from a proposal file.
+
+    This skeleton does not invent a window. A missing file is a 404.
+    """
+    if not _both_labellers_saved(clip_id):
+        raise HTTPException(status_code=404, detail="proposal is not available")
+    path = data_dir() / "proposals" / f"{clip_id}.json"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="proposal is not available")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=404, detail="proposal is not available")
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=404, detail="proposal is not available")
+    return payload
+
+
+def _hazards() -> list[dict]:
+    try:
+        return load_hazards()
+    except FileNotFoundError:
+        return []
+
+
+def _check_window(ws: float, we: float) -> None:
+    if we <= ws:
+        raise HTTPException(status_code=422, detail="we must be after ws")
+
+
+def _apply_labeller(hazard: dict, body: HazardBody) -> dict:
+    if not body.labeller:
+        raise HTTPException(status_code=422, detail="labeller is required")
+    updated = dict(hazard)
+    labellers = dict(updated.get("labellers") or {})
+    labellers[body.labeller] = [body.ws, body.we]
+    updated["labellers"] = labellers
+    updated["type"] = body.type
+    updated["description"] = body.description
+    windows = [window for window in labellers.values() if _is_window(window)]
+    if len(windows) >= 2:
+        starts = [window[0] for window in windows]
+        ends = [window[1] for window in windows]
+        if (
+            max(starts) - min(starts) <= _AGREE_START_S
+            and max(ends) - min(ends) <= _AGREE_END_S
+        ):
+            updated["window_start"] = round(sum(starts) / len(starts), 3)
+            updated["window_end"] = round(sum(ends) / len(ends), 3)
+            updated["agreed"] = True
+        else:
+            updated["agreed"] = False
+    else:
+        updated["window_start"] = body.ws
+        updated["window_end"] = body.we
+        updated["agreed"] = False
+    if "auto_window" not in updated:
+        updated["auto_window"] = None
+    return updated
+
+
+def _is_window(window: object) -> bool:
+    return (
+        isinstance(window, list)
+        and len(window) == 2
+        and all(isinstance(value, (int, float)) for value in window)
+    )
+
+
+def _next_hazard_id(hazards: list[dict], clip_id: str) -> str:
+    numbers = []
+    prefix = f"{clip_id}_h"
+    for hazard in hazards:
+        hazard_id = hazard.get("hazard_id")
+        if not isinstance(hazard_id, str) or not hazard_id.startswith(prefix):
+            continue
+        found = _HAZARD_SUFFIX.search(hazard_id)
+        if found:
+            numbers.append(int(found.group(1)))
+    nxt = max(numbers) + 1 if numbers else 1
+    return f"{prefix}{nxt}"
+
+
+def _both_labellers_saved(clip_id: str) -> bool:
+    try:
+        hazards = load_hazards()
+    except FileNotFoundError:
+        return False
+    matched = [hazard for hazard in hazards if hazard.get("clip_id") == clip_id]
+    if not matched:
+        return False
+    for hazard in matched:
+        labellers = hazard.get("labellers")
+        if not isinstance(labellers, dict) or len(labellers) < 2:
+            return False
+    return True
+
+
+def _next_testset_version() -> int:
+    versions = []
+    for path in data_dir().glob("testset_v*.json"):
+        found = _TESTSET_NAME.fullmatch(path.stem)
+        if found:
+            versions.append(int(found.group(1)))
+    return max(versions) + 1 if versions else 0
