@@ -66,7 +66,14 @@ def _click_time(item: object) -> float:
     return value
 
 
-def _clicks(body: dict) -> list[float]:
+def _clicks(body: dict, duration_s: float | None = None) -> list[float]:
+    """Click times in seconds, or 422.
+
+    ``duration_s`` is the clip length already loaded for this request
+    (``clips.json`` via ``clip_with_hazards``). A time past that length is a
+    bad request. That includes huge finite values such as ``1e300`` and
+    ``99999``. ``0 <= click <= duration_s`` stays valid.
+    """
     raw = body.get("clicks", [])
     if raw is None:
         return []
@@ -74,7 +81,15 @@ def _clicks(body: dict) -> list[float]:
         raise HTTPException(status_code=422, detail="clicks must be a list of numbers")
     if len(raw) > _MAX_CLICKS:
         raise HTTPException(status_code=422, detail=f"at most {_MAX_CLICKS} clicks")
-    return [_click_time(item) for item in raw]
+    clicks = [_click_time(item) for item in raw]
+    if duration_s is not None:
+        for value in clicks:
+            if value > duration_s:
+                raise HTTPException(
+                    status_code=422,
+                    detail="clicks must not exceed the clip duration",
+                )
+    return clicks
 
 
 @router.post("/api/human")
@@ -101,7 +116,9 @@ def post_human(body: dict) -> dict:
     clip_id = body.get("clip_id")
     if not isinstance(clip_id, str) or not clip_id:
         raise HTTPException(status_code=422, detail="clip_id is required")
-    clicks = _clicks(body)
+    # Shape, count, and finiteness before the catalogue lookup, so those 422s
+    # stay ahead of a missing clip.
+    _clicks(body)
 
     found = clip_with_hazards(clip_id)
     if found is None:
@@ -109,9 +126,11 @@ def post_human(body: dict) -> dict:
     clip, hazards = found
     if "duration_s" not in clip:
         raise HTTPException(status_code=422, detail="clip has no duration")
+    duration_s = float(clip["duration_s"])
+    clicks = _clicks(body, duration_s)
 
     # Blind sits still score against labels. The server holds the windows.
-    scored = _score(clicks, [dict(hazard) for hazard in hazards], float(clip["duration_s"]))
+    scored = _score(clicks, [dict(hazard) for hazard in hazards], duration_s)
     session = {
         "session_id": f"h_{uuid.uuid4().hex[:8]}",
         "name": name,

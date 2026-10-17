@@ -305,6 +305,65 @@ def test_human_rejects_too_many_clicks(api, tmp_path):
     assert not (tmp_path / "humans.jsonl").exists()
 
 
+def test_human_rejects_click_past_duration(api, tmp_path):
+    from dh.api.clips import clip_with_hazards
+
+    found = clip_with_hazards("c07")
+    assert found is not None
+    duration = float(found[0]["duration_s"])
+    past = api.post(
+        "/api/human",
+        json={
+            "name": "Judge 1",
+            "role": "judge",
+            "blind": True,
+            "clip_id": "c07",
+            "clicks": [duration + 0.001],
+        },
+    )
+    assert past.status_code == 422
+    assert past.json()["detail"] == "clicks must not exceed the clip duration"
+
+    far = api.post(
+        "/api/human",
+        json={
+            "name": "Judge 1",
+            "role": "judge",
+            "blind": True,
+            "clip_id": "c07",
+            "clicks": [99999],
+        },
+    )
+    assert far.status_code == 422
+    assert far.json()["detail"] == "clicks must not exceed the clip duration"
+
+    huge = _post_human_clicks(api, "[1e300]")
+    assert huge.status_code == 422
+    assert huge.json()["detail"] == "clicks must not exceed the clip duration"
+    assert not (tmp_path / "humans.jsonl").exists()
+
+
+def test_human_accepts_click_at_duration(api):
+    from dh.api.clips import clip_with_hazards
+
+    found = clip_with_hazards("c07")
+    assert found is not None
+    duration = float(found[0]["duration_s"])
+    response = api.post(
+        "/api/human",
+        json={
+            "name": "Judge 1",
+            "role": "judge",
+            "blind": True,
+            "clip_id": "c07",
+            "clicks": [duration],
+        },
+    )
+    assert response.status_code == 200
+    score = response.json()["clip_score"]
+    assert isinstance(score, int) and not isinstance(score, bool)
+
+
 def test_human_valid_request_score_is_int(api):
     clicks = [16.9]
     response = api.post(
