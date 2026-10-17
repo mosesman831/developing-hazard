@@ -1,0 +1,38 @@
+[
+  {
+    "clip_id": "fixclip",
+    "candidate_id": "fixture",
+    "camera_id": "fixture-cam",
+    "original_video": "fixture.mp4",
+    "segments": [
+      {
+        "source": "fixture-segment.mp4",
+        "start_s": 0.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": []
+  },
+  {
+    "clip_id": "fixdev",
+    "candidate_id": "fixture-dev",
+    "camera_id": "fixture-cam",
+    "original_video": "fixture-dev.mp4",
+    "segments": [
+      {
+        "source": "fixture-dev-segment.mp4",
+        "start_s": 0.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "dev",
+    "seen_by": []
+  }
+]

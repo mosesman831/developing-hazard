@@ -1,0 +1,6 @@
+{
+  "testset_id": "testset_v2",
+  "clips": ["fixclip"],
+  "hazards": ["fix_h1"],
+  "sha256": "526c8a52aa519e94aac246711a789684ca63c5fa33e67767dc840e176ffd74b4"
+}

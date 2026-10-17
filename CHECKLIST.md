@@ -127,7 +127,7 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 |---|---|---|---|---|---|---|---|
 | AG1-P4-1 | After AG2 freezes `testset_v2` at 14:00: final runs of every agent on test via EvaluationLogger; rebuild... | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
 | AG1-P4-2 | Sanity checks in 14.5 with AG2. | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-3 | Stretch, in order, only if time: miss explanations via W&B LLM (`dh/explain.py`, 7.12, cached in... | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
+| AG1-P4-3 | Stretch, in order, only if time: miss explanations via W&B LLM (`dh/explain.py`, 7.12, cached in... | AG1 (mosesman831) | 15:30 | [x] |  | [ ] | [ ] |
 | AG1-P4-4 | Pick the demo clip and the miss for the demo (24.3). | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
 | AG1-P4-5 | Numbers final by 15:30. No code after 15:30. | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
 | AG1-P4-PR | Phase 4 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |

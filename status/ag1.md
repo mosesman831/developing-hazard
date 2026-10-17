@@ -6,29 +6,75 @@ Only AG1 edits this file, inside its own PR.
 |---|---|---|---|---|
 | 1 | Merged | ag1/phase-1 | #6 | 2026-10-17 11:05 |
 | 2 | Merged | ag1/phase-2 | #9 | 2026-10-17 11:47 |
-| 3 | PR open | ag1/phase-3 | #20 | 2026-10-17 13:30 |
-| 4 | Not started | ag1/phase-4 | | |
+| 3 | Merged | ag1/phase-3 | #20 | 2026-10-17 13:30 |
+| 4 | In progress | ag1/phase-4 | | 2026-10-17 14:12 |
 
 ## Now
 
-Doing: Phase 3 PR, snapshot under the 900 KB pod budget.
-Next: stop. Do not start Phase 4.
-Blocked: only labeller `riyu` has windows, so label sensitivity has no second labeller. `vlm_wb` was not built: Cosmos is not slow and it does not call HAZARD on everything.
+Doing: Phase 4 sanity checks on dev, a fixture path for `testset_v2`, and miss explanations.
+Next: stop. Do not open a PR. Numbers are not final until AG2 freezes `testset_v2`.
+Blocked: `testset_v2` is not in the tree. AG1-P4-1, AG1-P4-2, AG1-P4-4, AG1-P4-5, and AG1-P4-PR stay unticked. AG2 must copy the dev sanity numbers below into `status/ag2.md`. This file does not edit that one.
 
 ### Pod snapshot
 
-`make` is not installed here. The `make snapshot` target is `python -m dh.snapshot`, and that reported **921,143 bytes** (budget 921,600). All 10,811 track rows stay (5 fps, top 3 boxes). All 28 run files stay. The leaderboard is rebuilt for `dev` and includes the blind human rows from `data/humans.jsonl`: `fmd` 4/5 (pct 0.8) and `smoke` 0/5.
+`pod_budget_kb` in `dh/config.py` is 1024. `dh.snapshot.budget_bytes()` is 1024 times 1024, which is 1,048,576 bytes. `build_snapshot(Path('/tmp/dh-ag1-snap'))` printed 927524. That is under the budget. `/tmp` output was not committed. `dh/snapshot.py` was not edited.
 
-Track files keep `t` and `xyxy` only, which is what the watch screen draws. Box coordinates are integers. A whole-second `t` is stored as an integer. Runs and `data/leaderboard.json` are minified. Scores in the run files are unchanged.
+The earlier write-up on this file recorded 921,143 bytes when the budget was 921,600. Track files still keep `t` and `xyxy` only. Tracks stay 5 fps, top 3. They were not thinned.
 
-| Piece | Bytes |
+## Phase 4
+
+`data/testset_v2.json` does not exist. No test leaderboard was written. `data/leaderboard.json` was left as the dev board. The real test clips were not scored.
+
+`python -m dh.evals --split test` uses `testset_v2` only when that file is in the data directory. A fixture under `tests/ag1/fixtures/split_test/` proves the command and `build_leaderboard("testset_v2")` on a temp directory. The fixture sha256 is of those fixture files only. It is not a hash of the real test set.
+
+### Sanity checks (dev)
+
+AG2 must record these same numbers in `status/ag2.md`. AG1 did not edit that file. AG1-P4-2 is not ticked.
+
+(a) Gaming check. Run `r_yolo_risk_20261017T122620` (`testset_id` `dev`). `run.json` totals: score 6, max 15, pct 0.4. Click counts in `clips.jsonl`, in clip order c01 to c06: 0, 1, 3, 1, 1, 1.
+
+`dh.baselines.random_at_k`, seed 0, `random_draws_per_k` 200 from `dh/config.py`. Clips are the six dev clips in `data/clips.json` with windows from `data/hazards.json` (c02, c04, and c06 have no hazard).
+
+| k | random@k pct |
 |---|---|
-| `data/tracks/` | 391,397 |
-| `data/runs/` | 282,627 |
-| `data/leaderboard.json` | 1,542 |
-| Code, web, and the other JSON | 245,577 |
-| Snapshot | 921,143 |
-| Budget | 921,600 |
+| 1 | 0.07566666666666666 |
+| 2 | 0.1589999999999998 |
+| 4 | 0.22833333333333333 |
+| 6 | 0.3310000000000002 |
+| 8 | 0.4613333333333334 |
+
+`random_at_k(3)` on the same clips is 0.1916666666666666. The run's own per-clip counts are not one k. `matched_chance` on those counts, seed 0, `random_draws_matched` 1000, is 0.07979999999999972. The run pct minus that figure is 0.3202000000000003, which is the `lift_vs_chance` stored on the run.
+
+random@6 is under this run's pct. random@8 is over it. A random clicker with this run's own click counts does not come close to the run.
+
+(b) `yolo_naive` dev run `r_yolo_naive_20261017T122551`. `run.json` totals `pattern_rate` is 0.8333333333333334. In that run's `clips.jsonl`, c01 is not flagged and the other five clips are.
+
+(c) Verifier false alarms. Dev grid `data/grid/cosmos_verify_v2` for c01 to c06: 315 points, 0 errors. A point has no labelled hazard within 3 s when its `t` is more than 3 s outside every window on that clip in `data/hazards.json` (a clip with no window counts every point). 270 points are in that set. 4 of them have stored `is_hazard` true. The share is 4/270, which is 0.014814814814814815. That is not yes on everything. The gate is not useless. `data/hazards.json` was not edited.
+
+(d) Blind humans, `data/humans.jsonl` read only. `fmd` session `h_92a39e35` is one sit on c01 with `clip_score` 4. The `smoke` row `h_74f0758e` is a test entry, not a human. `data/humans.jsonl` was not edited.
+
+(e) Window proposal against a human-agreed window: blocked. All 21 hazards in `data/hazards.json` have only labeller `riyu`. None have two labellers, so there is no agreed window. MAE was not computed.
+
+### Miss explanations
+
+`dh/explain.py` writes `data/cache/explain/<run_id>/<hazard_id>.json` with `approved` false. Only Moses sets `approved` true. The text is the model reply. `llm_wb` and the I-24 test were not started.
+
+One cache file: `data/cache/explain/r_yolo_risk_20261017T122620/c01_h1.json`. That hazard is the only 0 or 1 on the dev `yolo_risk` run. The call used the first id from `list_models`, `deepseek-ai/DeepSeek-V4-Flash-0731`. `approved` is false.
+
+### Demo clip proposal
+
+Not confirmed. AG1-P4-4 stays unticked.
+
+Demo clip: c03. Every agent has a dev run that includes it.
+
+- `r_yolo_risk_20261017T122620`: c03 clip score 3. Clicks at 0.8, 6.4, and 18.6. Hazard `c03_h1` points 3. The window in `data/hazards.json` is 5.0 s to 8.5 s.
+- `r_yolo_naive_20261017T122551`: c03 has 50 clicks, the pattern flag is set, clip score 0.
+- `r_yolo_cosmos_gate_20261017T122905` (`testset_id` `dev`): c03 has no clicks, clip score 0.
+- `r_yolo_cosmos_async_20261017T122908`: c03 has 3 clicks, clip score 0.
+
+Miss to show: c01 on those same four runs. Every one has clip score 0. On the `yolo_risk` run, `c01_h1` points are 0 and there are no clicks. The window is 20.0 s to 24.0 s. The cached explanation is not approved, so it stays off the screen.
+
+Judge clip: c33. `data/clips.json` has split `test` and `seen_by` `riyu` only. `data/hazards.json` has two windows there, `c33_h1` and `c33_h2`. No file under `data/runs/` includes c33. It is not a scored sit yet. The old run `r_yolo_risk_20261017T113337` is `testset_v0` on the example clip, not a sit of this test footage.
 
 ## Phase 3
 
@@ -78,6 +124,7 @@ Project `vastdata/team-36`. Headline traces:
 
 ## Log (newest first)
 
+- 2026-10-17 14:12 BST: Phase 4 dev sanity checks, fixture path for `--split test`, and one unapproved miss explanation. `testset_v2` still absent. No PR.
 - 2026-10-17 12:45 BST: PR #20 opened. https://github.com/mosesman831/developing-hazard/pull/20
 - 2026-10-17 12:42 BST: Phase 3 grids and dev leaderboard. Tuning did not touch test clips.
 - 2026-10-17 11:47 BST: Phase 2 PR #9 opened.

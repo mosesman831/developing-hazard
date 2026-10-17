@@ -900,13 +900,36 @@ def _parse_args(argv: list[str]) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
+def cli_testset_id(split: str, data_dir: str | Path | None = None) -> str:
+    """Test-set id for `python -m dh.evals --split`.
+
+    When split is test and data_dir holds testset_v2.json, that file is the
+    set. Otherwise the id is the split name. A missing file makes start_run
+    keep clips with that split. The example testset_v0 is not selected, so a
+    fixture is not replaced by clip c07.
+    """
+    root = Path(data_dir) if data_dir is not None else Path(dh_config.DATA_DIR)
+    if split == "test" and (root / "testset_v2.json").is_file():
+        return "testset_v2"
+    return split
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parse_args(argv if argv is not None else sys.argv[1:])
     if not args.agent:
         print("usage: python -m dh.evals --agent <name> [--split dev]", file=sys.stderr)
         return 2
+    root = Path(dh_config.DATA_DIR)
+    testset_id = cli_testset_id(args.split, root)
     run_config = {"split": args.split}
-    print(start_run(args.agent, run_config, latency_mode="zero"))
+    print(
+        start_run(
+            args.agent,
+            run_config,
+            testset_id=testset_id,
+            latency_mode="zero",
+        )
+    )
     return 0
 
 
