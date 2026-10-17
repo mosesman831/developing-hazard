@@ -158,16 +158,17 @@ const f2 = (v) => (typeof v === 'number' ? v.toFixed(2) : '-');
 const fs = (v) => (v == null ? '-' : f2(v) + ' s');
 const nm = (r) => `${r.cls}#${r.track_id}`;
 // tracks: Map track_id -> rows sorted by t. Each event carries provenance + the fields that fired.
-export function buildEvents({ tracks = new Map(), hazards = [], clicks = [], grid = [], explain = [] } = {}) {
-  const ev = [];
+// egoPath false (a fixed camera): skip in_corridor / heading_in events, which describe a dashcam's own path
+export function buildEvents({ tracks = new Map(), hazards = [], clicks = [], grid = [], explain = [], extra = [], egoPath = true } = {}) {
+  const ev = [...extra];                                   // e.g. proximity measurements from a fixed camera
   for (const [id, rows] of tracks) {
     rows.forEach((r, i) => {
       const prev = i > 0 && r.t - rows[i - 1].t <= T.streakGap ? rows[i - 1] : null;
       const src = { file: 'tracks', line: r._line };
-      if (r.in_corridor && !(prev && prev.in_corridor))
+      if (egoPath && r.in_corridor && !(prev && prev.in_corridor))
         ev.push({ t: r.t, prov: 'MEASURED', track_id: id, src, title: `${nm(r)} entered the projected path at ${f2(r.t)} s`,
           why: 'in_corridor=true (box bottom-centre inside the assumed-straight path, SPEC 7.6)' });
-      if (r.heading_in && !(prev && prev.heading_in))
+      if (egoPath && r.heading_in && !(prev && prev.heading_in))
         ev.push({ t: r.t, prov: 'MEASURED', track_id: id, src, title: `${nm(r)} heading toward the path at ${f2(r.t)} s`,
           why: `heading_in=true; vx=${f2(r.vx)}; t_lat=${fs(r.t_lat)}` });
       if (r.risk >= T.riskRed && !(prev && prev.risk >= T.riskRed))

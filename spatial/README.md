@@ -12,7 +12,7 @@ spatial/index.html?clip=c07&src=examples       # contracts/examples (placeholder
 spatial/index.html?clip=c99&src=fixtures       # synthetic, red banner
 spatial/index.html?clip=c07&src=dev&run=<id>   # real data/ files
 ```
-Add `&video=<url>` to play one local file without the picker. Add `&debug=1` to see source file + line for hovered boxes, markers and events. Play a local mp4 with the file picker, or "Load segments" (`video?source=`, override with `&vbase=`). With no video, the slider drives time.
+With no parameters the dev page opens the house-camera fixture. Add `&video=<url>` to play one local file without the picker. Add `&debug=1` to see source file + line for hovered boxes, markers and events. Play a local mp4 with the file picker, or "Load segments" (`video?source=`, override with `&vbase=`). With no video, the slider drives time.
 
 ## Inputs (all optional except the clip; missing ones are named in the Inputs strip)
 `clips.json`, `tracks/<id>.jsonl`, `det/<id>.jsonl` (only source of box confidence), `hazards.json`, `runs/<run>/clips.jsonl`, `grid/cosmos_verify_v2/<id>.jsonl` (not in `contracts/`, parsed defensively), `cache/explain/<id>.json` (optional). Confidence = best-IoU (>= 0.5) detection at the same `t`; otherwise "?" (amber). `xyxy` is auto-detected as pixels or 0-1.
@@ -20,8 +20,23 @@ Add `&video=<url>` to play one local file without the picker. Add `&debug=1` to 
 ## What it shows
 Ring = perception confidence (green solid / amber dashed). Fill = hazard assessment (grey / amber / red from pipeline `risk`, human window, Cosmos A.1 rule). Grey hatch = not visible to camera; nothing there is ever red. Bearing = linear in x over `ASSUMED_HFOV_DEG` (157); range = 3 ordinal bands from box-bottom y vs an assumed horizon (0.55). Arrows are observed motion over the past 1 s, not forecasts. All thresholds live in `THRESHOLDS` in `core.js`.
 
-## Stationary cameras (fixed mode)
-If the footage comes from a fixed camera rather than a dashcam, give the camera a calibration file. The panel then places objects on a flat ground plane in approximate metres, and renders the street around them.
+## Wall-mounted cameras (the default)
+The camera is assumed to be **fixed on a wall, a house or a pole, looking at a public road**. The dashcam model (ego car, 157° wedge, projected path) is used only for a camera known to move with a car: PIE's `pie_cam-3`, or a calibration or clip that says `"kind": "dashcam"`.
+
+**Where the camera pose comes from**, best first. The inputs strip names which one was used:
+1. A calibration file, `data/cameras/<camera_id>.json` (below).
+2. Auto-calibration from the people in the footage (`autoCalibrate`).
+3. An assumed house camera (`WALL_DEFAULT`: 4 m up, 20° down, 100° lens), labelled "assumed, rough".
+
+**Lens distortion:** the pose takes an optional `k1` (a one-parameter radial division model; negative values model barrel distortion). Wide security lenses need it. The house fixture uses -0.22, and the camera view bends straight edges the same way the video does.
+
+**What a wall camera can measure:** there is no ego car, so the log replaces the pipeline's ego-path events (`in_corridor`, `heading_in`) with `proximityEvents`. Each one is a MEASURED event when a person or cyclist comes within 2 m of a vehicle moving faster than 1 m/s. It uses the calibrated ground positions, typical vehicle sizes and the vehicle's observed heading, and records the closest gap.
+
+**For AG1 and Moses:** the pipeline's risk features (corridor, TTC) and the Cosmos A.1 prompt ("would a careful driver of *this car*…") both assume an ego car. For wall cameras they need a different hazard definition, such as "person close to a moving vehicle". Until then, the fill colour still shows the pipeline's risk as given.
+
+**Real data:** the 26 clips on main (`data/clips.json`, all `pie_cam-3`) are PIE drives filmed from a moving car, so they correctly open in dashcam mode. Wall-camera footage, such as `neighborhood_cam-1` in the challenge corpus, needs clips mined by AG2.
+
+With a calibration, the panel places objects on a flat ground plane in approximate metres and renders the street around them.
 
 `data/cameras/<camera_id>.json` (app route proposal: `api/cameras/{camera_id}`), or inline as `clip.camera`:
 ```json
@@ -37,8 +52,7 @@ If the footage comes from a fixed camera rather than a dashcam, give the camera 
 - Heading and speed come only from the track's own ground positions over the last second. A parked object keeps its last observed heading.
 - Models are stretched to typical real class sizes (`METRIC` in `models3d.js`). These sizes are not measured.
 - The 3D view adds a **Camera** view that renders from the calibrated viewpoint, masks the area outside the video frame, and draws 3D boxes: the base and its X show the hazard colour, and the top and uprights show the confidence colour. Ground the camera cannot see is hatched. Plan mode becomes Top + Ortho.
-- Without a calibration file, the panel assumes the PIE forward dashcam and says so in the inputs strip.
-- `fixtures/SYNTHETIC_c98.*` (from `gen-street.mjs`) is a synthetic avenue. Its boxes are produced by projecting 3D objects through the same camera, so the round trip can be checked.
+- Fixtures: `SYNTHETIC_c97.*` (`gen-house.mjs`) is a house camera 3.6 m up with a 112° barrel lens, looking across a front yard at a 2-lane road; it is the dev page's default. `SYNTHETIC_c98.*` (`gen-street.mjs`) is a pole camera 18 m up over an avenue. Both build their boxes by projecting 3D objects through the same camera, so the image-to-ground round trip can be checked.
 
 ## Sponsor stack (VAST Builders Challenge)
 From [vast-data/vast-builders-challenge](https://github.com/vast-data/vast-builders-challenge), read 2026-10-17. The panel only reads outputs; it never calls a model or the pipeline itself.
@@ -90,7 +104,7 @@ Panels rebuild only when what they show changes, sample lookups use binary searc
 
 Keys: `V` switches plan and 3D, `C` camera view (fixed cameras), `O` ortho, `F` frame (or double-click the view), `[` / `]` previous/next event, `Esc` clear. `P` and `Space` are left to the host, because SPEC 16.1 uses them for play/pause and the hazard click; the dev page uses `P` (and `Space`) for play. Clicking an event seeks to `t - 1.0` and selects its track.
 
-> **AG3: size budget exceeded.** The shipped files (`core.js`, `data.js`, `spatial.js`, `view3d.js`, `models3d.js`, `camera.js`, `style.css`) total 120,196 bytes (40 KB gzipped), about 60 KB over the 60 KB `spatial/` budget (SPEC 6.4 / 16). The lead accepted 4 KB over for the 2D plan plus the 3D viewport. Everything since (workspace polish, fixed-camera mode, auto-calibration and VSS sidecars, and the neu / glass / material redesign) still needs the lead's OK, and the pod's 900 KB budget in `dh/snapshot.py` must absorb it. If the pod runs short, drop the 2D plan first (about 5 KB), since 3D Top + Ortho replaces it.
+> **AG3: size budget exceeded.** The shipped files (`core.js`, `data.js`, `spatial.js`, `view3d.js`, `models3d.js`, `camera.js`, `style.css`) total 127,311 bytes, about 67 KB over the 60 KB `spatial/` budget (SPEC 6.4 / 16). The lead accepted 4 KB over for the 2D plan plus the 3D viewport. Everything since (workspace polish, fixed-camera mode, auto-calibration and VSS sidecars, the neu / glass / material redesign, and wall-camera mode with lens distortion and proximity events) still needs the lead's OK, and the pod's 900 KB budget in `dh/snapshot.py` must absorb it. If the pod runs short, drop the 2D plan first (about 5 KB), since 3D Top + Ortho replaces it.
 
 ## Hand-off (for Moses)
 1. **AG3 wiring** (`web/watch.js`): `import { mountSpatial } from "../spatial/spatial.js"` (or copy the folder to `web/spatial/`), then
@@ -99,10 +113,11 @@ Keys: `V` switches plan and 3D, `C` camera view (fixed cameras), `O` ortho, `F` 
 2. **Routes the app mode expects**: `api/clips/{id}` (clip, optionally `{clip, hazards}`), `/tracks`, `/det`, `/grid`, `/explain`, `api/runs/{run_id}`. Only the first two plus runs exist in `contracts/api_routes.md`; `/det`, `/grid`, `/explain` are proposals, and missing ones just show as "missing".
 3. **Ownership line for CONTEXT.md**: `spatial/** | <owner> | spatial hazard view add-on; edits only under spatial/`.
 4. **Snapshot** (`dh/snapshot.py`): copy `data/det/` (small, committed), `data/grid/` and `data/runs/` for the pod. Without `det/`, demo mode shows confidence "?" everywhere.
-5. **Size**: shipped files total 120,196 bytes, about 60 KB over the 60 KB budget; see the AG3 note above. Dev-only files (`index.html`, `video.js`, `tests/`, `fixtures/`, this README) do not ship.
+5. **Size**: shipped files total 127,311 bytes, about 67 KB over the 60 KB budget; see the AG3 note above. Dev-only files (`index.html`, `video.js`, `tests/`, `fixtures/`, this README) do not ship.
 
 ## Limitations
-- Fixed mode assumes flat ground and a distortion-free lens. Wide security cameras (such as the night street camera tested on 2026-10-17) have strong barrel distortion, so ground positions near the image edges will be off until a radial-distortion term is added to the calibration.
+- Fixed mode assumes flat ground and one radial distortion term. Auto-calibration does not fit `k1`; it uses the file's value or 0. Uncalibrated wide lenses, such as the night street camera tried on 2026-10-17, are least accurate near the image edges.
+- Proximity gaps use typical vehicle sizes and the flat-ground contact point of each box, so a gap under about half a metre means "touching distance, roughly", not a measured clearance.
 - Single camera, no depth, no calibration, no ego speed: positions are ordinal and the corridor assumes straight driving.
 - Tracks hold only the top 3 per frame at 5 fps, so a track can vanish when others outrank it. A dropout hides the track after 0.3 s (not interpolated).
 - Cosmos rows tint a track red only when the row carries a `track_id`; otherwise it is an event only.

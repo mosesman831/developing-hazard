@@ -86,7 +86,8 @@ import { mountSpatial } from './spatial.js';
 import { createPlayer, segmentUrls } from './video.js';
 import { devApi } from './data.js';
 const q = new URLSearchParams(location.search);
-const clipId = q.get('clip') || 'c07', src = q.get('src') || 'dev', runId = q.get('run');
+// no params: open the house-camera fixture; ?clip=<id> alone reads the real data/ files
+const clipId = q.get('clip') || 'c97', src = q.get('src') || (q.get('clip') ? 'dev' : 'fixtures'), runId = q.get('run');
 const $ = (id) => document.getElementById(id);
 $('title').textContent = clipId; $('src').textContent = src + (q.get('debug') ? ' · debug' : '');
 if (src === 'fixtures') document.body.classList.add('banner');

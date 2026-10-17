@@ -7,7 +7,7 @@
 // shadows, distance fog in large scenes, and glass label pills that stack instead of overlapping.
 import { ASSUMED_HFOV_DEG, corridorPolygon } from './core.js';
 import { modelFaces, metricDims, resolveClass, orient } from './models3d.js';
-import { visibleGround } from './camera.js';
+import { visibleGround, distort } from './camera.js';
 
 const U = 3.5, D2R = Math.PI / 180, HALF = ASSUMED_HFOV_DEG / 2, RIM = 1.12, NEAR = 0.1;
 const PAL = { d: [34, 38, 44], l: [206, 212, 219], g: [58, 84, 112] };
@@ -138,30 +138,78 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
 
   // ---- projection with near-plane clipping ----
   function basis() {
-    if (cam.lock && env.rig) { const R = env.rig, k = Math.min(W / (2 * R.tx), H / (2 * R.ty)); return { eye: R.c, f: R.f, r: R.r, u: R.u, k, ortho: false }; }
+    if (cam.lock && env.rig) { const R = env.rig, k = Math.min(W / (2 * R.tx), H / (2 * R.ty)); return { eye: R.c, f: R.f, r: R.r, u: R.u, k, ortho: false, k1: R.k1, tx: R.tx }; }
     return { ...camBasis(cam), k: H * 1.25, ortho: cam.ortho, s: H / (cam.dist * 0.9) };
   }
   const toCam = (p) => { const v = sub(p, B.eye); return [dot(v, B.r), dot(v, B.u), dot(v, B.f)]; };
-  const scr = (c) => { const s = B.ortho ? B.s : B.k / c[2]; return [W / 2 + c[0] * s, H / 2 - c[1] * s, c[2]]; };
-  const proj = (p) => { const c = toCam(p); return !B.ortho && c[2] < NEAR ? null : scr(c); };
-  function clipNear(C, close) {
-    if (B.ortho) return C;
-    const out = [], n = C.length;
-    for (let i = 0; i < (close ? n : n - 1); i++) {
-      const a = C[i], b = C[(i + 1) % n], ia = a[2] >= NEAR, ib = b[2] >= NEAR;
-      if (ia) out.push(a);
-      if (ia !== ib) { const k = (NEAR - a[2]) / (b[2] - a[2]); out.push([a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, NEAR]); }
+  const scr = (c) => {
+    if (B.k1) {                                                                // camera view through a wide lens: bend like the video does
+      const d = distort(B.k1, c[0] / (c[2] * B.tx), c[1] / (c[2] * B.tx)) || [c[0] / (c[2] * B.tx), c[1] / (c[2] * B.tx)];
+      return [W / 2 + d[0] * B.tx * B.k, H / 2 - d[1] * B.tx * B.k, c[2]];
     }
-    if (!close && C[n - 1][2] >= NEAR) out.push(C[n - 1]);
+    const s = B.ortho ? B.s : B.k / c[2]; return [W / 2 + c[0] * s, H / 2 - c[1] * s, c[2]];
+  };
+  // with distortion a straight edge projects to a curve, so long edges are split before projecting
+  function bend(C, close) {
+    if (!B.k1) return C;
+    const out = [], n = close ? C.length : C.length - 1;
+    for (let i = 0; i < n; i++) {
+      const a = C[i], b = C[(i + 1) % C.length], m = Math.min(24, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]) / 1.5));
+      for (let j = 0; j < m; j++) out.push([a[0] + ((b[0] - a[0]) * j) / m, a[1] + ((b[1] - a[1]) * j) / m, a[2] + ((b[2] - a[2]) * j) / m]);
+    }
+    if (!close) out.push(C[C.length - 1]);
     return out;
   }
+  const proj = (p) => { const c = toCam(p); return !B.ortho && (c[2] < NEAR || (B.k1 && (Math.abs(c[0]) > B.tx * 1.6 * c[2] || Math.abs(c[1]) > B.tx * 1.6 * c[2]))) ? null : scr(c); };
+  // clip in camera space: always the near plane; in a distorted camera view also a frustum a little wider than
+  // the image, because the lens model squashes far-off-axis points back toward the frame
+  function planes() {
+    if (B.ortho) return [];
+    const P = [[0, 0, 1, -NEAR]];
+    if (B.k1) { const m = B.tx * 1.6; P.push([-1, 0, m, 0], [1, 0, m, 0], [0, -1, m, 0], [0, 1, m, 0]); }
+    return P;
+  }
+  const sd = (pl, c) => pl[0] * c[0] + pl[1] * c[1] + pl[2] * c[2] + pl[3];
+  const lerp = (a, b, k) => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
+  // closed -> [polygon] (or []); open -> runs of the polyline that survive
+  function clip(C, close) {
+    const PL = planes();
+    if (close) {
+      let P = C;
+      for (const pl of PL) {
+        const out = [];
+        for (let i = 0; i < P.length; i++) {
+          const a = P[i], b = P[(i + 1) % P.length], da = sd(pl, a), db = sd(pl, b);
+          if (da >= 0) out.push(a);
+          if ((da >= 0) !== (db >= 0)) out.push(lerp(a, b, da / (da - db)));
+        }
+        P = out; if (P.length < 3) return [];
+      }
+      return [P];
+    }
+    const runs = []; let cur = null;
+    for (let i = 0; i < C.length - 1; i++) {
+      const a = C[i], b = C[i + 1]; let t0 = 0, t1 = 1;
+      for (const pl of PL) {
+        const da = sd(pl, a), db = sd(pl, b);
+        if (da < 0 && db < 0) { t0 = 1; t1 = 0; break; }
+        if (da < 0) t0 = Math.max(t0, da / (da - db)); else if (db < 0) t1 = Math.min(t1, da / (da - db));
+      }
+      if (t0 >= t1) { cur = null; continue; }
+      if (!cur || t0 > 0) { cur = [lerp(a, b, t0)]; runs.push(cur); }
+      cur.push(lerp(a, b, t1)); if (t1 < 1) cur = null;
+    }
+    return runs.filter((r) => r.length > 1);
+  }
+  const ring = (P3) => { const r = clip(P3.map(toCam), true)[0]; return r ? bend(r, true).map(scr) : []; };
   const path = (pts) => { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); };
   function poly(P3, fill, stroke, lw = 1, dash = null, close = true) {
-    const C = clipNear(P3.map(toCam), close); if (C.length < 2) return null;
-    const P = C.map(scr); path(P); if (close) g.closePath();
+    const runs = clip(P3.map(toCam), close); if (!runs.length) return null;
+    g.beginPath();
+    for (const run of runs) { bend(run, close).map(scr).forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); if (close) g.closePath(); }
     if (fill) { g.fillStyle = fill; g.fill(); }
     if (stroke) { g.setLineDash(dash || []); g.lineWidth = lw; g.strokeStyle = stroke; g.stroke(); g.setLineDash([]); }
-    return P;
+    return runs;
   }
   // ground annotation in small spaced capitals
   function note(p3, s, color = '#626a75', size = 9) {
@@ -182,13 +230,13 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     if (env.kind === 'fixed') {
       SCN = buildScenery(env.scenery);
       const R = env.rig, vis = env.visible || visibleGround(R);
-      const ground = vis.filter((p) => Math.hypot(p[0] - R.c[0], p[1] - R.c[2]) < 120);
+      const reach = Math.min(120, 12 * R.c[1]), ground = vis.filter((p) => Math.hypot(p[0] - R.c[0], p[1] - R.c[2]) < reach);   // a house camera frames its street, a pole camera its junction
       const cx = ground.reduce((s, p) => s + p[0], 0) / (ground.length || 1), cz = ground.reduce((s, p) => s + p[1], 0) / (ground.length || 1);
       SCN.bounds = SCN.bounds || [cx - 60, cx + 60, cz - 60, cz + 60];
       SCN.bounds = [Math.min(SCN.bounds[0], R.c[0] - 10), Math.max(SCN.bounds[1], R.c[0] + 10), Math.min(SCN.bounds[2], R.c[2] - 10), Math.max(SCN.bounds[3], R.c[2] + 10)];
       SCN.visible = clipRect(vis, SCN.bounds);
       SCN.corners = visibleGround(R, 1).filter((_, i) => i % 2 === 0);
-      home = { target: [cx, 0, cz], dist: 70 }; zoom = [6, 400];
+      home = { target: [cx, 0, cz], dist: Math.max(25, Math.min(80, 12 + R.c[1] * 3.5)) }; zoom = [4, 400];
       api.setView('camera');
     } else { SCN = null; home = { target: [0, 0, 1.5], dist: 5.6 }; zoom = [2, 30]; api.setView('persp'); }
   }
@@ -217,7 +265,7 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     }
     if (opt.fov && SCN.visible.length > 2) {
       // even-odd: everything inside the scene rect but outside the camera's ground footprint is hatched
-      const outer = clipNear(rect.map(toCam), true).map(scr), inner = clipNear(SCN.visible.map((p) => toCam(G3(p, 0.04))), true).map(scr);
+      const outer = ring(rect), inner = ring(SCN.visible.map((p) => G3(p, 0.04)));
       if (outer.length > 2) {
         g.beginPath(); for (const ring of [outer, inner]) ring.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])));
         g.globalAlpha = 0.8; g.fillStyle = hatch; g.fill('evenodd'); g.globalAlpha = 1;
@@ -417,7 +465,7 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     redraw() { readFonts(); sched(); },
     setView(v) {
       if (v === 'camera') { if (env.kind !== 'fixed') return; Object.assign(cam, { lock: true, view: 'camera', ortho: false }); sched(); return; }
-      const p = VIEWS[v]; if (!p) return;
+      const p = v === 'persp' && env.kind === 'fixed' ? { yaw: 150, pitch: 30 } : VIEWS[v]; if (!p) return;   // wall camera: look back from across the street
       Object.assign(cam, p, { view: v, lock: false, target: [...home.target], dist: v === 'top' ? home.dist * 1.25 : home.dist }); sched();
     },
     toggle(k, on) { opt[k] = on ?? !opt[k]; sched(); return opt[k]; },

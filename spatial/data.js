@@ -1,6 +1,6 @@
 // Loaders + validation. Every input except the clip is optional; failures become "Inputs" strip entries.
 import { detectNormalised, normBox, indexDets, joinConf, streaks, parseGrid } from './core.js';
-import { validPose, rig, groundPoint, visibleGround, CAMERAS, autoCalibrate, parseVssDetections } from './camera.js';
+import { validPose, rig, groundPoint, visibleGround, CAMERAS, autoCalibrate, parseVssDetections, WALL_DEFAULT } from './camera.js';
 
 export function parseJSONL(text) {
   const rows = []; let bad = 0;
@@ -66,19 +66,15 @@ export async function loadModel({ clipId, api, frame = { w: 1920, h: 1080 }, mod
   const hv = hazards.filter((h) => need(h, ['window_start', 'window_end']) && num(h.window_start) && num(h.window_end));
   hazards.length || hzRows ? set('hazards', hv.length ? 'ok' : 'empty', `${hv.length} human-labelled windows`) : miss('hazards', 'Human labels come from AG2 (data/hazards.json).');
 
-  // camera: a stationary camera needs a calibration (pose + scenery); otherwise the PIE forward dashcam is assumed
-  let camera = { kind: 'dashcam', camera_id: clip && clip.camera_id || null };
-  const cid = camera.camera_id;
+  // camera: a fixed camera on a wall, house or pole looking at the road is the default. Only a camera known to
+  // move with a car (PIE's pie_cam-3, or a calibration / clip saying kind "dashcam") uses the ego-car model.
+  const cid = (clip && clip.camera_id) || null;
   const cal = clip && clip.camera && typeof clip.camera === 'object' ? clip.camera : P.camera && cid ? await api.getJSON(P.camera(cid)) : null;
-  if (cal && cal.kind === 'fixed' && validPose(cal.pose)) {
-    const R = rig(cal.pose, frame);
-    camera = { kind: 'fixed', camera_id: cid, pose: cal.pose, scenery: cal.scenery || {}, rig: R, visible: visibleGround(R) };
-    set('camera', 'ok', `fixed camera ${cid}, ${cal.pose.height_m} m up, ${cal.pose.hfov_deg}° lens`);
-  } else if (cal && cal.kind === 'fixed') set('camera', 'malformed', `calibration for ${cid} has no valid pose (x, z, height_m, yaw_deg, pitch_deg, hfov_deg). Showing the dashcam approximation.`);
-  else if (cal && cal.kind === 'dashcam') set('camera', 'ok', 'forward dashcam');
-  else if (cid && /^pie_/.test(cid)) set('camera', 'ok', `forward dashcam (${cid})`);
-  else if (cid && CAMERAS[cid] && CAMERAS[cid].kind === 'fixed') set('camera', 'missing', `${cid} is a fixed camera (${CAMERAS[cid].what}) with no calibration file; trying to auto-calibrate from people in the footage.`);
-  else set('camera', 'missing', `no calibration for camera ${cid || '?'}; assuming a forward dashcam. For a stationary camera add data/cameras/<camera_id>.json with kind "fixed" and a pose.`);
+  const dashcam = (cal && cal.kind === 'dashcam') || (!cal && !!cid && !!CAMERAS[cid] && CAMERAS[cid].kind === 'dashcam');
+  let camera = { kind: dashcam ? 'dashcam' : 'fixed', camera_id: cid };
+  const fixCam = (pose, extra) => { const R = rig(pose, frame); camera = { kind: 'fixed', camera_id: cid, pose, scenery: (cal && cal.scenery) || {}, rig: R, visible: visibleGround(R), ...extra }; };
+  if (dashcam) set('camera', 'ok', cal ? 'camera moves with a car (dashcam)' : `camera moves with a car: ${CAMERAS[cid].what}`);
+  else if (cal && validPose(cal.pose)) { fixCam(cal.pose, {}); set('camera', 'ok', `fixed camera ${cid || ''}, ${cal.pose.height_m} m up, ${cal.pose.hfov_deg}° lens${cal.pose.k1 ? `, distortion k1 ${cal.pose.k1}` : ''}`); }
 
   // tracks
   const tr = asRows(await get('tracks'));
@@ -103,19 +99,23 @@ export async function loadModel({ clipId, api, frame = { w: 1920, h: 1080 }, mod
     set('det', dets.length ? (dets.length < dr.length ? 'partial' : 'ok') : 'malformed', `${dets.length}/${dr.length} rows from ${detSrc}`);
     dnorm = detectNormalised(dets);
   }
-  for (const r of tracks) { r.nb = normBox(r.xyxy, norm, frame); if (camera.rig) r.g = groundPoint(camera.rig, r.nb); }
+  for (const r of tracks) r.nb = normBox(r.xyxy, norm, frame);
   for (const d of dets) d.nb = normBox(d.xyxy, dnorm, frame);
-  const wantFixed = camera.kind !== 'fixed' && cid && ((CAMERAS[cid] && CAMERAS[cid].kind === 'fixed') || (cal && cal.kind === 'fixed'));
-  if (wantFixed) {
-    const hfov = cal && cal.pose && Number.isFinite(cal.pose.hfov_deg) ? cal.pose.hfov_deg : 90;
-    const ac = autoCalibrate(tracks.length ? tracks : dets, frame, { hfov });
+  // a fixed camera without a usable calibration: auto-calibrate from people, else assume a typical house camera
+  if (camera.kind === 'fixed' && !camera.rig) {
+    const given = (cal && cal.pose) || {}, name = cid || 'this camera', file = `data/cameras/${cid || '<camera_id>'}.json`;
+    const hfov = Number.isFinite(given.hfov_deg) ? given.hfov_deg : WALL_DEFAULT.hfov_deg, k1 = Number.isFinite(given.k1) ? given.k1 : 0;
+    const bad = cal ? `${file} has no valid pose (x, z, height_m, yaw_deg, pitch_deg, hfov_deg); ` : '';
+    const ac = autoCalibrate(tracks.length ? tracks : dets, frame, { hfov, k1 });
     if (ac) {
-      const R = rig(ac.pose, frame);
-      camera = { kind: 'fixed', auto: ac, camera_id: cid, pose: ac.pose, scenery: (cal && cal.scenery) || {}, rig: R, visible: visibleGround(R) };
-      for (const r of tracks) r.g = groundPoint(R, r.nb);
-      set('camera', 'partial', `auto-calibrated ${cid} from ${ac.n} person boxes: ${ac.pose.height_m} m up, pitched ${ac.pose.pitch_deg}°, lens width assumed ${hfov}°. Approximate; a calibration file is better.`);
-    } else if (!cal) set('camera', 'missing', `${cid} is a fixed camera but there are too few clear people to auto-calibrate it. Showing the dashcam approximation; add data/cameras/${cid}.json.`);
+      fixCam(ac.pose, { auto: ac });
+      set('camera', cal ? 'malformed' : 'partial', `${bad}auto-calibrated ${name} from ${ac.n} person boxes: ${ac.pose.height_m} m up, ${ac.pose.pitch_deg}° down, lens width assumed ${hfov}°. Approximate; a calibration file is better.`);
+    } else {
+      fixCam({ ...WALL_DEFAULT, hfov_deg: hfov, k1 }, { assumed: true });
+      set('camera', cal ? 'malformed' : 'partial', `${bad}${clip ? `no calibration for ${name} and too few clear people to auto-calibrate` : 'no clip, so no camera'}: assuming a house-mounted camera (${WALL_DEFAULT.height_m} m up, ${WALL_DEFAULT.pitch_deg}° down, ${hfov}° lens). Positions are rough; add ${file}.`);
+    }
   }
+  if (camera.rig) for (const r of tracks) r.g = groundPoint(camera.rig, r.nb);
   const di = indexDets(dets);
   const byId = new Map();
   for (const r of tracks.sort((a, b) => a.t - b.t)) { if (!byId.has(r.track_id)) byId.set(r.track_id, []); byId.get(r.track_id).push(r); }

@@ -228,7 +228,7 @@ test('loadModel: a fixed-camera calibration switches to ground positions', async
   assert.ok(Array.isArray(m.tracks.get(1)[0].g), 'ground point below the horizon');
   assert.equal(m.tracks.get(2)[0].g, null, 'box above the horizon has no ground point');
   const bad = await loadModel({ clipId: 'cx', mode: 'fixtures', api: { getJSON: async (u) => (u.endsWith('camera.json') ? { kind: 'fixed', pose: {} } : files[u] ?? null) } });
-  assert.equal(bad.camera.kind, 'dashcam'); assert.equal(bad.status.camera.state, 'malformed');
+  assert.equal(bad.camera.kind, 'fixed'); assert.equal(bad.camera.assumed, true, 'a broken file falls back to an assumed wall camera, not a dashcam'); assert.equal(bad.status.camera.state, 'malformed');
 });
 
 test('auto-calibration recovers a street camera from person boxes (synthetic c98)', async () => {
@@ -287,4 +287,58 @@ test('app mode reads the routes exactly as the merged AG3 server returns them', 
   assert.equal(m.status.explain.state, 'optional');
   const ev = (await import('../core.js')).buildEvents({ tracks: m.tracks, hazards: m.hazards, clicks: m.clicks });
   assert.deepEqual(ev.map((e) => e.prov).sort(), ['AGENT', 'HUMAN', 'MEASURED', 'MODEL']);
+});
+
+test('wall camera is the default; only a known moving camera gets the dashcam model', async () => {
+  const clip = (id) => ({ 'fixtures/SYNTHETIC_cz.clips.json': [{ clip_id: 'cz', camera_id: id, segments: [{ start_s: 0, end_s: 5 }] }] });
+  const load = (files) => loadModel({ clipId: 'cz', mode: 'fixtures', api: { getJSON: async (u) => files[u] ?? null } });
+  const unknown = await load(clip('house_cam_7'));
+  assert.equal(unknown.camera.kind, 'fixed'); assert.equal(unknown.camera.assumed, true);
+  assert.equal(unknown.status.camera.state, 'partial'); assert.match(unknown.status.camera.detail, /house-mounted/);
+  const pie = await load(clip('pie_cam-3'));
+  assert.equal(pie.camera.kind, 'dashcam'); assert.equal(pie.status.camera.state, 'ok');
+  const said = await load({ ...clip('anything'), 'fixtures/SYNTHETIC_cz.camera.json': { kind: 'dashcam' } });
+  assert.equal(said.camera.kind, 'dashcam');
+});
+
+test('wide-lens distortion: image <-> ground round trip with barrel k1', async () => {
+  const K = await import('../camera.js');
+  const pose = { x: 0, z: 0, height_m: 4, yaw_deg: 10, pitch_deg: 20, hfov_deg: 110, k1: -0.25 };
+  assert.equal(K.validPose(pose), true); assert.equal(K.validPose({ ...pose, k1: 2 }), false);
+  const R = K.rig(pose, { w: 2048, h: 1154 });
+  let n = 0;
+  for (const g of [[2, 8], [-5, 12], [6, 20], [0, 40], [-9, 9]]) {
+    const uv = K.worldToImage(R, [g[0], 0, g[1]]);
+    if (!uv || uv[0] < 0 || uv[0] > 1 || uv[1] < 0 || uv[1] > 1) continue;
+    const back = K.imageToGround(R, uv[0], uv[1]); n++;
+    assert.ok(Math.hypot(back[0] - g[0], back[1] - g[1]) < 1e-6, `round trip at ${g}`);
+  }
+  assert.ok(n >= 3, 'most test points are in view');
+  const plain = K.worldToImage(K.rig({ ...pose, k1: 0 }, { w: 2048, h: 1154 }), [-9, 0, 9]), bent = K.worldToImage(R, [-9, 0, 9]);
+  assert.ok(Math.abs(bent[0] - 0.5) < Math.abs(plain[0] - 0.5), 'barrel distortion pulls edge points toward the centre');
+});
+
+test('proximity: a person near a moving vehicle is one MEASURED event per encounter', async () => {
+  const K = await import('../camera.js');
+  const rows = (id, cls, f) => [0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0].map((t, i) => ({ track_id: id, t, cls, g: f(t), _line: i + 1 }));
+  const tracks = new Map([
+    [1, rows(1, 'car', (t) => [0, t * 8])],                      // driving along +z at 8 m/s
+    [2, rows(2, 'person', () => [1.9, 9])],                      // standing at the kerb, car passes at ~1.1 s
+    [3, rows(3, 'person', () => [9, 9])],                        // far away: never near
+    [4, rows(4, 'car', () => [1.9, 2])],                         // parked: not moving, never counts
+  ]);
+  const ev = K.proximityEvents(tracks);
+  assert.equal(ev.length, 1, JSON.stringify(ev.map((e) => e.title)));
+  assert.equal(ev[0].prov, 'MEASURED'); assert.equal(ev[0].track_id, 2);
+  assert.match(ev[0].title, /person #2 within .* m of moving car #1/);
+  assert.match(ev[0].why, /approximate/); assert.ok(ev[0].min <= ev[0].gap);
+});
+
+test('fixed camera: no ego-path events, proximity measurements instead', () => {
+  const rows = [0, 0.2].map((t, i) => ({ track_id: 1, cls: 'person', t, risk: 0.1, in_corridor: !!i, heading_in: !!i, _line: i + 1 }));
+  const tracks = new Map([[1, rows]]);
+  assert.equal(C.buildEvents({ tracks }).filter((e) => e.prov === 'MEASURED').length, 2);
+  const extra = [{ t: 0.1, prov: 'MEASURED', track_id: 1, src: {}, title: 'person #1 within 1.0 m of moving car #2', why: 'x' }];
+  const ev = C.buildEvents({ tracks, egoPath: false, extra });
+  assert.deepEqual(ev.map((e) => e.title), ['person #1 within 1.0 m of moving car #2']);
 });

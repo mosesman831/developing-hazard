@@ -3,7 +3,7 @@
 import * as C from './core.js';
 import { loadModel } from './data.js';
 import { createView3D } from './view3d.js';
-import { groundMotion } from './camera.js';
+import { groundMotion, proximityEvents } from './camera.js';
 
 const NS = 'http://www.w3.org/2000/svg';
 function h(tag, attrs = {}, ...kids) {
@@ -267,7 +267,7 @@ export function mountSpatial(el, ctx) {
     const sw = (v) => h('span', { class: 'sp-eye' + (v ? ' on' : ''), role: 'switch', 'aria-checked': String(v) });
     const tog = (k) => () => { setPressed(togs[k], v3.toggle(k)); memo.out = null; sched(); };
     const kids = fixed()
-      ? [row('Scene', 'root'), row(`Camera ${model.camera.camera_id || ''}`, 'l1 tog', () => { setMode('3d'); v3.setView('camera'); }, icon('camera'), `${model.camera.pose.height_m} m`),
+      ? [row('Scene', 'root'), row(`Camera ${model.camera.camera_id || '(wall-mounted)'}`, 'l1 tog', () => { setMode('3d'); v3.setView('camera'); }, icon('camera'), `${model.camera.assumed ? '~' : ''}${model.camera.pose.height_m} m`),
         row('Visible ground', 'l1 tog', tog('fov'), icon('fov'), null, sw(o.fov)), row('Scenery', 'l1 tog', tog('scenery'), icon('scenery'), null, sw(o.scenery))]
       : [row('Scene', 'root'), row('Ego car', 'l1', null, icon('camera'), 'camera'), row(`FOV ${C.ASSUMED_HFOV_DEG}°`, 'l1 tog', tog('fov'), icon('fov'), null, sw(o.fov)), row('Projected path', 'l1 tog', tog('path'), icon('path'), null, sw(o.path))];
     kids.push(row('Tracks', 'root', null, null, model ? `${act.length} / ${model.tracks.size}` : '-'));
@@ -280,7 +280,7 @@ export function mountSpatial(el, ctx) {
   function drawStatus() {
     const c = v3.camera;
     stat.t.textContent = `${f2(t)} s`;
-    stat.mode.textContent = fixed() ? 'FIXED CAMERA' : mode === '3d' ? '3D' : 'PLAN';
+    stat.mode.textContent = fixed() ? 'WALL CAMERA' : mode === '3d' ? '3D' : 'PLAN';
     stat.cam.textContent = fixed() && c.view === 'camera' ? `camera view · yaw ${c.yaw}° · pitch ${c.pitch}°` : mode === '3d' || fixed() ? `${c.view} · yaw ${c.yaw}° · pitch ${c.pitch}° · ${c.ortho ? 'ortho' : 'persp'}` : 'top-down · ordinal';
     stat.sel.textContent = sel ? (sel.kind === 'track' ? `track #${sel.id}` : 'event') : 'no selection';
   }
@@ -398,13 +398,16 @@ export function mountSpatial(el, ctx) {
     const m = await loadModel({ clipId: ctx.clipId, api: ctx.api, frame, mode: ctx.mode || 'app', runId: ctx.runId || null });
     if (dead) return;
     model = m;
-    events = C.buildEvents({ tracks: m.tracks, hazards: m.hazards, clicks: m.clicks, grid: m.grid, explain: m.explain });
+    events = C.buildEvents({ tracks: m.tracks, hazards: m.hazards, clicks: m.clicks, grid: m.grid, explain: m.explain, extra: m.camera.kind === 'fixed' ? proximityEvents(m.tracks) : [], egoPath: m.camera.kind !== 'fixed' });
     sources.replaceChildren(...Object.entries(m.status).map(([k, v]) => h('span', { class: 'sp-in ' + STATE_CLS[v.state], role: 'listitem', title: `${k}: ${v.detail}` }, h('i'), k)));
     const notes = Object.entries(m.status).filter(([, v]) => v.state !== 'ok' && v.state !== 'optional');
     note.hidden = !notes.length;
     note.replaceChildren(...notes.slice(0, 3).map(([k, v]) => h('div', {}, h('b', { text: k }), v.detail)), ...(notes.length > 3 ? [h('div', { class: 'sp-muted', text: `+${notes.length - 3} more: hover the input chips above` })] : []));
     for (const k in memo) memo[k] = null;
-    if (fixed()) { vpTag.textContent = m.camera.auto ? 'Metres · auto-calibrated, approximate' : 'Metres · from calibration, approximate'; disc.textContent = 'One stationary camera, flat ground assumed. Positions approximate; model sizes are typical, not measured.'; }
+    if (fixed()) {
+      vpTag.textContent = m.camera.assumed ? 'Metres · assumed camera pose, rough' : m.camera.auto ? 'Metres · auto-calibrated, approximate' : 'Metres · from calibration, approximate';
+      disc.textContent = 'One fixed camera (wall, house or pole), flat ground assumed. Positions approximate; vehicle sizes are typical, not measured.';
+    }
     setMode(mode);
     drawChips(); drawEvents(); sched();
     ctx.onLoaded && ctx.onLoaded(m);
