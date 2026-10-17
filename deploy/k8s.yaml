@@ -48,7 +48,7 @@ spec:
             - -lc
             - >-
               set -euo pipefail; mkdir -p /code; tar -xzf /cm/app.tar.gz -C /code;
-              cd /code; pip install --no-cache-dir -q -r requirements-pod.txt;
+              cd /code; pip install --no-cache-dir -q -r requirements-pod.txt fastapi==0.143.3 uvicorn==0.54.0 requests==2.34.2;
               exec python -m uvicorn dh.server:app --host 0.0.0.0 --port "$PORT"
           volumeMounts:
             - name: code
