@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import uuid
 from datetime import datetime, timezone
 
@@ -16,6 +17,8 @@ from dh.clips import data_dir
 router = APIRouter()
 
 _ROLES = frozenset({"team", "judge", "guest"})
+_MAX_NAME_LEN = 64
+_MAX_CLICKS = 1000
 
 sessions: list[dict] = []
 
@@ -45,18 +48,33 @@ def _score(clicks: list[float], hazards: list[dict], duration_s: float) -> dict:
     return scored
 
 
+def _click_time(item: object) -> float:
+    """One click time in seconds, or 422.
+
+    JSON ``1e309`` parses as infinity, and ``round(t * 1000)`` in the scorer
+    then raises. NaN does the same. Those are bad requests, not server errors.
+    """
+    if isinstance(item, bool) or not isinstance(item, (int, float)):
+        raise HTTPException(status_code=422, detail="clicks must be a list of numbers")
+    value = float(item)
+    scaled = value * 1000.0
+    if value < 0 or not math.isfinite(value) or not math.isfinite(scaled):
+        raise HTTPException(
+            status_code=422,
+            detail="clicks must be finite non-negative numbers",
+        )
+    return value
+
+
 def _clicks(body: dict) -> list[float]:
     raw = body.get("clicks", [])
     if raw is None:
         return []
     if not isinstance(raw, list):
         raise HTTPException(status_code=422, detail="clicks must be a list of numbers")
-    clicks: list[float] = []
-    for item in raw:
-        if isinstance(item, bool) or not isinstance(item, (int, float)):
-            raise HTTPException(status_code=422, detail="clicks must be a list of numbers")
-        clicks.append(float(item))
-    return clicks
+    if len(raw) > _MAX_CLICKS:
+        raise HTTPException(status_code=422, detail=f"at most {_MAX_CLICKS} clicks")
+    return [_click_time(item) for item in raw]
 
 
 @router.post("/api/human")
@@ -70,6 +88,11 @@ def post_human(body: dict) -> dict:
     raw_name = body.get("name")
     if isinstance(raw_name, str) and raw_name.strip():
         name = raw_name.strip()
+        if len(name) > _MAX_NAME_LEN:
+            raise HTTPException(
+                status_code=422,
+                detail=f"name must be at most {_MAX_NAME_LEN} characters",
+            )
     else:
         name = "Anonymous"
     blind = body.get("blind", False)
