@@ -49,9 +49,11 @@ ARCHIVE="$(mktemp --suffix=.tar.gz)"
 tar -C "${ROOT}/data/snapshot" -czf "${ARCHIVE}" .
 trap 'rm -f "${MANIFEST:-}" "${ARCHIVE}"' EXIT
 
+# Client-side apply stores the whole object in an annotation capped at 256 KB.
+# The pod bundle is larger than that, so the code ConfigMap uses server-side apply.
 kubectl -n "${NS}" create configmap "${APP_NAME}-code" \
   --from-file=app.tar.gz="${ARCHIVE}" \
-  --dry-run=client -o yaml | kubectl apply -f -
+  --dry-run=client -o yaml | kubectl apply --server-side --force-conflicts -f -
 
 kubectl -n "${NS}" create secret generic "${APP_NAME}-vss-creds" \
   --from-literal=VSS_URL="${INGRESS_URL}" \
