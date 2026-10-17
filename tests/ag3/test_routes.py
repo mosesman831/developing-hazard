@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
+from dh.clients.vss import VSSError
 from dh.server import create_app
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -557,6 +558,35 @@ def test_video(api, monkeypatch):
     unknown = api.get("/video", params={"source": "s3://not-in-list"})
     assert unknown.status_code == 404
     assert seen["source"] != "s3://not-in-list"
+
+
+def test_video_not_configured_when_env_empty(api, monkeypatch):
+    for name in (
+        "INGRESS_URL",
+        "USERNAME",
+        "PASSWORD",
+        "KUBERNETES_SERVICE_HOST",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    monkeypatch.setattr("dh.clients.vss._config_files", lambda: [])
+    clips = load_example("clips.json", ("segments", "original_video"))
+    source = clips[0]["segments"][0]["source"]
+    response = api.get("/video", params={"source": source})
+    assert response.status_code == 503
+    assert response.json() == {"detail": "video not configured"}
+
+
+def test_video_upstream_error_is_502(api, monkeypatch):
+    clips = load_example("clips.json", ("segments", "original_video"))
+    source = clips[0]["segments"][0]["source"]
+
+    def fail_open(src, range_header):
+        raise VSSError("VSS GET /videos/stream failed")
+
+    monkeypatch.setattr("dh.api.video.open_upstream", fail_open)
+    response = api.get("/video", params={"source": source})
+    assert response.status_code == 502
+    assert response.json() == {"detail": "video upstream failed"}
 
 
 def test_explain_and_stream(api, tmp_path, monkeypatch):
