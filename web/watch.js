@@ -3,44 +3,22 @@
  */
 
 import { mountPlayer } from "./player.js";
-import { mountSpatial } from "../spatial/spatial.js";
-import { parseJSONL } from "../spatial/data.js";
+import { mountSpatial } from "./spatial/spatial.js";
 
 let activeSpatial = null;
-let activeHost = null;
-let leaveArmed = false;
 
-function releaseSpatial() {
+/** Tear down the spatial panel (its key listener and video overlay). app.js calls this on every route. */
+export function unmountWatch() {
   if (activeSpatial) {
     activeSpatial.destroy();
     activeSpatial = null;
   }
-  activeHost = null;
 }
 
-function armLeave() {
-  if (leaveArmed) {
-    return;
-  }
-  leaveArmed = true;
-  window.addEventListener("hashchange", () => {
-    if (activeHost && !activeHost.isConnected) {
-      releaseSpatial();
-    }
-  });
-}
-
-async function getJSON(rel) {
+async function getJSON(url) {
   try {
-    const response = await fetch(rel);
-    if (!response.ok) {
-      return null;
-    }
-    const text = await response.text();
-    if (String(rel).endsWith(".jsonl")) {
-      return { __jsonl: true, ...parseJSONL(text) };
-    }
-    return JSON.parse(text);
+    const response = await fetch(url);
+    return response.ok ? await response.json() : null;
   } catch {
     return null;
   }
@@ -65,12 +43,7 @@ const AGENT_TABS = [
  * @param {{ getClip?: Function, videoUrl?: Function }} api
  */
 export function mountWatch(el, runId, clipId, api = {}) {
-  releaseSpatial();
-  armLeave();
   el.replaceChildren();
-  if (el.parentElement) {
-    el.parentElement.classList.add("wide");
-  }
   const videoUrl =
     typeof api.videoUrl === "function"
       ? api.videoUrl
@@ -92,10 +65,19 @@ export function mountWatch(el, runId, clipId, api = {}) {
   stage.className = "watch-stage";
   const side = document.createElement("aside");
   side.className = "watch-side";
-  const spatialHost = document.createElement("div");
-  spatialHost.className = "watch-spatial";
-  layout.append(stage, side, spatialHost);
-  shell.append(title, note, tabs, layout);
+  layout.append(stage, side);
+  // spatial view: full width below the video, open by default (1920x1080 projector)
+  const spatial = document.createElement("section");
+  spatial.className = "watch-spatial";
+  const spatialToggle = document.createElement("button");
+  spatialToggle.type = "button";
+  spatialToggle.className = "watch-spatial-toggle";
+  spatialToggle.textContent = "Spatial view";
+  spatialToggle.setAttribute("aria-expanded", "true");
+  const spatialBody = document.createElement("div");
+  spatialBody.className = "watch-spatial-body";
+  spatial.append(spatialToggle, spatialBody);
+  shell.append(title, note, tabs, layout, spatial);
   el.append(shell);
 
   const scoreEl = document.createElement("p");
@@ -151,36 +133,58 @@ export function mountWatch(el, runId, clipId, api = {}) {
     fill.style.height = `${height}%`;
     readout.textContent = value == null ? "risk -" : `risk ${value.toFixed(2)}`;
     paintCurve(stage.querySelector(".risk-curve"), state.row, clipTime, state.clip);
-    if (state.spatial && clipTime != null) {
-      state.spatial.setTime(clipTime);
+    const video = state.player && state.player.getActiveVideo ? state.player.getActiveVideo() : null;
+    const canvas = stage.querySelector(".box-overlay");
+    // the spatial panel draws its own overlay while open; never both
+    const spatialOpen = !!activeSpatial && spatialToggle.getAttribute("aria-expanded") === "true";
+    if (canvas) {
+      canvas.hidden = spatialOpen;
+    }
+    if (video && canvas && !spatialOpen) {
+      paintBoxes(canvas, video, state.tracks, clipTime);
+    }
+    if (activeSpatial && clipTime != null) {
+      activeSpatial.setTime(clipTime);
     }
   }
 
   function attachSpatial(forRun) {
-    if (activeSpatial) {
-      activeSpatial.destroy();
+    unmountWatch();
+    if (!state.player || spatialToggle.getAttribute("aria-expanded") !== "true") {
+      return;
     }
-    const video = state.player && state.player.getActiveVideo ? state.player.getActiveVideo() : null;
-    activeHost = spatialHost;
-    activeSpatial = mountSpatial(spatialHost, {
-      clipId,
-      runId: forRun || null,
-      initialMode: "3d",
-      api: { getJSON },
-      mode: "app",
-      videoEl: video,
-      // the panel reads the player's clock itself while the video plays, and boxes the video showing now
-      getClipTime: () => (state.player && typeof state.player.getClipTime === "function" ? state.player.getClipTime() : NaN),
-      getVideo: () => (state.player && state.player.getActiveVideo ? state.player.getActiveVideo() : video),
-      frame: video && video.videoWidth ? { w: video.videoWidth, h: video.videoHeight } : { w: 1920, h: 1080 },
-      onSeek: (time) => {
-        if (state.player && typeof state.player.seek === "function") {
-          state.player.seek(time);
-        }
-      },
-    });
-    state.spatial = activeSpatial;
+    const video = state.player.getActiveVideo ? state.player.getActiveVideo() : null;
+    try {
+      activeSpatial = mountSpatial(spatialBody, {
+        clipId,
+        runId: forRun || null,
+        mode: "app",
+        api: { getJSON },
+        videoEl: video,
+        getVideo: () => state.player.getActiveVideo(),
+        getClipTime: () => state.player.getClipTime(),
+        frame: { w: 1920, h: 1080 },
+        initialMode: "3d",
+        aurora: false,
+        onSeek: (t) => state.player.seek(t),
+        onSelect: () => {},
+      });
+    } catch (error) {
+      spatialBody.replaceChildren(Object.assign(document.createElement("p"), { className: "muted", textContent: `Spatial view could not start: ${error.message}` }));
+    }
+    paintLive();
   }
+  spatialToggle.addEventListener("click", () => {
+    const open = spatialToggle.getAttribute("aria-expanded") !== "true";
+    spatialToggle.setAttribute("aria-expanded", String(open));
+    spatialBody.hidden = !open;
+    if (open) {
+      attachSpatial(state.activeId);
+    } else {
+      unmountWatch();
+      paintLive();
+    }
+  });
 
   function showRun(nextRunId) {
     const run = state.runs.find((item) => item.run_id === nextRunId) || null;
@@ -217,11 +221,13 @@ export function mountWatch(el, runId, clipId, api = {}) {
       paintTabs(tabs, runs, runId, clipId, showRun);
       const host = document.createElement("div");
       host.className = "watch-player";
+      const canvas = document.createElement("canvas");
+      canvas.className = "box-overlay";
       const curve = document.createElement("svg");
       curve.className = "risk-curve";
       curve.setAttribute("viewBox", "0 0 100 40");
       curve.setAttribute("aria-label", "risk curve");
-      stage.append(host, curve);
+      stage.append(host, canvas, curve);
       if (!clip || !clip.segments) {
         host.textContent = `Clip ${clipId} is not in the clip list.`;
       } else {
@@ -232,16 +238,15 @@ export function mountWatch(el, runId, clipId, api = {}) {
           autoplay: false,
           playOnce: true,
         });
-        // The player swaps between two <video> elements at every segment end, so listen on both:
-        // listening on the first one only froze the overlay and the spatial view on segments 2, 4 and 6.
+        // the player swaps two <video> elements at each segment end: listen on both
         for (const video of host.querySelectorAll("video")) {
-          video.addEventListener("loadedmetadata", () => {
-            if (video.videoWidth && state.spatial) {
-              state.spatial.setFrame({ w: video.videoWidth, h: video.videoHeight });
-            }
-          });
           video.addEventListener("timeupdate", paintLive);
           video.addEventListener("seeked", paintLive);
+          video.addEventListener("loadedmetadata", () => {
+            if (activeSpatial && video.videoWidth) {
+              activeSpatial.setFrame({ w: video.videoWidth, h: video.videoHeight });
+            }
+          });
           if (typeof video.requestVideoFrameCallback === "function") {
             const tick = () => {
               paintLive();
@@ -551,6 +556,61 @@ function timeline(clip, row) {
     bar.append(flag);
   }
   return bar;
+}
+
+function paintBoxes(canvas, video, tracks, clipTime) {
+  const width = video.clientWidth;
+  const height = video.clientHeight;
+  if (!width || !height) {
+    return;
+  }
+  canvas.width = width;
+  canvas.height = height;
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  const context = canvas.getContext("2d");
+  if (!context) {
+    return;
+  }
+  context.clearRect(0, 0, width, height);
+  const nativeW = video.videoWidth || width;
+  const nativeH = video.videoHeight || height;
+  const scaleX = width / nativeW;
+  const scaleY = height / nativeH;
+  const nearest = nearestTracks(tracks, clipTime);
+  for (const track of nearest) {
+    const box = track.xyxy;
+    if (!box || box.length < 4) {
+      continue;
+    }
+    context.strokeStyle = "#22d3ee";
+    context.lineWidth = 2;
+    context.strokeRect(
+      box[0] * scaleX,
+      box[1] * scaleY,
+      (box[2] - box[0]) * scaleX,
+      (box[3] - box[1]) * scaleY,
+    );
+  }
+}
+
+function nearestTracks(tracks, clipTime) {
+  if (!tracks.length || clipTime == null) {
+    return [];
+  }
+  let best = tracks[0].t;
+  let bestGap = Infinity;
+  for (const track of tracks) {
+    const gap = Math.abs(track.t - clipTime);
+    if (gap < bestGap) {
+      bestGap = gap;
+      best = track.t;
+    }
+  }
+  if (bestGap > 0.3) {
+    return [];
+  }
+  return tracks.filter((track) => track.t === best).slice(0, 3);
 }
 
 function formatTime(value) {

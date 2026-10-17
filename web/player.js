@@ -211,6 +211,7 @@ export function mountPlayer(host, options) {
     getActiveVideo() {
       return activeVideo();
     },
+    // jump to a clip time, across segments when needed; keeps playing if it was playing
     seek(clipTime) {
       const t = Number(clipTime);
       if (!Number.isFinite(t) || !segments.length) {
@@ -268,6 +269,7 @@ function stubPlayer() {
     pause: noop,
     togglePlay: noop,
     step: noop,
+    seek: noop,
     getActiveVideo() {
       return null;
     },

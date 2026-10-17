@@ -295,20 +295,6 @@ a:hover {
   flex: 1 1 640px;
 }
 
-.app-shell.wide {
-  max-width: 1500px;
-}
-
-.watch-spatial {
-  flex: 1 1 100%;
-  height: 78vh;
-  min-height: 640px;
-}
-
-.watch-spatial > .sp {
-  height: 100%;
-}
-
 .box-overlay {
   position: absolute;
   left: 0;
@@ -475,3 +461,11 @@ button[aria-pressed="true"] {
   align-items: center;
   margin: 0.35rem 0;
 }
+
+/* spatial view under the watch layout (web/spatial/) */
+.watch-spatial { margin-top: 16px; }
+.watch-spatial-toggle { font: 600 12px var(--sans, system-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.watch-spatial-toggle[aria-expanded="true"] { color: var(--text); }
+.watch-spatial-body { height: 820px; min-height: 640px; margin-top: 10px; display: flex; }
+.watch-spatial-body > .sp { flex: 1; min-width: 0; }
+.watch-spatial-body[hidden] { display: none; }

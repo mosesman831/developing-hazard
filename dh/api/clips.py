@@ -131,3 +131,48 @@ def get_tracks(clip_id: str) -> list[dict]:
     if examples:
         return example_tracks(clip_id)
     return []
+
+
+# ---- read-only inputs of the spatial view. A missing file is [] ("present but empty" is a
+# different chip from 404 "missing"); the file name must be a plain name, so no path traversal.
+def _safe_file(folder: Path, filename: str) -> Path | None:
+    if Path(filename).name != filename or filename.startswith("."):
+        return None
+    return folder / filename
+
+
+def _clip_file_rows(clip_id: str, folder: Path, suffix: str = ".jsonl") -> list[dict]:
+    if clip_with_hazards(clip_id) is None:
+        raise HTTPException(status_code=404, detail="clip not found")
+    path = _safe_file(folder, f"{clip_id}{suffix}")
+    if path is None:
+        raise HTTPException(status_code=404, detail="clip not found")
+    if not path.is_file():
+        return []
+    if suffix == ".json":
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        return doc if isinstance(doc, list) else [doc]
+    return _read_jsonl(path)
+
+
+@router.get("/api/clips/{clip_id}/det")
+def get_det(clip_id: str) -> list[dict]:
+    return _clip_file_rows(clip_id, data_dir() / "det")
+
+
+@router.get("/api/clips/{clip_id}/grid")
+def get_grid(clip_id: str) -> list[dict]:
+    return _clip_file_rows(clip_id, data_dir() / "grid" / "cosmos_verify_v2")
+
+
+@router.get("/api/clips/{clip_id}/explain")
+def get_explain(clip_id: str) -> list[dict]:
+    return _clip_file_rows(clip_id, data_dir() / "cache" / "explain", ".json")
+
+
+@router.get("/api/cameras/{camera_id}")
+def get_camera(camera_id: str) -> dict:
+    path = _safe_file(data_dir() / "cameras", f"{camera_id}.json")
+    if path is None or not path.is_file():
+        raise HTTPException(status_code=404, detail="no calibration for this camera")
+    return json.loads(path.read_text(encoding="utf-8"))

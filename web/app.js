@@ -398,6 +398,8 @@ async function renderLabel(root, clipId) {
 }
 
 function renderRoute() {
+  // the watch screen's spatial panel listens for keys on document; drop it before any other screen
+  void import("./watch.js").then((mod) => mod.unmountWatch && mod.unmountWatch()).catch(() => {});
   const route = parseRoute();
   switch (route.name) {
     case "home":

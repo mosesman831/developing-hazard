@@ -30,12 +30,32 @@ def open_upstream(source: str, range_header: str | None):
     return client.stream(source, range_header=range_header)
 
 
+def _local_file(source: str):
+    """A ``local:<name>`` source added by dh.connect: a plain file name under data/clips/."""
+    from pathlib import Path
+
+    from dh.clips import data_dir
+
+    name = source[len("local:"):]
+    if not name or Path(name).name != name or name.startswith("."):
+        return None
+    path = data_dir() / "clips" / name
+    return path if path.is_file() else None
+
+
 @router.get("/video")
-def get_video(request: Request, source: str | None = None) -> StreamingResponse:
+def get_video(request: Request, source: str | None = None):
     if not source:
         raise HTTPException(status_code=400, detail="source is required")
     if source not in media_sources():
         raise HTTPException(status_code=404, detail="source not found")
+    if source.startswith("local:"):
+        from starlette.responses import FileResponse
+
+        path = _local_file(source)
+        if path is None:
+            raise HTTPException(status_code=404, detail="local video not found")
+        return FileResponse(path, media_type="video/mp4")      # serves Range requests, so seeking works
     range_header = request.headers.get("range")
     try:
         upstream = open_upstream(source, range_header)
