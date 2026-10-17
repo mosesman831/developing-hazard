@@ -3,16 +3,16 @@
 .PHONY: detect grid propose run eval
 
 detect:
-	@echo not yet
+	python -m dh.dets
 
 grid:
-	@echo not yet
+	python -m dh.grid
 
 propose:
 	@echo not yet
 
 run:
-	@echo not yet
+	python -m dh.evals --agent "$(AGENT)" --split "$(SPLIT)"
 
 eval:
-	@echo not yet
+	python -m dh.evals --agent "$(AGENT)" --split "$(SPLIT)"
