@@ -5,15 +5,15 @@ Only AG2 edits this file, inside its own PR.
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
 | 1 | Merged | ag2/phase-1 | #4 | 2026-10-17 10:54 |
-| 2 | Merged; 2-b in progress, re-ingest not started | ag2/phase-2-b | #8 | 2026-10-17 12:20 |
+| 2 | Merged; 2-b in progress, freeze waiting | ag2/phase-2-b | #8 | 2026-10-17 12:40 |
 | 3 | Not started | ag2/phase-3 | | |
 | 4 | Not started | ag2/phase-4 | | |
 
 ## Now
 
-Doing: Phase 2-b on `ag2/phase-2-b`. Probes are in. Eight more set01 chunks are in `data/candidates.jsonl` and `data/clips.json` as `c27` to `c34` (test).
-Next: re-ingest only after an explicit OK. Freeze `testset_v1` only after the message "labels agreed".
-Blocked: re-ingest has not been started. No second labeller, so nothing is `agreed` and `testset_v1` is not written. `data/hazards.json` was not edited.
+Doing: Phase 2-b on `ag2/phase-2-b`. Five confirmed chunks were re-ingested, one at a time, with the custom hazard prompt. Camera, capture type, and location were left as indexed.
+Next: freeze `testset_v1` only after the message "labels agreed".
+Blocked: no second labeller, so nothing is `agreed` and `testset_v1` is not written. `data/hazards.json` was not edited.
 
 ## Go / no-go (questions 1 and 4)
 
@@ -42,5 +42,6 @@ Re-checked against VSS on 17 Oct, about 12:05 BST. Counts are from this run.
 
 ## Log (newest first)
 
+- 2026-10-17 12:40 BST. Re-ingested five parent chunks, `chunk_count` 1, custom prompt, metadata unchanged. Each still has segments 1 to 6. Dashboard `duplicate_segment_rows` is 0 and `segment_rows` is still 3537. The progress URL returned 404 before a `completed` status; caption text had changed by then. `c01`'s chunk (`20261001_061917_set02_video_chunk_0002.mp4`) was submitted twice because the first progress record disappeared while its captions were still the old text. The other four were submitted once. `testset_v1` was not frozen.
 - 2026-10-17 12:20 BST. Phase 2-b probes and eight more set01 clips (`c27` to `c34`, test). `pytest tests/ag2`: 33 passed, 1 warning. Re-ingest not started. `testset_v1` not frozen. Hazards file not edited.
 - 2026-10-17 11:39 BST. Phase 2 data and label screen. `pytest tests/ag2`: 33 passed, 1 warning (Starlette `httpx` inside FastAPI's TestClient). Headless Chrome: after the stub blind sit, the label view shows drag handles, the type and labeller selects, and the four buttons. Save sends `PUT api/hazards/c07_h1`. The other labeller outline, the dashed window, and the risk curve stay hidden until that labeller has saved. `testset_v1` was not frozen: every hazard has only riyu's window, so `agreed` is false. Dev clips `c02`, `c04`, and `c06` were watched and left without a window because a developing hazard was not clear. Nothing was pushed to `main`.
