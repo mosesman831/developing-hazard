@@ -1,0 +1,27 @@
+{
+  "testset_id": "testset_v1",
+  "frozen_at": "2026-10-17T14:38:00+01:00",
+  "clips": [
+    "c07",
+    "c08",
+    "c10",
+    "c11",
+    "c14",
+    "c17",
+    "c21",
+    "c24"
+  ],
+  "hazards": [
+    "c07_h1",
+    "c08_h1",
+    "c10_h1",
+    "c11_h1",
+    "c14_h1",
+    "c17_h1",
+    "c21_h1",
+    "c24_h1"
+  ],
+  "scorer_version": "score_v1",
+  "pattern_version": "PATTERN_V1",
+  "sha256": "047a198c71d8d54feae88db6e4f4c64c75d40915852fefc212308efd0452ad4e"
+}

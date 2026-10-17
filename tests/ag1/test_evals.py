@@ -141,6 +141,8 @@ def test_split_test_cli_and_testset_v2_leaderboard(tmp_path: Path):
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
     env["DH_DATA_DIR"] = str(data)
     repo = Path(__file__).resolve().parents[2]
+    repo_testset = repo / "data" / "testset_v2.json"
+    before = repo_testset.read_bytes() if repo_testset.is_file() else None
     completed = subprocess.run(
         [sys.executable, "-m", "dh.evals", "--agent", "yolo_risk", "--split", "test"],
         cwd=repo,
@@ -162,4 +164,5 @@ def test_split_test_cli_and_testset_v2_leaderboard(tmp_path: Path):
     names = [row["name"] for row in board["rows"]]
     assert names == ["yolo_risk"]
     assert (data / "leaderboard.json").is_file()
-    assert not (repo / "data" / "testset_v2.json").exists()
+    after = repo_testset.read_bytes() if repo_testset.is_file() else None
+    assert after == before

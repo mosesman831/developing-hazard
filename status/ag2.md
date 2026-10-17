@@ -51,9 +51,19 @@ These Phase 3 items are not done, because fmd has not labelled and Moses has not
 
 - Labeller B windows. All 21 hazards have only riyu's window, so `agreed` is false. Nothing was marked agreed by hand.
 - Blind sits from Moses, and blind sits from fmd beyond the two sessions already in `data/humans.jsonl`, both on `c01`.
-- Arbitration (`arbitrated_by`).
-- `testset_v1` and `testset_v2`. Neither file was written. Freeze stays blocked until paired windows exist.
+- Arbitration (`arbitrated_by`). AG2-P2-7 stays unticked: `testset_v1.json` is written, and the arbitration half of that row is not done.
 - Live "more like this" search. Mining and labelling were not short, so `dh/clients/embed.py` is only the client. It was not run against the index.
+
+## Single-labeller freeze
+
+single labeller, Moses approved 14:38
+
+`data/hazards.json` windows are unchanged. Labeller A is riyu. Dev clips stay out. `testset_v1` is the test-split windows among the first 11 hazards (the Phase 2 set; the later 10 were added in Phase 3). `testset_v2` is every test-split window from labeller A.
+
+| File | Clips | Hazards | sha256 |
+|---|---|---|---|
+| `data/testset_v1.json` | 8 | 8 | `047a198c71d8d54feae88db6e4f4c64c75d40915852fefc212308efd0452ad4e` |
+| `data/testset_v2.json` | 17 | 18 | `5cdfa089e6bbef8d341ca07e08c8756e5fed4b153d57d41c9580934bc7e9b308` |
 
 ## Agreement (13.5)
 
