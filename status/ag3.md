@@ -6,14 +6,14 @@ Only AG3 edits this file, inside its own PR.
 |---|---|---|---|---|
 | 1 | Merged | ag3/phase-1 | #11 | 2026-10-17 11:59 |
 | 2 | Merged | ag3/phase-2 | #15 | 2026-10-17 12:15 |
-| 3 | PR open | ag3/phase-3 | #17 | 2026-10-17 12:30 |
+| 3 | Merged | ag3/phase-3 | #17 | 2026-10-17 12:27 |
 | 4 | Not started | ag3/phase-4 | | |
 
 ## Now
 
-Doing: waiting on the merge bot for #17.
-Next: wait for the merge bot. Do not start Phase 4.
-Blocked: `data/leaderboard.json` is not on main, so the board is the example file and the screen says "Example data. Not a result." `data/tracks/` is still empty, so watch has no boxes. No run has a Weave URL, so the watch screen says there is no Weave trace.
+Doing: Phase 3-b evidence for the judge sit on the deployed app.
+Next: open the Phase 3-b PR and stop. Do not start Phase 4.
+Blocked: `make snapshot` wrote 927524 bytes. That is over 900 KB (921600). `dh/snapshot.py` was not changed. `pod_budget_kb` on main is 1024, so the snapshot command exited 0.
 
 ## Handoffs ready for others
 
@@ -40,8 +40,10 @@ A segment does play from inside the pod via the in-cluster backend.
 
 ## Log (newest first)
 
-- 2026-10-17 12:30 BST. PR #17 open: https://github.com/mosesman831/developing-hazard/pull/17
-- 2026-10-17 12:28 BST. Redeployed after the Phase 2 merge. `deploy/deploy.sh` rolled out and `/app/health` returned `{"ok":true}`. Deployed smoke passed, including video 206 and demo `POST /api/runs` 404. The pod board has no `data/leaderboard.json`, so it shows no agent rows and does not show the example scores. Per-clip sits for smoke and fmd are there. Headless Chrome on `/app` showed the sit form with 6 segments ready.
+- 2026-10-17 14:04 BST. Redeployed after #20 merged. `pytest tests`: 176 passed. `make snapshot`: 927524 bytes, over 900 KB. Judge sit on the deployed app, clip `c07`, at http://video-lab-team-36.cosmos.vastdata.com/app/#/sit/c07. Name `fmd`, role judge, seen-before checked (blind false). Six segments ready. After the clip the screen showed score 0, no pattern flag, `c07_h1` window 20.5-24, points 0, first click none. Side by side: You 0, `yolo_risk` 0. No other agent run includes `c07`. Pod log `h_7225d45b`, clicks `[]`, `clip_score` 0, created 2026-10-17T13:03:55Z. Leaderboard `#/leaderboard` on the same deploy: `yolo_risk` 6/15 40.0% lift 0.32; `yolo_cosmos_async` 0/15 lift -0.13 mean latency 0.95 s; `yolo_cosmos_gate` 0/15 mean latency 0.94 s; `yolo_naive` 0/15 pattern rate 0.83; `fmd` 4/15 80.0%; `smoke` 0/15. Per clip: `c01` smoke 0, best agent `yolo_cosmos_async` 0; `c01` fmd 4, best agent `yolo_cosmos_async` 0. No hazard-type breakdown. Judges open https://workshop.thecosmoslabs.com and click App.
+- 2026-10-17 12:27 BST. Phase 3 merged: https://github.com/mosesman831/developing-hazard/pull/17
+- 2026-10-17 12:25 BST. PR #17 open: https://github.com/mosesman831/developing-hazard/pull/17. GitHub created the PR at 12:25:52 BST. The status line was previously stamped 12:30, which was after the commit that added it (12:26:04 BST).
+- 2026-10-17 12:25 BST. Redeployed after the Phase 2 merge. `deploy/deploy.sh` rolled out and `/app/health` returned `{"ok":true}`. Deployed smoke passed, including video 206 and demo `POST /api/runs` 404. The pod board has no `data/leaderboard.json`, so it shows no agent rows and does not show the example scores. Per-clip sits for smoke and fmd are there. Headless Chrome on `/app` showed the sit form with 6 segments ready. This line was previously stamped 12:28 in the commit at 12:25:43 BST.
 - 2026-10-17 12:25 BST. Phase 3 checks: `make test` 137 passed, `pytest tests/ag3` 22 passed. `make snapshot` 234197 bytes. Dev `scripts/smoke.sh` passed, including video 206. Headless Chrome: leaderboard shows the example banner, the reference line, and the per-clip sits; watch shows score 0, risk 0.00, the five agent tabs, and no Weave URL; sit shows name, role, seen-before, and "6 segments ready."
 - 2026-10-17 12:15 BST. Phase 2 merged: https://github.com/mosesman831/developing-hazard/pull/15
 - 2026-10-17 12:14 BST. PR #15 open: https://github.com/mosesman831/developing-hazard/pull/15
