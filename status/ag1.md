@@ -6,7 +6,7 @@ Only AG1 edits this file, inside its own PR.
 |---|---|---|---|---|
 | 1 | Merged | ag1/phase-1 | #6 | 2026-10-17 11:05 |
 | 2 | Merged | ag1/phase-2 | #9 | 2026-10-17 11:47 |
-| 3 | PR open | ag1/phase-3 | | 2026-10-17 12:42 |
+| 3 | PR open | ag1/phase-3 | #20 | 2026-10-17 12:45 |
 | 4 | Not started | ag1/phase-4 | | |
 
 ## Now
@@ -63,6 +63,7 @@ Project `vastdata/team-36`. Headline traces:
 
 ## Log (newest first)
 
+- 2026-10-17 12:45 BST: PR #20 opened. https://github.com/mosesman831/developing-hazard/pull/20
 - 2026-10-17 12:42 BST: Phase 3 grids and dev leaderboard. Tuning did not touch test clips.
 - 2026-10-17 11:47 BST: Phase 2 PR #9 opened.
 
