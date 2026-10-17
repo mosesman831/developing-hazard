@@ -98,12 +98,13 @@ import { createPlayer, segmentUrls } from './video.js';
 import { devApi } from './data.js';
 import { PRESETS, presetById, loadPreset, paintPreview } from './presets.js';
 const q = new URLSearchParams(location.search);
-// no params: a hazard preset. ?clip=<id> still opens fixture or dev data.
-const usePreset = !q.get('clip');
+// Served under a path prefix (…/spatial/ or …/app/spatial/). App mode is the default.
+// Presets and fixtures only when src says so. No ?clip opens c07 against the API.
+const usePreset = q.get('src') === 'preset';
 const $ = (id) => document.getElementById(id);
 let presetId = presetById(q.get('preset')).id;
-let clipId = usePreset ? presetId : q.get('clip');
-let src = usePreset ? 'preset' : (q.get('src') || 'dev');
+let clipId = usePreset ? presetId : (q.get('clip') || 'c07');
+let src = usePreset ? 'preset' : (q.get('src') || 'app');
 let runId = usePreset ? 'preview' : q.get('run');
 const fileApi = devApi();
 const api = {
@@ -115,7 +116,10 @@ const api = {
       const part = body[kind];
       return kind === 'tracks' || kind === 'det' || kind === 'run' ? { rows: part } : part;
     }
-    return fileApi.getJSON(rel);
+    // Relative to this page, not site-root absolute: /spatial/index.html and /app/spatial/ both reach <prefix>/api.
+    let path = String(rel);
+    if (path.startsWith('api/')) path = `../${path}`;
+    return fileApi.getJSON(path);
   },
 };
 function title() {
@@ -246,7 +250,7 @@ if (usePreset) {
 mount();
 if (usePreset) loadRecording(presetById(presetId));
 $('file').onchange = (e) => { const f = e.target.files[0]; if (f) { player.loadFile(f); $('err').textContent = ''; } };
-$('seg').onclick = () => { const m = panel.model; if (!m || !m.clip) { $('err').textContent = 'No clip metadata, so no segment URLs to stream.'; return; } player.loadSegments(segmentUrls(m.clip, q.get('vbase') || 'video?source=')); };
+$('seg').onclick = () => { const m = panel.model; if (!m || !m.clip) { $('err').textContent = 'No clip metadata, so no segment URLs to stream.'; return; } player.loadSegments(segmentUrls(m.clip, q.get('vbase') || '../video?source=')); };
 $('play').onclick = toggle;
 // ?video=<relative url> plays one local file without the picker (dev only)
 if (q.get('video')) player.loadSegments([{ url: q.get('video'), start: 0, end: Infinity }]);
