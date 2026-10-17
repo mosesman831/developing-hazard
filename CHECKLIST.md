@@ -65,17 +65,17 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 
 | ID | Task | Owner | Due | Agent | PR | Gate | Merged |
 |---|---|---|---|---|---|---|---|
-| AG1-P2-1 | `dh/score.py` complete: SPEC 9.1-9.5, integer ms, `PATTERN_V1` (9.3). `tests/ag1/test_score.py` and... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-2 | `dh/replay.py` (7.9) as a generator, simulated clock, blocking vs non-blocking calls.... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-3 | `dh/dets.py` (7.4) reading via `dh.clients.vss.detections` (AG2), caching to `data/det/<clip_id>.jsonl`, YOLO... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-4 | `dh/track.py` (7.5, App C), `dh/risk.py` (7.6), writing `data/tracks/<clip_id>.jsonl` (top 3 tracks per frame... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-5 | `dh/agents/base.py`, `yolo_naive.py`, `yolo_risk.py` (7.10.1, 7.10.2, 12.1, 12.2, 12.4).... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-6 | `dh/baselines.py`: `random@k` and `random@matched` (7.10.7, App E). `tests/ag1/test_baselines.py`. | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-7 | `dh/evals.py` minimal: `start_run` writes `data/runs/<run_id>/run.json` and `clips.jsonl` per... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
+| AG1-P2-1 | `dh/score.py` complete: SPEC 9.1-9.5, integer ms, `PATTERN_V1` (9.3). `tests/ag1/test_score.py` and... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-2 | `dh/replay.py` (7.9) as a generator, simulated clock, blocking vs non-blocking calls.... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-3 | `dh/dets.py` (7.4) reading via `dh.clients.vss.detections` (AG2), caching to `data/det/<clip_id>.jsonl`, YOLO... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-4 | `dh/track.py` (7.5, App C), `dh/risk.py` (7.6), writing `data/tracks/<clip_id>.jsonl` (top 3 tracks per frame... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-5 | `dh/agents/base.py`, `yolo_naive.py`, `yolo_risk.py` (7.10.1, 7.10.2, 12.1, 12.2, 12.4).... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-6 | `dh/baselines.py`: `random@k` and `random@matched` (7.10.7, App E). `tests/ag1/test_baselines.py`. | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-7 | `dh/evals.py` minimal: `start_run` writes `data/runs/<run_id>/run.json` and `clips.jsonl` per... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
 | AG1-P2-8 | 11:00-11:15: your human does blind sits through AG3's sit screen or the label screen. | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-9 | Gaming check before 12:30 (SPEC 14.5, risk 11): random clickers on the dev clips with the real scorer. Random... | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-10 | Start the verdict grid (`dh/grid.py`, 12.3) in the background if time allows. | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
-| AG1-P2-PR | Phase 2 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
+| AG1-P2-9 | Gaming check before 12:30 (SPEC 14.5, risk 11): random clickers on the dev clips with the real scorer. Random... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-10 | Start the verdict grid (`dh/grid.py`, 12.3) in the background if time allows. | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-PR | Phase 2 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
 | AG2-P2-1 | `dh/mine.py` (7.1): search plus scrubbing sets 2-6; 20+ candidate chunks (moving ego, onset >= 5 s) into... | AG2 (Riyu-D1) | 12:30 | [ ] |  | [ ] | [ ] |
 | AG2-P2-2 | `make build`: `data/clips.json` with dev/test split (aim 6 dev, 14+ test), joined local clips (`data/clips/`,... | AG2 (Riyu-D1) | 12:30 | [ ] |  | [ ] | [ ] |
 | AG2-P2-3 | `dh/frames.py` (7.3) at 5 fps into `data/frames/` (gitignored), for AG1's Cosmos inputs. | AG2 (Riyu-D1) | 12:30 | [ ] |  | [ ] | [ ] |

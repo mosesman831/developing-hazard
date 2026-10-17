@@ -96,3 +96,109 @@ def score_clip(clicks: list[float], hazards: list[dict], duration_s: float) -> d
         "hazard_points": points_by_id,
         "hazards": breakdown,
     }
+
+
+def click_time(t_trigger: float, blocking_latencies_s: list[float]) -> float:
+    """SPEC 9.5. t_click = t_trigger + sum of blocking latencies."""
+    return t_trigger + sum(blocking_latencies_s)
+
+
+def _median(values: list[float]) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    n = len(ordered)
+    mid = n // 2
+    if n % 2:
+        return ordered[mid]
+    return (ordered[mid - 1] + ordered[mid]) / 2
+
+
+def _click_times(clicks: list) -> list[float]:
+    times: list[float] = []
+    for click in clicks:
+        if isinstance(click, dict):
+            times.append(float(click["t"]))
+        else:
+            times.append(float(click))
+    return times
+
+
+def _in_window(t: float, ws: float, we: float) -> bool:
+    return _ms(ws) <= _ms(t) <= _ms(we)
+
+
+def aggregate(rows: list[dict]) -> dict:
+    """SPEC 9.4 over clip result dicts."""
+    score = sum(int(row.get("clip_score", 0)) for row in rows)
+    max_score = 5 * sum(len(row.get("hazard_points", {})) for row in rows)
+    pct = score / max_score if max_score else 0.0
+
+    total_hazards = 0
+    hits = 0
+    hit_points: list[int] = []
+    flagged = 0
+    total_clicks = 0
+    false_clicks = 0
+    reactions: list[float] = []
+    leads: list[float] = []
+    latencies: list[float] = []
+
+    for row in rows:
+        pattern = row.get("pattern") or {}
+        if pattern.get("flag"):
+            flagged += 1
+
+        clicks = row.get("clicks") or []
+        click_times = _click_times(clicks)
+        total_clicks += len(click_times)
+
+        windows: list[tuple[float, float]] = []
+        for hazard in row.get("hazards") or []:
+            window = hazard.get("window")
+            if window and len(window) >= 2:
+                windows.append((float(window[0]), float(window[1])))
+
+        for t in click_times:
+            if not any(_in_window(t, ws, we) for ws, we in windows):
+                false_clicks += 1
+
+        for hazard in row.get("hazards") or []:
+            total_hazards += 1
+            points = int(hazard.get("points", 0))
+            if points >= 1:
+                hits += 1
+                hit_points.append(points)
+                window = hazard.get("window") or [0.0, 0.0]
+                ws, we = float(window[0]), float(window[1])
+                first_click = hazard.get("first_click")
+                if first_click is not None:
+                    reactions.append(float(first_click) - ws)
+                    leads.append(we - float(first_click))
+
+        for call in row.get("calls") or []:
+            if isinstance(call, dict) and call.get("latency_s") is not None:
+                latencies.append(float(call["latency_s"]))
+
+    n_clips = len(rows)
+    hit_rate = hits / total_hazards if total_hazards else 0.0
+    mean_points_when_hit = (
+        sum(hit_points) / len(hit_points) if hit_points else 0.0
+    )
+    pattern_rate = flagged / n_clips if n_clips else 0.0
+    clicks_per_clip = total_clicks / n_clips if n_clips else 0.0
+    mean_latency_s = sum(latencies) / len(latencies) if latencies else 0.0
+
+    return {
+        "score": score,
+        "max": max_score,
+        "pct": pct,
+        "hit_rate": hit_rate,
+        "mean_points_when_hit": mean_points_when_hit,
+        "pattern_rate": pattern_rate,
+        "clicks_per_clip": clicks_per_clip,
+        "false_clicks": false_clicks,
+        "median_reaction_s": _median(reactions),
+        "median_lead_s": _median(leads),
+        "mean_latency_s": mean_latency_s,
+    }
