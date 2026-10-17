@@ -68,7 +68,7 @@ Project `vastdata/team-36`. Headline traces:
 
 ## Handoffs
 
-- `data/leaderboard.json` (`testset_id` `dev`, max 15). Every agent row has `ci90` and `lift_vs_chance`. No human rows: `data/humans.jsonl` is missing.
+- `data/leaderboard.json` (`testset_id` `dev`, max 15). Every agent row has `ci90` and `lift_vs_chance`.
 - `data/grid/cosmos_verify_v2/`, `data/tracks/`, `data/proposals/`, `data/det/`.
 - `dh.evals.start_run` now runs `yolo_cosmos_gate` and `yolo_cosmos_async` and looks up the grid. `build_leaderboard` writes the file above.
 
