@@ -5,13 +5,13 @@ Only AG3 edits this file, inside its own PR.
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
 | 1 | Merged | ag3/phase-1 | #11 | 2026-10-17 11:59 |
-| 2 | In progress | ag3/phase-2 | | 2026-10-17 12:12 |
+| 2 | PR open | ag3/phase-2 | #15 | 2026-10-17 12:14 |
 | 3 | Not started | ag3/phase-3 | | |
 | 4 | Not started | ag3/phase-4 | | |
 
 ## Now
 
-Doing: Phase 2 PR (video proxy, sit and watch screens, snapshot, MVP deploy).
+Doing: waiting on the merge bot for #15.
 Next: wait for the merge bot. Do not start Phase 3.
 Blocked: nothing on the code. `data/tracks/` is not on main, so the watch screen has no boxes for the recorded run. Laptop port-forward was not confirmed.
 
@@ -40,6 +40,7 @@ A segment does play from inside the pod via the in-cluster backend.
 
 ## Log (newest first)
 
+- 2026-10-17 12:14 BST. PR #15 open: https://github.com/mosesman831/developing-hazard/pull/15
 - 2026-10-17 12:12 BST. Phase 2 checks: `pytest tests/ag3` 18 passed, full suite 133 passed before the health fallback tweak. `make snapshot` 204835 bytes. Dev smoke and `/app` smoke passed, including video 206. Blind sit on `c01` at 21.0s scored 4. Headless Chrome showed the 26-clip list, sit reached "segments ready", and the watch screen showed score 0, risk 0.00, no clicks, and a window band for the recorded run.
 - 2026-10-17 11:57 BST. PR #11 open: https://github.com/mosesman831/developing-hazard/pull/11
 - 2026-10-17 11:52 BST. Phase 1 checks passed. `make test`: 67 passed. `pytest tests/ag3`: 15 passed. `make serve` on port 8011 returned the home HTML. `scripts/smoke.sh` against `127.0.0.1:8000` ok for `/health`, `/api/health`, `/api/clips`, `/api/leaderboard`. `deploy/deploy.sh` exited 0 after a retry on the ingress (first curl was 503 while endpoints caught up). Past the 10:30 due time.
