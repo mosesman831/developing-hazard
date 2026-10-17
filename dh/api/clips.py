@@ -26,8 +26,13 @@ def _read_jsonl(path: Path) -> list[dict]:
     return rows
 
 
-def load_clip_records() -> tuple[list[dict], list[dict]]:
-    """Clips and hazards from the data directory, or the examples."""
+def load_clip_records() -> tuple[list[dict], list[dict], bool]:
+    """Clips and hazards from the data directory, or the examples.
+
+    The third value is true when the catalogue is the example file.
+    Example tracks are only served in that case, so a real clip with no
+    ``data/tracks`` file does not pick up placeholder boxes.
+    """
     clips: list[dict] | None = None
     hazards: list[dict] | None = None
     try:
@@ -41,10 +46,10 @@ def load_clip_records() -> tuple[list[dict], list[dict]]:
     except (OSError, ValueError):
         hazards = None
     if not clips:
-        return example_clips(), example_hazards()
+        return example_clips(), example_hazards(), True
     if hazards is None:
         hazards = []
-    return clips, hazards
+    return clips, hazards, False
 
 
 def _hazards_for(hazards: list[dict], clip_id: str) -> list[dict]:
@@ -52,7 +57,7 @@ def _hazards_for(hazards: list[dict], clip_id: str) -> list[dict]:
 
 
 def clip_with_hazards(clip_id: str) -> tuple[dict, list[dict]] | None:
-    clips, hazards = load_clip_records()
+    clips, hazards, _examples = load_clip_records()
     for clip in clips:
         if clip.get("clip_id") == clip_id:
             return clip, _hazards_for(hazards, clip_id)
@@ -60,8 +65,8 @@ def clip_with_hazards(clip_id: str) -> tuple[dict, list[dict]] | None:
 
 
 def media_sources() -> set[str]:
-    """Segment sources and original videos the stub player is allowed to serve."""
-    clips, _hazards = load_clip_records()
+    """Segment sources and original videos the proxy is allowed to serve."""
+    clips, _hazards, _examples = load_clip_records()
     sources: set[str] = set()
     for clip in clips:
         original = clip.get("original_video")
@@ -97,7 +102,7 @@ def _tracks_path(clip_id: str) -> Path | None:
 
 @router.get("/api/clips")
 def list_clips() -> list[dict]:
-    clips, hazards = load_clip_records()
+    clips, hazards, _examples = load_clip_records()
     return [_summary(clip, hazards) for clip in clips]
 
 
@@ -122,4 +127,7 @@ def get_tracks(clip_id: str) -> list[dict]:
     path = _tracks_path(clip_id)
     if path is not None and path.is_file():
         return _read_jsonl(path)
-    return example_tracks(clip_id)
+    _clips, _hazards, examples = load_clip_records()
+    if examples:
+        return example_tracks(clip_id)
+    return []

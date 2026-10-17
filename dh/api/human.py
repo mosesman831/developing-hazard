@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
 
-from dh.api._stubs import current_mode, try_score_clip
+from dh.api._stubs import current_mode, example_score
 from dh.api.clips import clip_with_hazards
 from dh.clips import data_dir
 
@@ -17,6 +17,18 @@ router = APIRouter()
 _ROLES = frozenset({"team", "judge", "guest"})
 
 sessions: list[dict] = []
+
+
+def _score(clicks: list[float], hazards: list[dict], duration_s: float) -> dict:
+    """Score with AG1's scorer. The example score is only the import fallback."""
+    try:
+        from dh.score import score_clip
+    except ImportError:
+        return example_score()
+    scored = score_clip(clicks, hazards, duration_s)
+    if "agents" not in scored:
+        scored = {**scored, "agents": {}}
+    return scored
 
 
 def _clicks(body: dict) -> list[float]:
@@ -62,7 +74,7 @@ def post_human(body: dict) -> dict:
         raise HTTPException(status_code=422, detail="clip has no duration")
 
     # Blind sits still score against labels. The server holds the windows.
-    scored = try_score_clip(clicks, [dict(hazard) for hazard in hazards], float(clip["duration_s"]))
+    scored = _score(clicks, [dict(hazard) for hazard in hazards], float(clip["duration_s"]))
     session = {
         "session_id": f"h_{uuid.uuid4().hex[:8]}",
         "name": name,
@@ -70,6 +82,7 @@ def post_human(body: dict) -> dict:
         "blind": blind,
         "clip_id": clip_id,
         "clicks": clicks,
+        "clip_score": scored["clip_score"],
         "created_at": datetime.now(timezone.utc).isoformat(),
     }
     sessions.append(session)

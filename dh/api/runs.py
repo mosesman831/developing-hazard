@@ -102,11 +102,26 @@ def explain(run_id: str, hazard_id: str) -> dict:
 
 @router.get("/api/runs/{run_id}/stream")
 def stream_run(run_id: str, clip: str | None = None) -> StreamingResponse:
-    if _find_run(run_id) is None:
+    found = _find_run(run_id)
+    if found is None:
         raise HTTPException(status_code=404, detail="run not found")
-    # Phase 1 replays one example score. The clip query is accepted for later.
-    _ = clip
-    payload = json.dumps({"clip_score": example_score()["clip_score"]})
+    _run, path = found
+    rows = _clip_results(run_id, path)
+    chosen = None
+    for row in rows:
+        if clip and row.get("clip_id") != clip:
+            continue
+        chosen = row
+        break
+    if chosen is None and rows and not clip:
+        chosen = rows[0]
+    score = chosen.get("clip_score") if chosen else None
+    if score is None:
+        try:
+            score = example_score()["clip_score"]
+        except (OSError, IndexError, KeyError):
+            score = None
+    payload = json.dumps({"clip_score": score})
 
     def events():
         yield f"event: score\ndata: {payload}\n\n"

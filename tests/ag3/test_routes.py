@@ -226,22 +226,56 @@ def test_post_run(api):
     assert isinstance(response.json()["run_id"], str)
 
 
-def test_video(api):
+class _FakeUpstream:
+    def __init__(self, range_header):
+        self.range_header = range_header
+        self.status_code = 206 if range_header else 200
+        self.headers = {
+            "Content-Type": "video/mp4",
+            "Accept-Ranges": "bytes",
+            "Content-Length": "4",
+        }
+        if range_header:
+            self.headers["Content-Range"] = "bytes 0-3/4"
+        self._closed = False
+
+    def iter_content(self, chunk_size=1024):
+        yield b"ftyp"
+
+    def close(self):
+        self._closed = True
+
+
+def test_video(api, monkeypatch):
     clips = load_example("clips.json", ("segments", "original_video"))
     source = clips[0]["segments"][0]["source"]
+    seen = {}
+
+    def fake_open(src, range_header):
+        seen["source"] = src
+        seen["range"] = range_header
+        return _FakeUpstream(range_header)
+
+    monkeypatch.setattr("dh.api.video.open_upstream", fake_open)
+
     missing = api.get("/video")
     assert missing.status_code == 400
 
-    response = api.get("/video", params={"source": source})
-    assert response.status_code == 200
+    response = api.get("/video", params={"source": source}, headers={"Range": "bytes=0-3"})
+    assert response.status_code == 206
     assert response.headers["content-type"].startswith("video/")
     assert response.headers["accept-ranges"] == "bytes"
+    assert response.headers["content-range"] == "bytes 0-3/4"
+    assert response.content == b"ftyp"
+    assert seen["source"] == source
+    assert seen["range"] == "bytes=0-3"
 
     original = api.get("/video", params={"source": clips[0]["original_video"]})
     assert original.status_code == 200
 
     unknown = api.get("/video", params={"source": "s3://not-in-list"})
     assert unknown.status_code == 404
+    assert seen["source"] != "s3://not-in-list"
 
 
 def test_explain_and_stream(api):
@@ -253,6 +287,45 @@ def test_explain_and_stream(api):
     assert stream.status_code == 200
     assert "event: score" in stream.text
     assert "clip_score" in stream.text
+
+
+def test_real_clip_without_tracks_is_empty(monkeypatch, tmp_path):
+    clips = [
+        {
+            "clip_id": "c01",
+            "duration_s": 30.0,
+            "split": "dev",
+            "segments": [{"source": "s3://real/seg.mp4", "start_s": 0.0, "end_s": 5.0}],
+        }
+    ]
+    (tmp_path / "clips.json").write_text(json.dumps(clips), encoding="utf-8")
+    (tmp_path / "hazards.json").write_text("[]", encoding="utf-8")
+    monkeypatch.setenv("DH_MODE", "dev")
+    monkeypatch.setenv("DH_DATA_DIR", str(tmp_path))
+    with TestClient(create_app()) as client:
+        response = client.get("/api/clips/c01/tracks")
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+def test_snapshot_under_budget(tmp_path):
+    from dh.snapshot import SnapshotError, build_snapshot, budget_bytes
+
+    size = build_snapshot(tmp_path / "snapshot")
+    assert size > 0
+    assert size <= budget_bytes()
+    assert (tmp_path / "snapshot" / "dh" / "server.py").is_file()
+    assert (tmp_path / "snapshot" / "web" / "index.html").is_file()
+    assert not list((tmp_path / "snapshot").rglob("*.mp4"))
+
+
+def test_snapshot_rejects_over_budget(monkeypatch, tmp_path):
+    from dh import snapshot as snapshot_mod
+
+    monkeypatch.setattr(snapshot_mod, "budget_bytes", lambda: 1)
+    with pytest.raises(snapshot_mod.SnapshotError):
+        snapshot_mod.build_snapshot(tmp_path / "too-big")
+    assert not (tmp_path / "too-big").exists()
 
 
 def test_demo_mode(demo):

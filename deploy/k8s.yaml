@@ -24,14 +24,32 @@ spec:
           env:
             - name: PORT
               value: "8080"
+            - name: DH_MODE
+              value: demo
+            - name: DH_DATA_DIR
+              value: /code/data
+            - name: USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: developing-hazard-vss-creds
+                  key: VSS_USERNAME
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: developing-hazard-vss-creds
+                  key: VSS_PASSWORD
+            - name: INGRESS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: developing-hazard-vss-creds
+                  key: VSS_URL
           command:
             - bash
             - -lc
             - >-
-              set -euo pipefail; mkdir -p /code; cp /cm/main.py /code/main.py;
-              cp /cm/requirements.txt /code/requirements.txt; cd /code;
-              pip install --no-cache-dir -q -r requirements.txt;
-              exec python main.py
+              set -euo pipefail; mkdir -p /code; tar -xzf /cm/app.tar.gz -C /code;
+              cd /code; pip install --no-cache-dir -q -r requirements-pod.txt;
+              exec python -m uvicorn dh.server:app --host 0.0.0.0 --port "$PORT"
           volumeMounts:
             - name: code
               mountPath: /cm

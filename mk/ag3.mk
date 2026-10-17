@@ -8,7 +8,7 @@ serve:
 	DH_MODE=dev uvicorn dh.server:app --host 0.0.0.0 --port $(DH_PORT)
 
 snapshot:
-	@echo "snapshot: dh/snapshot.py lands in Phase 2"
+	python -m dh.snapshot
 
 deploy:
 	bash deploy/deploy.sh

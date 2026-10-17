@@ -19,4 +19,13 @@ def get_leaderboard() -> dict:
         payload = json.loads(path.read_text(encoding="utf-8"))
         if isinstance(payload, dict):
             return payload
-    return example_leaderboard()
+    try:
+        return example_leaderboard()
+    except OSError:
+        # The demo pod does not ship contracts/examples. Do not invent scores.
+        return {
+            "testset_id": None,
+            "max": None,
+            "dvsa_reference_pct": 0.587,
+            "rows": [],
+        }
