@@ -67,10 +67,16 @@ done < <(git ls-files -z)
 
 while IFS= read -r commit; do
   [[ -z "$commit" ]] && continue
-  patch="$(git show "$commit" -p --no-color 2>/dev/null || true)"
-  if scan_text "commit:$commit" "$patch"; then
-    HITS=1
-  fi
+  while IFS= read -r path; do
+    [[ -z "$path" ]] && continue
+    if [[ "$path" =~ $SKIP_PATH_RE ]]; then
+      continue
+    fi
+    patch="$(git show "$commit" -p --no-color -- "$path" 2>/dev/null || true)"
+    if scan_text "commit:$commit file:$path" "$patch"; then
+      HITS=1
+    fi
+  done < <(git diff-tree --no-commit-id --name-only -r "$commit" 2>/dev/null || true)
 done < <(git rev-list --all)
 
 printf 'secret_scan: files_scanned=%s hits=%s\n' "$FILES_SCANNED" "$HITS"
