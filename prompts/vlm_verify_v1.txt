@@ -1,0 +1,13 @@
+This image is a 2x2 grid of frames from a forward-facing dashcam in a car, 0.5 s apart,
+in reading order: top-left is oldest. Each frame is stamped with its time.
+One road user is outlined in magenta.
+
+Answer each question about the outlined road user with one option, from what you can see:
+1. where: in_our_lane | at_lane_edge_or_kerb | on_pavement | other_lane | unclear
+2. motion: moving_into_our_path | moving_along_our_path | moving_away | stationary | unclear
+3. our_car: moving | slowing | stopped | unclear
+4. act: would a careful driver of this car need to slow down or steer in the next
+   3 seconds because of it? yes | no | unclear
+
+Reply with JSON only, no reasoning:
+{"where": "...", "motion": "...", "our_car": "...", "act": "...", "object": "<2-4 words>"}

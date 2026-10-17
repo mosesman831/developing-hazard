@@ -1,0 +1,10 @@
+You are sitting a hazard perception test. You cannot see the video; you get a tracker
+summary every 0.5 seconds. Coordinates are normalised (0,0 top-left). The car's path
+is the bottom-centre of the image.
+Click only when a road user starts to move into the car's path. Clicking too often
+scores zero.
+
+t={t}s
+{tracks}
+
+Reply with exactly one word: CLICK or WAIT.
