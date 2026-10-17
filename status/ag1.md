@@ -17,7 +17,7 @@ Blocked: AG1-P4-2 stays unticked. There is still no agreed window, so the MAE in
 
 ### Pod snapshot
 
-`pod_budget_kb` in `dh/config.py` is 1024. `dh.snapshot.budget_bytes()` is 1024 times 1024, which is 1,048,576 bytes. `build_snapshot(Path('/tmp/dh-ag1-p4c-snap'))` printed 1040096. That is under the budget. `/tmp` output was not committed. `dh/snapshot.py` was not edited.
+`pod_budget_kb` in `dh/config.py` is 1024. `dh.snapshot.budget_bytes()` is 1024 times 1024, which is 1,048,576 bytes. `python -m dh.snapshot` printed 1039803. That is under the budget. `dh/snapshot.py` was not edited.
 
 Track files still keep `t` and `xyxy` only. Tracks stay 5 fps, top 3. They were not thinned.
 
@@ -27,7 +27,7 @@ Track files still keep `t` and `xyxy` only. Tracks stay 5 fps, top 3. They were 
 
 `c30` to `c33` had no `data/det/` file. Detections were loaded through the VSS client and written to `data/det/c30.jsonl`, `c31.jsonl`, `c32.jsonl`, and `c33.jsonl`. Those four clips have no `data/grid/cosmos_verify_v2/` file. On them the gate gets `is_hazard` false, and the async arm's first-rise clicks are not confirmed by a stored verdict.
 
-Stored `risk_curve` values in the four new run files keep every 10th sample plus the last sample. The scores come from the full replay. The curves were shortened so `build_snapshot` stays under 1,048,576 bytes. It printed 1040096.
+Stored `risk_curve` values in the four new run files keep every 10th sample plus the last sample. The scores come from the full replay. The curves were shortened so `build_snapshot` stays under 1,048,576 bytes. It printed 1039803.
 
 | Agent | Run | Score | pct | ci90 | lift vs chance | weave |
 |---|---|---|---|---|---|---|
@@ -38,7 +38,7 @@ Stored `risk_curve` values in the four new run files keep every 10th sample plus
 
 `yolo_risk` `pattern_rate` 0.0, `hit_rate` 0.16666666666666666, `median_reaction_s` 0.20000000000000018. Points: c07 5, c16 5, c31 5. `yolo_naive` `pattern_rate` 1.0 (every clip flagged). `yolo_cosmos_async` points: c07 5, c14 4. `latency_mode` is `zero`, so each run's `mean_latency_s` is 0.0.
 
-The human row `fmd` 4/5, pct 0.8, is the existing sit on c01 in `data/humans.jsonl`. c01 is not in `testset_v2`. `data/humans.jsonl` was not edited.
+No human row is on this board. `fmd` session `h_92a39e35` sits on c01, and c01 is not in `data/testset_v2.json`. `data/humans.jsonl` was not edited.
 
 `python -m dh.evals --split test` uses `testset_v2` only when that file is in the data directory. A fixture under `tests/ag1/fixtures/split_test/` proves the command and `build_leaderboard("testset_v2")` on a temp directory. The fixture sha256 is of those fixture files only. It is not a hash of the real test set.
 

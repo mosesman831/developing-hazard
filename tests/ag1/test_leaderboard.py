@@ -100,7 +100,16 @@ def test_no_runs_writes_an_empty_board(tmp_path: Path):
 
 def test_blind_human_is_scored_and_a_seen_session_is_left_out(tmp_path: Path):
     (tmp_path / "clips.json").write_text(
-        json.dumps([{"clip_id": "c1", "duration_s": 30.0, "split": "dev"}]),
+        json.dumps(
+            [
+                {"clip_id": "c1", "duration_s": 30.0, "split": "dev"},
+                {"clip_id": "c2", "duration_s": 30.0, "split": "dev"},
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "testset_v2.json").write_text(
+        json.dumps({"testset_id": "testset_v2", "clips": ["c1"]}),
         encoding="utf-8",
     )
     (tmp_path / "hazards.json").write_text(
@@ -134,8 +143,17 @@ def test_blind_human_is_scored_and_a_seen_session_is_left_out(tmp_path: Path):
         "clicks": [0.0],
         "created_at": "2026-10-17T10:05:00+01:00",
     }
+    outside = {
+        "session_id": "h_outside",
+        "name": "Cara",
+        "role": "team",
+        "blind": True,
+        "clip_id": "c2",
+        "clicks": [0.0],
+        "created_at": "2026-10-17T10:06:00+01:00",
+    }
     (tmp_path / "humans.jsonl").write_text(
-        json.dumps(blind) + "\n" + json.dumps(seen) + "\n",
+        json.dumps(blind) + "\n" + json.dumps(seen) + "\n" + json.dumps(outside) + "\n",
         encoding="utf-8",
     )
     board = build_leaderboard("testset_v0", data_dir=tmp_path)
