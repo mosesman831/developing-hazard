@@ -5,7 +5,7 @@ Only AG2 edits this file, inside its own PR.
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
 | 1 | Merged | ag2/phase-1 | #4 | 2026-10-17 10:54 |
-| 2 | PR open, freeze blocked | ag2/phase-2 | | 2026-10-17 11:39 |
+| 2 | PR open, freeze blocked | ag2/phase-2 | #8 | 2026-10-17 11:39 |
 | 3 | Not started | ag2/phase-3 | | |
 | 4 | Not started | ag2/phase-4 | | |
 
