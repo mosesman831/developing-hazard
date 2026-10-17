@@ -11,8 +11,8 @@ Only AG3 edits this file, inside its own PR.
 
 ## Now
 
-Doing: Phase 3-b evidence for the judge sit on the deployed app.
-Next: open the Phase 3-b PR and stop. Do not start Phase 4.
+Doing: waiting on the merge bot for #27.
+Next: wait for the merge bot. Do not start Phase 4.
 Blocked: `make snapshot` wrote 927524 bytes. That is over 900 KB (921600). `dh/snapshot.py` was not changed. `pod_budget_kb` on main is 1024, so the snapshot command exited 0.
 
 ## Handoffs ready for others
@@ -40,6 +40,7 @@ A segment does play from inside the pod via the in-cluster backend.
 
 ## Log (newest first)
 
+- 2026-10-17 14:05 BST. PR #27 open: https://github.com/mosesman831/developing-hazard/pull/27
 - 2026-10-17 14:04 BST. Redeployed after #20 merged. `pytest tests`: 176 passed. `make snapshot`: 927524 bytes, over 900 KB. Judge sit on the deployed app, clip `c07`, at http://video-lab-team-36.cosmos.vastdata.com/app/#/sit/c07. Name `fmd`, role judge, seen-before checked (blind false). Six segments ready. After the clip the screen showed score 0, no pattern flag, `c07_h1` window 20.5-24, points 0, first click none. Side by side: You 0, `yolo_risk` 0. No other agent run includes `c07`. Pod log `h_7225d45b`, clicks `[]`, `clip_score` 0, created 2026-10-17T13:03:55Z. Leaderboard `#/leaderboard` on the same deploy: `yolo_risk` 6/15 40.0% lift 0.32; `yolo_cosmos_async` 0/15 lift -0.13 mean latency 0.95 s; `yolo_cosmos_gate` 0/15 mean latency 0.94 s; `yolo_naive` 0/15 pattern rate 0.83; `fmd` 4/15 80.0%; `smoke` 0/15. Per clip: `c01` smoke 0, best agent `yolo_cosmos_async` 0; `c01` fmd 4, best agent `yolo_cosmos_async` 0. No hazard-type breakdown. Judges open https://workshop.thecosmoslabs.com and click App.
 - 2026-10-17 12:27 BST. Phase 3 merged: https://github.com/mosesman831/developing-hazard/pull/17
 - 2026-10-17 12:25 BST. PR #17 open: https://github.com/mosesman831/developing-hazard/pull/17. GitHub created the PR at 12:25:52 BST. The status line was previously stamped 12:30, which was after the commit that added it (12:26:04 BST).
