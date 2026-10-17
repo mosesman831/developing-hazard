@@ -7,7 +7,7 @@ Only AG3 edits this file, inside its own PR.
 | 1 | Merged | ag3/phase-1 | #11 | 2026-10-17 11:59 |
 | 2 | Merged | ag3/phase-2 | #15 | 2026-10-17 12:15 |
 | 3 | Merged | ag3/phase-3 | #17 | 2026-10-17 12:27 |
-| 4 | In progress | ag3/phase-4-c | | 2026-10-17 15:30 |
+| 4 | PR open | ag3/phase-4-c | #44 | 2026-10-17 15:31 |
 
 ## Now
 
@@ -127,6 +127,7 @@ A segment does play from inside the pod via the in-cluster backend.
 
 ## Log (newest first)
 
+- 2026-10-17 15:31 BST. PR #44 open: https://github.com/mosesman831/developing-hazard/pull/44
 - 2026-10-17 15:30 BST. Phase 4-c on `ag3/phase-4-c`. Deployed main's snapshot. Smoke failed on explain 404, so AG3-P4-1 and AG3-P4-4 stay unticked. Live Cosmos call on c03 returned in 1.550 s. VastDB has no `developing_hazard` schema. Weave call `01a1499f-8129-7d6b-95d6-7b63cee224df` exists. Deployed leaderboard, c03 replay, and miss panel render at `/app/`.
 - 2026-10-17 14:05 BST. PR #27 open: https://github.com/mosesman831/developing-hazard/pull/27
 - 2026-10-17 14:04 BST. Redeployed after #20 merged. `pytest tests`: 176 passed. `make snapshot`: 927524 bytes, over 900 KB. Judge sit on the deployed app, clip `c07`, at http://video-lab-team-36.cosmos.vastdata.com/app/#/sit/c07. Name `fmd`, role judge, seen-before checked (blind false). Six segments ready. After the clip the screen showed score 0, no pattern flag, `c07_h1` window 20.5-24, points 0, first click none. Side by side: You 0, `yolo_risk` 0. No other agent run includes `c07`. Pod log `h_7225d45b`, clicks `[]`, `clip_score` 0, created 2026-10-17T13:03:55Z. Leaderboard `#/leaderboard` on the same deploy: `yolo_risk` 6/15 40.0% lift 0.32; `yolo_cosmos_async` 0/15 lift -0.13 mean latency 0.95 s; `yolo_cosmos_gate` 0/15 mean latency 0.94 s; `yolo_naive` 0/15 pattern rate 0.83; `fmd` 4/15 80.0%; `smoke` 0/15. Per clip: `c01` smoke 0, best agent `yolo_cosmos_async` 0; `c01` fmd 4, best agent `yolo_cosmos_async` 0. No hazard-type breakdown. Judges open https://workshop.thecosmoslabs.com and click App.
