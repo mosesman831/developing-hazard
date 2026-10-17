@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: developing-hazard
+  namespace: NS_PLACEHOLDER
+  labels:
+    app: developing-hazard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: developing-hazard
+  template:
+    metadata:
+      labels:
+        app: developing-hazard
+    spec:
+      containers:
+        - name: developing-hazard
+          image: python:3.12-slim
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: PORT
+              value: "8080"
+          command:
+            - bash
+            - -lc
+            - >-
+              set -euo pipefail; mkdir -p /code; cp /cm/main.py /code/main.py;
+              cp /cm/requirements.txt /code/requirements.txt; cd /code;
+              pip install --no-cache-dir -q -r requirements.txt;
+              exec python main.py
+          volumeMounts:
+            - name: code
+              mountPath: /cm
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 12
+      volumes:
+        - name: code
+          configMap:
+            name: developing-hazard-code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: developing-hazard
+  namespace: NS_PLACEHOLDER
+  labels:
+    app: developing-hazard
+spec:
+  type: ClusterIP
+  selector:
+    app: developing-hazard
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: developing-hazard
+  namespace: NS_PLACEHOLDER
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: APP_HOST_PLACEHOLDER
+      http:
+        paths:
+          - path: /app(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: developing-hazard
+                port:
+                  number: 80
