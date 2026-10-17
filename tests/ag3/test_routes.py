@@ -508,6 +508,64 @@ def test_snapshot_rejects_over_budget(monkeypatch, tmp_path):
     assert not (tmp_path / "too-big").exists()
 
 
+def test_snapshot_copies_spatial_and_checks_configmap_payload(tmp_path):
+    from dh.snapshot import (
+        PAYLOAD_MARGIN_BYTES,
+        budget_bytes,
+        build_snapshot,
+        configmap_payload_bytes,
+        directory_size,
+    )
+
+    dest = tmp_path / "snapshot"
+    payload = build_snapshot(dest)
+    spatial = dest / "spatial"
+    assert (spatial / "index.html").is_file()
+    assert (spatial / "spatial.js").is_file()
+    assert (spatial / "presets.js").is_file()
+    assert (spatial / "fonts" / "ibm-plex-sans-400.woff2").is_file()
+    for excluded in ("fixtures", "tests", "media", "presets-data"):
+        assert not (spatial / excluded).exists(), excluded
+    assert '"/spatial"' in (dest / "dh" / "server.py").read_text(encoding="utf-8")
+    raw = directory_size(dest)
+    assert payload == configmap_payload_bytes(dest)
+    assert payload <= budget_bytes() - PAYLOAD_MARGIN_BYTES
+    assert payload < raw
+
+
+def test_snapshot_rejects_payload_over_margin(monkeypatch, tmp_path):
+    from dh import snapshot as snapshot_mod
+
+    limit = snapshot_mod.payload_budget_bytes()
+    monkeypatch.setattr(
+        snapshot_mod, "configmap_payload_bytes", lambda root: limit + 1
+    )
+    with pytest.raises(snapshot_mod.SnapshotError):
+        snapshot_mod.build_snapshot(tmp_path / "over-margin")
+    assert not (tmp_path / "over-margin").exists()
+
+
+def test_spatial_served_from_snapshot(monkeypatch, tmp_path):
+    import dh.server as server
+    from dh.snapshot import build_snapshot
+
+    dest = tmp_path / "snapshot"
+    build_snapshot(dest)
+    monkeypatch.setattr(server, "_SPATIAL_DIR", dest / "spatial")
+    monkeypatch.setattr(server, "_WEB_DIR", dest / "web")
+    monkeypatch.setenv("DH_MODE", "demo")
+    application = server.create_app()
+    with TestClient(application) as client:
+        page = client.get("/spatial/")
+        assert page.status_code == 200
+        assert "Spatial Hazard View" in page.text
+        script = client.get("/spatial/spatial.js")
+        assert script.status_code == 200
+        assert script.content == (dest / "spatial" / "spatial.js").read_bytes()
+        assert client.get("/spatial/fixtures/gen.mjs").status_code == 404
+        assert client.get("/spatial/presets-data/brake.json").status_code == 404
+
+
 def test_demo_mode(demo):
     hazard = load_example(
         "hazards.json",

@@ -61,7 +61,7 @@ def create_app() -> FastAPI:
     if _SPATIAL_DIR.is_dir():
         application.mount(
             "/spatial",
-            StaticFiles(directory=str(_SPATIAL_DIR)),
+            StaticFiles(directory=str(_SPATIAL_DIR), html=True),
             name="spatial",
         )
     if _WEB_DIR.is_dir():
