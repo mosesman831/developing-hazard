@@ -61,9 +61,10 @@ def put_hazard(hazard_id: str, body: HazardBody) -> dict:
     hazards = _hazards()
     for index, hazard in enumerate(hazards):
         if hazard.get("hazard_id") == hazard_id:
-            hazards[index] = _apply_labeller(hazard, body)
+            updated = _apply_labeller(hazard, body)
+            hazards[index] = updated
             write_json("hazards.json", hazards)
-            return hazards[index]
+            return visible_hazard(updated, body.labeller)
     raise HTTPException(status_code=404, detail="hazard not found")
 
 
@@ -88,9 +89,10 @@ def post_hazard(body: HazardCreate) -> dict:
         "segment_sources": [],
         "description": body.description,
     }
+    hazard["segment_sources"] = _sources_for_window(body.clip_id, body.ws, body.we)
     hazards.append(hazard)
     write_json("hazards.json", hazards)
-    return hazard
+    return visible_hazard(hazard, body.labeller)
 
 
 @router.post("/api/clips/{clip_id}/status")
@@ -114,36 +116,11 @@ def post_clip_status(clip_id: str, body: ClipStatusBody) -> dict:
 
 @router.post("/api/testset/freeze")
 def post_testset_freeze() -> dict:
-    """Freeze agreed hazards into the next ``testset_vN`` file."""
+    """Freeze agreed test-split hazards into the next ``testset_vN`` file."""
     try:
-        hazards = load_hazards()
-        clips = load_clips()
+        return _freeze_testset()
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail="clips or hazards are missing") from exc
-    known_clips = {clip.get("clip_id") for clip in clips}
-    agreed = [hazard for hazard in hazards if hazard.get("agreed") is True]
-    clip_ids: list[str] = []
-    hazard_ids: list[str] = []
-    for hazard in agreed:
-        clip_id = hazard.get("clip_id")
-        hazard_id = hazard.get("hazard_id")
-        if clip_id in known_clips and clip_id not in clip_ids:
-            clip_ids.append(clip_id)
-        if isinstance(hazard_id, str):
-            hazard_ids.append(hazard_id)
-    testset_id = f"testset_v{_next_testset_version()}"
-    payload = {
-        "testset_id": testset_id,
-        "frozen_at": datetime.now(timezone.utc).isoformat(),
-        "clips": clip_ids,
-        "hazards": hazard_ids,
-        "scorer_version": "score_v1",
-        "pattern_version": "PATTERN_V1",
-    }
-    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    payload["sha256"] = hashlib.sha256(canonical).hexdigest()
-    write_json(f"{testset_id}.json", payload)
-    return payload
 
 
 @router.get("/api/clips/{clip_id}/proposal")
@@ -164,6 +141,21 @@ def get_proposal(clip_id: str) -> dict:
     if not isinstance(payload, dict):
         raise HTTPException(status_code=404, detail="proposal is not available")
     return payload
+
+
+def visible_hazard(hazard: dict, caller: str) -> dict:
+    """Return hazard JSON safe for the caller (HTTP); disk keeps the full record."""
+    out = dict(hazard)
+    labellers = dict(hazard.get("labellers") or {})
+    if caller and caller in labellers:
+        out["labellers"] = labellers
+        if "auto_window" not in out:
+            out["auto_window"] = None
+    else:
+        kept = {caller: labellers[caller]} if caller and caller in labellers else {}
+        out["labellers"] = kept
+        out["auto_window"] = None
+    return out
 
 
 def _hazards() -> list[dict]:
@@ -206,6 +198,11 @@ def _apply_labeller(hazard: dict, body: HazardBody) -> dict:
         updated["agreed"] = False
     if "auto_window" not in updated:
         updated["auto_window"] = None
+    updated["segment_sources"] = _sources_for_window(
+        str(updated.get("clip_id") or ""),
+        float(updated["window_start"]),
+        float(updated["window_end"]),
+    ) or list(updated.get("segment_sources") or [])
     return updated
 
 
@@ -253,3 +250,75 @@ def _next_testset_version() -> int:
         if found:
             versions.append(int(found.group(1)))
     return max(versions) + 1 if versions else 0
+
+
+def _sources_for_window(clip_id: str, ws: float, we: float) -> list[str]:
+    """Segment sources whose clip-time span overlaps the window."""
+    try:
+        clips = load_clips()
+    except FileNotFoundError:
+        return []
+    for clip in clips:
+        if clip.get("clip_id") != clip_id:
+            continue
+        sources = []
+        for segment in clip.get("segments") or []:
+            start_s = segment.get("start_s")
+            end_s = segment.get("end_s")
+            source = segment.get("source")
+            if not isinstance(source, str):
+                continue
+            if not isinstance(start_s, (int, float)) or not isinstance(end_s, (int, float)):
+                continue
+            if end_s > ws and start_s < we:
+                sources.append(source)
+        return sources
+    return []
+
+
+def _in_test_split(clip: dict | None) -> bool:
+    """Dev clips and rejected or no-hazard clips stay out of a frozen test set."""
+    if not clip or clip.get("split") != "test":
+        return False
+    notes = clip.get("notes") or ""
+    if "[status:rejected]" in notes or "[status:no_hazard]" in notes:
+        return False
+    return True
+
+
+def _freeze_testset() -> dict:
+    """Run the same logic as POST /api/testset/freeze without the HTTP layer."""
+    hazards = load_hazards()
+    clips = load_clips()
+    clip_by_id = {clip.get("clip_id"): clip for clip in clips}
+    agreed = [hazard for hazard in hazards if hazard.get("agreed") is True]
+    clip_ids: list[str] = []
+    hazard_ids: list[str] = []
+    for hazard in agreed:
+        clip_id = hazard.get("clip_id")
+        hazard_id = hazard.get("hazard_id")
+        if not _in_test_split(clip_by_id.get(clip_id)):
+            continue
+        if clip_id not in clip_ids:
+            clip_ids.append(clip_id)
+        if isinstance(hazard_id, str):
+            hazard_ids.append(hazard_id)
+    testset_id = f"testset_v{_next_testset_version()}"
+    payload = {
+        "testset_id": testset_id,
+        "frozen_at": datetime.now(timezone.utc).isoformat(),
+        "clips": clip_ids,
+        "hazards": hazard_ids,
+        "scorer_version": "score_v1",
+        "pattern_version": "PATTERN_V1",
+    }
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+    payload["sha256"] = hashlib.sha256(canonical).hexdigest()
+    write_json(f"{testset_id}.json", payload)
+    return payload
+
+
+if __name__ == "__main__":
+    result = _freeze_testset()
+    print(result["testset_id"])
+    print(result["sha256"])

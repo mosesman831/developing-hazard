@@ -1,8 +1,9 @@
 """VSS retrieval client (SPEC 11.4).
 
-Login, search, stream and detections. Uses ``requests`` only so the pod can
-import this module. Re-logs in on HTTP 401. Timeouts are 30 seconds, and
-120 seconds for video. Never logs the JWT or the password.
+Login, search, stream, detections, explore, segments and metadata values.
+Uses ``requests`` only so the pod can import this module. Re-logs in on
+HTTP 401. Timeouts are 30 seconds, and 120 seconds for video. Never logs
+the JWT, the password, or response bodies.
 """
 
 from __future__ import annotations
@@ -246,6 +247,70 @@ class VSS:
             raise VSSError("VSS detections returned no object")
         return payload
 
+    def explore(
+        self,
+        *,
+        location: str | None = None,
+        limit: int = 48,
+        offset: int = 0,
+    ) -> dict:
+        """``GET /videos/explore``. Returns the JSON object. The body is not logged."""
+        params: dict = {"scope": "all", "limit": limit, "offset": offset}
+        if location is not None:
+            params["location"] = location
+        response = self._call(
+            "GET",
+            "/videos/explore",
+            timeout=TIMEOUT_S,
+            params=params,
+        )
+        try:
+            payload = response.json()
+        except ValueError:
+            response.close()
+            raise VSSError("VSS explore returned no JSON")
+        response.close()
+        if not isinstance(payload, dict):
+            raise VSSError("VSS explore returned no object")
+        return payload
+
+    def segments(self, original_video: str) -> list[dict]:
+        """``GET /tools/segments``. Returns the segment list. The body is not logged."""
+        response = self._call(
+            "GET",
+            "/tools/segments",
+            timeout=TIMEOUT_S,
+            params={"original_video": original_video},
+        )
+        try:
+            payload = response.json()
+        except ValueError:
+            response.close()
+            raise VSSError("VSS segments returned no JSON")
+        response.close()
+        found = _segment_list(payload)
+        if found is None:
+            raise VSSError("VSS segments returned no list")
+        return found
+
+    def metadata_values(self, field: str, limit: int = 50) -> list[str]:
+        """``GET /metadata/values``. Returns the values list. The body is not logged."""
+        response = self._call(
+            "GET",
+            "/metadata/values",
+            timeout=TIMEOUT_S,
+            params={"field": field, "limit": limit},
+        )
+        try:
+            payload = response.json()
+        except ValueError:
+            response.close()
+            raise VSSError("VSS metadata values returned no JSON")
+        response.close()
+        if not isinstance(payload, dict) or not isinstance(payload.get("values"), list):
+            raise VSSError("VSS metadata values returned no values list")
+        return [item for item in payload["values"] if isinstance(item, str)]
+
     def _ensure_token(self) -> str:
         if not self._token:
             self.login()
@@ -317,6 +382,17 @@ class VSS:
                 response.close()
                 raise VSSError(f"VSS {method} {path} returned {status}")
             return response
+
+
+def _segment_list(payload) -> list[dict] | None:
+    if isinstance(payload, list):
+        return [item for item in payload if isinstance(item, dict)]
+    if isinstance(payload, dict):
+        for key in ("segments", "results"):
+            found = payload.get(key)
+            if isinstance(found, list):
+                return [item for item in found if isinstance(item, dict)]
+    return None
 
 
 def _access_token(response: requests.Response) -> str:
