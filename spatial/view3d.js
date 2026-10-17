@@ -10,11 +10,11 @@ import { modelFaces, metricDims, resolveClass, orient } from './models3d.js';
 import { visibleGround, distort } from './camera.js';
 
 const U = 3.5, D2R = Math.PI / 180, HALF = ASSUMED_HFOV_DEG / 2, RIM = 1.12, NEAR = 0.1;
-const PAL = { d: [34, 38, 44], l: [206, 212, 219], g: [58, 84, 112] };
+const PAL = { d: [34, 38, 44], l: [214, 218, 224], g: [186, 208, 224], w: [236, 214, 168] };
 // neutral paint and clothing, deliberately never the green / amber / red channel colours
-const PAINT = [[222, 226, 230], [176, 182, 189], [112, 118, 126], [42, 46, 52], [64, 82, 108], [118, 108, 96], [146, 152, 160]];
+const PAINT = [[222, 226, 230], [176, 182, 189], [112, 118, 126], [78, 84, 94], [64, 82, 108], [118, 108, 96], [146, 152, 160]];
 const CLOTH = [[66, 78, 98], [96, 86, 74], [58, 62, 70], [118, 122, 132]];
-const HZ = { red: '#f85149', amber: '#e3a008', grey: '#8b929c' }, ACCENT = '#8ab4ff', FOG = [21, 25, 31];
+const ACCENT = '#8ab4ff', FOG = [21, 25, 31];
 export const VIEWS = { persp: { yaw: -28, pitch: 26 }, top: { yaw: 0, pitch: 89.5 }, front: { yaw: 180, pitch: 6 }, back: { yaw: 0, pitch: 6 }, left: { yaw: -90, pitch: 6 }, right: { yaw: 90, pitch: 6 } };
 const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
@@ -25,8 +25,8 @@ const mean = (P) => { let x = 0, y = 0, z = 0; for (const p of P) { x += p[0]; y
 const faceN = (f) => { const n = norm(cross(sub(f.pts[1], f.pts[0]), sub(f.pts[2], f.pts[0]))); return f.s < 0 ? [-n[0], -n[1], -n[2]] : n; };
 // key light + sky/ground ambient; glass gets a little sheen when seen edge-on; fog pulls far faces to the background
 function shade(c, n, view, fog, glass) {
-  const amb = 0.34 + 0.2 * (n[1] * 0.5 + 0.5), k = amb + 0.6 * Math.max(0, dot(n, LIGHT)) + (glass ? 0.22 * (1 - Math.abs(dot(n, view))) : 0);
-  const m = (i) => (c[i] * k * (1 - fog) + FOG[i] * fog) | 0;
+  const amb = 0.22 + 0.16 * (n[1] * 0.5 + 0.5), k = amb + 0.82 * Math.max(0, dot(n, LIGHT)) + (glass ? 0.3 * (1 - Math.abs(dot(n, view))) : 0);
+  const m = (i) => Math.max(0, Math.min(255, (c[i] * k * (1 - fog) + FOG[i] * fog) | 0));
   return `rgb(${m(0)},${m(1)},${m(2)})`;
 }
 export const world = (ang, r, y = 0) => [Math.sin(ang * D2R) * r * U, y, Math.cos(ang * D2R) * r * U];
@@ -52,6 +52,13 @@ function boxFaces(cx, cz, w, d, y0, y1, yaw = 0) {
   const v = []; for (const y of [y0, y1]) for (const [a, b] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) v.push(P((a * w) / 2, y, (b * d) / 2));
   return orient([[4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]].map((f) => f.map((i) => v[i])));
 }
+function coneFaces(cx, cz, r, y0, y1, n = 8) {
+  const top = [cx, y1, cz], ring = [];
+  for (let i = 0; i < n; i++) { const a = ((i + 0.5) * 2 * Math.PI) / n; ring.push([cx + Math.cos(a) * r, y0, cz + Math.sin(a) * r]); }
+  const F = [];
+  for (let i = 0; i < n; i++) F.push([ring[i], ring[(i + 1) % n], top]);
+  return orient(F);
+}
 function cylFaces(cx, cz, r, y0, y1, n = 8) {
   const v = []; for (const y of [y0, y1]) for (let i = 0; i < n; i++) { const a = ((i + 0.5) * 2 * Math.PI) / n; v.push([cx + Math.cos(a) * r, y, cz + Math.sin(a) * r]); }
   const F = [[...Array(n).keys()].map((i) => i + n)]; for (let i = 0; i < n; i++) F.push([i, (i + 1) % n, ((i + 1) % n) + n, i + n]);
@@ -73,7 +80,7 @@ function stripe(pts, w, dash) {
 export function buildScenery(sc = {}) {
   const flat = [], solid = [], pts = [];
   const add = (list, fill, stroke = null, y = 0.01) => { for (const p of list || []) if (isPoly(p)) { flat.push({ pts: p.map((q) => G3(q, y)), fill, stroke }); pts.push(...p); } };
-  add(sc.sidewalks, '#363a41', '#4b5058', 0.01); add(sc.roads, '#24272c', null, 0.015); add(sc.medians, '#2f3338', '#454a52', 0.02);
+  add(sc.sidewalks, '#6a7380', '#8d96a3', 0.012); add(sc.roads, '#121418', null, 0.02); add(sc.medians, '#3a4a3c', '#5e715f', 0.028);
   for (const l of sc.lane_lines || []) if (Array.isArray(l.pts) && l.pts.length > 1) for (const q of stripe(l.pts, l.width || 0.15, !!l.dash)) flat.push({ pts: q, fill: 'rgba(228,231,235,.78)' });
   for (const c of sc.crossings || []) {
     if (!c.a || !c.b) continue;
@@ -91,7 +98,7 @@ export function buildScenery(sc = {}) {
       walls.push({ pts: [G3(p), G3(q), G3(q, h), G3(p, h)], deco });
     }
     const roof = { pts: F.map((p) => G3(p, h)) };
-    orient([...walls, roof].map((f) => f.pts)).forEach((o, i) => { const f = i < walls.length ? walls[i] : roof; solid.push({ ...f, s: o.s, base: f === roof ? [70, 74, 81] : [96, 100, 108] }); });
+    orient([...walls, roof].map((f) => f.pts)).forEach((o, i) => { const f = i < walls.length ? walls[i] : roof; solid.push({ ...f, s: o.s, base: f === roof ? [132, 136, 144] : [196, 198, 204] }); });
   }
   for (const p of sc.poles || []) {
     if (!Array.isArray(p.at)) continue;
@@ -103,9 +110,8 @@ export function buildScenery(sc = {}) {
   for (const t of sc.trees || []) {
     if (!Array.isArray(t.at)) continue;
     const [x, z] = t.at, h = t.height_m || 6;
-    for (const f of cylFaces(x, z, 0.16, 0, h * 0.45, 6)) solid.push({ ...f, base: [88, 74, 62] });
-    for (const f of cylFaces(x, z, h * 0.27, h * 0.38, h * 0.82)) solid.push({ ...f, base: [56, 84, 62] });
-    for (const f of cylFaces(x, z, h * 0.17, h * 0.82, h)) solid.push({ ...f, base: [62, 92, 68] });
+    for (const f of cylFaces(x, z, 0.14, 0, h * 0.42, 6)) solid.push({ ...f, base: [102, 78, 54] });
+    for (const f of coneFaces(x, z, h * 0.28, h * 0.34, h * 0.95, 9)) solid.push({ ...f, base: [58, 112, 70] });
   }
   const xs = pts.map((p) => p[0]), zs = pts.map((p) => p[1]);
   const bounds = pts.length ? [Math.min(...xs) - 10, Math.max(...xs) + 10, Math.min(...zs) - 10, Math.max(...zs) + 10] : null;
@@ -129,8 +135,9 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
   const g = canvas.getContext('2d');
   const cam = { ...VIEWS.persp, target: [0, 0, 1.5], dist: 5.6, ortho: false, view: 'persp', lock: false };
   const opt = { grid: true, fov: true, path: true, labels: true, scenery: true };
-  let scene = { objects: [] }, env = { kind: 'dashcam' }, envKey = '', SCN = null, home = { target: [0, 0, 1.5], dist: 5.6 }, zoom = [2, 30];
+  let scene = { objects: [] }, env = { kind: 'dashcam' }, envKey = '', SCN = null, home = { target: [0, 0, 1.5], dist: 5.6 }, zoom = [2, 48], aimed = false;
   let picks = [], cube = [], B, W = 0, H = 0, raf = 0, FONT = { sans: 'system-ui, sans-serif', mono: 'ui-monospace, monospace' };
+  const meshCache = new Map();
   const readFonts = () => { const cs = getComputedStyle(canvas); FONT = { sans: cs.getPropertyValue('--sans').trim() || FONT.sans, mono: cs.getPropertyValue('--mono').trim() || FONT.mono }; };
   const hatch = (() => { const c = document.createElement('canvas'); c.width = c.height = 7; const x = c.getContext('2d');
     x.fillStyle = '#111317'; x.fillRect(0, 0, 7, 7); x.strokeStyle = '#1d2026'; x.lineWidth = 1.6; x.beginPath(); x.moveTo(-2, 9); x.lineTo(9, -2); x.stroke(); return g.createPattern(c, 'repeat'); })();
@@ -217,16 +224,30 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     g.font = `600 ${size}px ${FONT.sans}`; spaced('1.2px'); g.fillStyle = color; g.fillText(s, p[0] + 4, p[1] - 6); spaced('0px');
   }
   // soft contact shadow: three widening, fading copies of the footprint, pushed away from the light
-  function shadow(foot, c, h) {
-    const sx = (-LIGHT[0] / LIGHT[1]) * h * 0.35, sz = (-LIGHT[2] / LIGHT[1]) * h * 0.35;
-    for (const [k, a] of [[1.0, 0.24], [1.18, 0.12], [1.38, 0.06]]) poly(foot.map((p) => [c[0] + (p[0] - c[0]) * k + sx, 0.03, c[2] + (p[2] - c[2]) * k + sz]), `rgba(0,0,0,${a})`, null);
+  function disc3(cx, cz, r, y) {
+    const n = 16, pts = [];
+    for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2; pts.push([cx + Math.cos(a) * r, y, cz + Math.sin(a) * r]); }
+    return pts;
   }
+  function shadow(c, r) { poly(disc3(c[0], c[2], r, 0.03), 'rgba(0,0,0,0.28)', null); }
 
+  // centre the opening view on the actors, not the whole ground footprint
+  function aimActors(objects) {
+    const all = (objects || []).filter((o) => Array.isArray(o.pos) && o.pos.length >= 2);
+    if (!all.length || env.kind !== 'fixed') return false;
+    const vehicles = all.filter((o) => /car|truck|bus|van|motorcycle|bicycle/.test(String(o.cls || '')));
+    const pts = (vehicles.length ? vehicles : all).map((o) => o.pos);
+    const cx = pts.reduce((s, p) => s + p[0], 0) / pts.length, cz = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+    let spread = 3;
+    for (const p of pts) spread = Math.max(spread, Math.hypot(p[0] - cx, p[1] - cz));
+    home = { target: [cx, 0.55, cz], dist: Math.max(32, Math.min(46, spread * 2.2 + 22)) };
+    return true;
+  }
   // ---- environments ----
   function setEnv(e) {
     const key = e && e.kind === 'fixed' ? JSON.stringify(e.pose) + (e.scenery ? Object.keys(e.scenery).length : 0) : 'dashcam';
     if (key === envKey) { env = e || env; return; }
-    envKey = key; env = e && e.kind === 'fixed' ? e : { kind: 'dashcam' };
+    envKey = key; env = e && e.kind === 'fixed' ? e : { kind: 'dashcam' }; aimed = false;
     if (env.kind === 'fixed') {
       SCN = buildScenery(env.scenery);
       const R = env.rig, vis = env.visible || visibleGround(R);
@@ -237,7 +258,7 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
       SCN.visible = clipRect(vis, SCN.bounds);
       SCN.corners = visibleGround(R, 1).filter((_, i) => i % 2 === 0);
       home = { target: [cx, 0, cz], dist: Math.max(25, Math.min(80, 12 + R.c[1] * 3.5)) }; zoom = [4, 400];
-      api.setView('camera');
+      api.setView('persp');
     } else { SCN = null; home = { target: [0, 0, 1.5], dist: 5.6 }; zoom = [2, 30]; api.setView('persp'); }
   }
   function drawDashGround() {
@@ -257,7 +278,7 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
   }
   function drawFixedGround() {
     const [x0, x1, z0, z1] = SCN.bounds, rect = [[x0, 0, z0], [x1, 0, z0], [x1, 0, z1], [x0, 0, z1]];
-    poly(rect, '#191c21', null);
+    poly(rect, '#0c0e12', null);
     if (opt.scenery) for (const f of SCN.flat) poly(f.pts, f.fill, f.stroke, 1);
     if (opt.grid) {
       for (let x = Math.ceil(x0 / 10) * 10; x <= x1; x += 10) poly([[x, 0.03, z0], [x, 0.03, z1]], null, 'rgba(255,255,255,.045)', 1, null, false);
@@ -302,8 +323,9 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     raf = 0;
     const dpr = window.devicePixelRatio || 1; W = canvas.clientWidth; H = canvas.clientHeight;
     if (!W || !H) return;
-    if (canvas.width !== Math.round(W * dpr) || canvas.height !== Math.round(H * dpr)) { canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr); }
-    g.setTransform(dpr, 0, 0, dpr, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round';
+    const px = Math.min(dpr, 1.25);
+    if (canvas.width !== Math.round(W * px) || canvas.height !== Math.round(H * px)) { canvas.width = Math.round(W * px); canvas.height = Math.round(H * px); }
+    g.setTransform(px, 0, 0, px, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round';
     const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, '#1b2029'); bg.addColorStop(0.55, '#14181e'); bg.addColorStop(1, '#0f1216');
     g.fillStyle = bg; g.fillRect(0, 0, W, H);
     const glow = g.createRadialGradient(W * 0.5, H * 0.05, 0, W * 0.5, H * 0.05, W * 0.7); glow.addColorStop(0, 'rgba(138,180,255,.07)'); glow.addColorStop(1, 'rgba(138,180,255,0)');
@@ -315,33 +337,66 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     // gather solids: scenery, the camera mast or the ego car, then tracked objects
     const faces = [];
     if (fixed && opt.scenery) for (const f of SCN.solid) faces.push(f);
-    if (fixed && !cam.lock) {                                                  // the camera's own mast and housing (not drawn from inside it)
+    if (fixed && !cam.lock && env.follow !== 'video') {                        // the camera's own mast and housing (not drawn from inside it, or from a dashcam)
       const R = env.rig;
       for (const f of cylFaces(R.c[0], R.c[2], 0.14, 0, R.c[1] - 0.3, 6)) faces.push({ ...f, base: [72, 77, 84] });
       for (const f of boxFaces(R.c[0], R.c[2], 0.5, 0.9, R.c[1] - 0.35, R.c[1] + 0.15, env.pose.yaw_deg)) faces.push({ ...f, base: [214, 218, 224] });
     }
+    const behind = (p) => !B.ortho && toCam(p)[2] < NEAR;
+    const meshOf = (cls, base, yaw, dims) => {
+      const key = `${resolveClass(cls)}|${Math.round(yaw)}|${dims ? 1 : 0}|${base[0].toFixed(2)}|${base[2].toFixed(2)}`;
+      let hit = meshCache.get(key);
+      if (!hit) {
+        hit = modelFaces(cls, base, yaw, dims);
+        for (const f of hit.faces) f.n = faceN(f);
+        if (meshCache.size > 280) meshCache.clear();
+        meshCache.set(key, hit);
+      }
+      return hit;
+    };
     let ego = null;
-    if (!fixed) { ego = modelFaces('car', [0, 0, -0.32], 0); for (const f of ego.faces) faces.push({ ...f, base: f.c === 'f' ? [214, 218, 224] : PAL[f.c], glass: f.c === 'g', edge: true }); shadow(ego.bounds.foot, [0, 0, -0.32], ego.bounds.h); }
+    if (!fixed) {
+      ego = meshOf('car', [0, 0, -0.32], 0, null);
+      for (const f of ego.faces) faces.push({ ...f, base: f.c === 'f' ? [214, 218, 224] : PAL[f.c], glass: f.c === 'g', alpha: f.c === 'g' ? 0.46 : 1 });
+      let er = 0.2; for (const p of ego.bounds.foot) er = Math.max(er, Math.hypot(p[0], p[2] + 0.32));
+      shadow([0, 0, -0.32], er * 0.85);
+    } else if (env.follow === 'video') {
+      ego = meshOf('car', [0, 0, -1.6], 0, metricDims('car'));
+      for (const f of ego.faces) faces.push({ ...f, base: f.c === 'f' ? [230, 232, 236] : PAL[f.c], glass: f.c === 'g', alpha: f.c === 'g' ? 0.46 : 1 });
+      shadow([0, 0, -1.6], 1.35);
+    }
     picks = [];
     for (const o of scene.objects) {
       o._base = fixed ? [o.pos[0], 0, o.pos[1]] : world(o.ang, o.r);
-      const m = modelFaces(o.cls, o._base, fixed ? o.heading : o.ang, fixed ? metricDims(o.cls) : null);
+      if (behind(o._base) && behind([o._base[0], 2, o._base[2]])) continue;
+      const yaw = fixed ? o.heading : o.ang;
+      const m = meshOf(o.cls, o._base, yaw, fixed ? metricDims(o.cls) : null);
       const person = resolveClass(o.cls) === 'person', paint = (person ? CLOTH : PAINT)[Math.abs(o.id | 0) % (person ? CLOTH.length : PAINT.length)];
-      for (const f of m.faces) faces.push({ ...f, base: f.c === 'f' ? paint : PAL[f.c], glass: f.c === 'g', edge: true });
+      const fade = o.alpha == null ? 1 : o.alpha;
+      for (const f of m.faces) faces.push({ ...f, base: f.c === 'f' ? paint : PAL[f.c], glass: f.c === 'g', alpha: (f.c === 'g' ? 0.46 : 1) * fade });
       o._h = m.bounds.h; o._foot = m.bounds.foot;
-      if (o.hz !== 'grey') poly(o._foot.map((p) => [o._base[0] + (p[0] - o._base[0]) * 1.22, 0.04, o._base[2] + (p[2] - o._base[2]) * 1.22]), o.hz === 'red' ? 'rgba(248,81,73,.24)' : 'rgba(227,160,8,.2)', null);
-      shadow(o._foot, o._base, o._h);
+      let rad = 0.25;
+      for (const p of m.bounds.foot) rad = Math.max(rad, Math.hypot(p[0] - o._base[0], p[2] - o._base[2]));
+      o._rad = rad;
+      g.globalAlpha = fade;
+      if (o.hz === 'red' || o.hz === 'amber') poly(disc3(o._base[0], o._base[2], rad * 1.15, 0.045), o.hz === 'red' ? 'rgba(248,81,73,0.38)' : 'rgba(227,160,8,0.32)', null);
+      shadow(o._base, rad * 0.92);
+      g.globalAlpha = 1;
     }
-    // cull back faces, light, fog and sort far to near
+    // cull back faces, light, fog and sort far to near. Glass keeps its alpha so cabins read as glass.
     const vis = [];
     for (const f of faces) {
       const c = mean(f.pts), v = sub(c, B.eye), n = f.n || faceN(f), d = Math.hypot(...v) || 1, vd = B.ortho ? B.f : [v[0] / d, v[1] / d, v[2] / d];
       if (dot(n, vd) > 0.02) continue;
       const fog = Math.min(0.55, Math.max(0, (d - fogNear) / (fogFar - fogNear)));
-      vis.push({ f, z: dot(v, B.f), fill: shade(f.base, n, vd, fog, f.glass), dfill: f.deco ? shade([36, 46, 58], n, vd, fog, true) : null });
+      vis.push({ f, z: dot(v, B.f), fill: shade(f.base, n, vd, fog, f.glass), dfill: f.deco ? shade([28, 44, 64], n, vd, fog, true) : null, alpha: f.alpha ?? 1 });
     }
     vis.sort((a, b) => b.z - a.z);
-    for (const { f, fill, dfill } of vis) if (poly(f.pts, fill, f.edge ? 'rgba(0,0,0,.18)' : null, 0.5) && f.deco) for (const q of f.deco) poly(q, dfill, null);
+    for (const { f, fill, dfill, alpha } of vis) {
+      g.globalAlpha = alpha;
+      if (poly(f.pts, fill, null) && f.deco) for (const q of f.deco) poly(q, dfill, null);
+    }
+    g.globalAlpha = 1;
     if (fixed && opt.fov && !cam.lock) {
       for (const p of SCN.corners) poly([env.rig.c, G3(p, 0.05)], null, 'rgba(138,180,255,.4)', 1, [2, 3], false);
     }
@@ -349,14 +404,18 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     // 3D boxes over everything: base (and its X) = hazard, top + uprights = confidence; accent glow when selected
     const tags = [];
     for (const o of scene.objects) {
-      const c = o._base, pad = 1.06, h = o._h * 1.04;
-      const bot = o._foot.map((p) => [c[0] + (p[0] - c[0]) * pad, 0.04, c[2] + (p[2] - c[2]) * pad]), top = bot.map((p) => [p[0], h, p[2]]);
-      const hz = HZ[o.hz] || HZ.grey, ring = o.sel ? ACCENT : o.ring, dash = o.amber && !o.sel ? [5, 4] : null, lw = o.sel ? 2.2 : 1.5;
-      poly(bot, null, hz, 1.5); g.globalAlpha = 0.55; poly([bot[0], bot[2]], null, hz, 1, null, false); poly([bot[1], bot[3]], null, hz, 1, null, false); g.globalAlpha = 1;
-      g.save(); if (o.sel) { g.shadowColor = 'rgba(138,180,255,.7)'; g.shadowBlur = 10; }
-      for (let i = 0; i < 4; i++) poly([bot[i], top[i]], null, ring, lw, dash, false);
-      poly(top, o.sel ? 'rgba(138,180,255,.08)' : null, ring, lw, dash);
-      g.restore();
+      if (!o._base || !o._foot) continue;
+      const c = o._base, h = o._h * 1.04, ring = o.sel ? ACCENT : o.ring, dash = o.amber && !o.sel ? [5, 4] : null;
+      g.globalAlpha = o.alpha == null ? 1 : o.alpha;
+      poly(disc3(c[0], c[2], (o._rad || 0.4) * 1.02, 0.06), null, ring, o.sel ? 2.2 : 1.6, dash);
+      if (o.sel) {
+        const pad = 1.04, bot = o._foot.map((p) => [c[0] + (p[0] - c[0]) * pad, 0.05, c[2] + (p[2] - c[2]) * pad]), top = bot.map((p) => [p[0], h, p[2]]);
+        g.save(); g.shadowColor = 'rgba(138,180,255,.7)'; g.shadowBlur = 10;
+        for (let i = 0; i < 4; i++) poly([bot[i], top[i]], null, ACCENT, 1.7, null, false);
+        poly(top, 'rgba(138,180,255,.08)', ACCENT, 1.7, null);
+        g.restore();
+      }
+      g.globalAlpha = 1;
       if (o.motion) {
         const a = proj([c[0], 0.06, c[2]]), b = proj([c[0] + o.motion[0], 0.06, c[2] + o.motion[1]]);
         if (a && b && Math.hypot(b[0] - a[0], b[1] - a[1]) > 4) {
@@ -460,17 +519,42 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
   readFonts();
   if (document.fonts) document.fonts.ready.then(() => { readFonts(); sched(); });
 
+  // behind the bumper, looking down the road the dashcam is driving
+  function chase() {
+    home = { target: [0, 0.5, 9], dist: 18 };
+    Object.assign(cam, { yaw: 0, pitch: 32, dist: 18, lock: false, ortho: false, view: 'persp', target: [0, 0.5, 9] });
+    sched();
+  }
   const api = {
-    render(s) { setEnv(s.env); scene = s; sched(); },
+    render(s) {
+      setEnv(s.env); scene = s;
+      if (!aimed && env.kind === 'fixed' && env.follow === 'video') { aimed = true; chase(); return; }
+      if (!aimed && env.kind === 'fixed' && aimActors(s.objects)) { aimed = true; api.setView('persp'); return; }
+      sched();
+    },
     redraw() { readFonts(); sched(); },
     setView(v) {
-      if (v === 'camera') { if (env.kind !== 'fixed') return; Object.assign(cam, { lock: true, view: 'camera', ortho: false }); sched(); return; }
-      const p = v === 'persp' && env.kind === 'fixed' ? { yaw: 150, pitch: 30 } : VIEWS[v]; if (!p) return;   // wall camera: look back from across the street
+      if (v === 'camera') { if (env.kind !== 'fixed') return; if (env.follow === 'video') { chase(); return; } Object.assign(cam, { lock: true, view: 'camera', ortho: false }); sched(); return; }
+      if (v === 'persp' && env.kind === 'fixed' && env.rig) {
+        // three-quarter from the street side of the camera, so the eye is not inside the building behind it
+        const R = env.rig, t = home.target, fx = R.f[0], fz = R.f[2], fl = Math.hypot(fx, fz) || 1;
+        const ux = fx / fl, uz = fz / fl, rx = uz, rz = -ux, span = home.dist;
+        const eye = [t[0] + rx * span * 0.22 + ux * span * 0.12, Math.max(5, span * 0.34), t[2] + rz * span * 0.22 + uz * span * 0.12];
+        const dx = eye[0] - t[0], dy = eye[1] - t[1], dz = eye[2] - t[2], dist = Math.max(zoom[0], Math.hypot(dx, dy, dz));
+        Object.assign(cam, {
+          yaw: (Math.atan2(dx, -dz) * 180) / Math.PI,
+          pitch: Math.max(26, Math.min(52, (Math.asin(Math.min(1, dy / dist)) * 180) / Math.PI)),
+          dist, view: 'persp', lock: false, ortho: false, target: [...t],
+        });
+        sched();
+        return;
+      }
+      const p = VIEWS[v]; if (!p) return;
       Object.assign(cam, p, { view: v, lock: false, target: [...home.target], dist: v === 'top' ? home.dist * 1.25 : home.dist }); sched();
     },
     toggle(k, on) { opt[k] = on ?? !opt[k]; sched(); return opt[k]; },
     setOrtho(on) { unlock(); cam.ortho = on ?? !cam.ortho; sched(); return cam.ortho; },
-    frame() { if (env.kind === 'fixed') api.setView('camera'); else { cam.target = [...home.target]; cam.dist = home.dist; sched(); } },
+    frame() { if (env.follow === 'video') { chase(); return; } if (env.kind === 'fixed') { aimActors(scene.objects); api.setView('persp'); } else { cam.target = [...home.target]; cam.dist = home.dist; sched(); } },
     get options() { return { ...opt }; },
     get camera() { return state(); },
     destroy() { ro.disconnect(); },

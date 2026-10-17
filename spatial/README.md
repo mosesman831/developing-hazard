@@ -50,7 +50,7 @@ With a calibration, the panel places objects on a flat ground plane in approxima
 ```
 - `camera.js` turns a box's bottom-centre into a ground point through a pinhole camera (no lens distortion yet). A box whose bottom is above the horizon, or more than 150 m away, has no ground point and is left out of the 3D view.
 - Heading and speed come only from the track's own ground positions over the last second. A parked object keeps its last observed heading.
-- Models are stretched to typical real class sizes (`METRIC` in `models3d.js`). These sizes are not measured.
+- Models are authored in metres and scaled by one factor (height, from `METRIC` in `models3d.js`), so wheels and heads stay round. The sizes are typical, not measured. A track with no observed motion faces the nearest lane, or the camera if there is no lane. The opening view frames the actors from the street side of the camera. `C` still jumps to the video viewpoint.
 - The 3D view adds a **Camera** view that renders from the calibrated viewpoint, masks the area outside the video frame, and draws 3D boxes: the base and its X show the hazard colour, and the top and uprights show the confidence colour. Ground the camera cannot see is hatched. Plan mode becomes Top + Ortho.
 - Fixtures: `SYNTHETIC_c97.*` (`gen-house.mjs`) is a house camera 3.6 m up with a 112° barrel lens, looking across a front yard at a 2-lane road; it is the dev page's default. `SYNTHETIC_c98.*` (`gen-street.mjs`) is a pole camera 18 m up over an avenue. Both build their boxes by projecting 3D objects through the same camera, so the image-to-ground round trip can be checked.
 
@@ -71,12 +71,11 @@ The interface mixes three materials, and each one has a single job:
 
 The accent is periwinkle (`#8ab4ff`) and only marks selection and active state. Green, amber and red stay reserved for the data channels.
 
-**Type** (`style.css`, Google Fonts with `display=swap`):
-- Instrument Sans for the interface. Its width axis condenses dense toolbars and labels.
+**Type** (`style.css`, self-hosted in `spatial/fonts/`):
+- IBM Plex Sans for the interface.
 - IBM Plex Mono for every number and timestamp, with tabular figures and a slashed zero (SPEC 16.1).
-- Instrument Serif italic for the wordmark only.
 
-SPEC 16.1 asks for self-hosted fonts and leaves open whether the pod can reach Google Fonts. Offline, the stack falls back to IBM Plex Sans (if AG3 self-hosts it in `web/fonts/`), then to system fonts, so nothing breaks.
+SPEC 16.1 asks for self-hosted fonts. `spatial/fonts/` holds the IBM Plex Sans and Mono files the view uses, so the page does not call Google Fonts.
 
 **Layout:**
 - A header with the wordmark, a clip/run breadcrumb and one status chip per input. Missing inputs are spelled out in a note under it.
@@ -95,7 +94,7 @@ SPEC 16.1 asks for self-hosted fonts and leaves open whether the pod can reach G
 - Glass label pills with a status dot and a leader line, stacked so they never overlap. The view cube and axis triad sit on glass discs.
 - **3D Viewport** (`view3d.js`, canvas 2D, no library): drag to orbit, right/shift-drag to pan, wheel to zoom. Preset views Persp / Top / Front / Side, the view cube (click a face), Ortho, Frame, and Grid / FOV / Path / Labels toggles. Axis triad: X right, Y up, Z forward.
 - 3D positions use the same bearing and ordinal range bands as the plan view. The grid is in band units, not metres, and the viewport says so.
-- **Object models** (`models3d.js`): low-poly generic shapes for person, car, truck/lorry, bus, motorcycle, bicycle, dog, traffic light and stop sign. Any other class gets a generic block. Aliases map `lorry`, `pedestrian`, `motorbike`, `van`, `cyclist`, `train`, `coach` and `cat` onto these. The body colour is the hazard fill, and the footprint outline on the ground is the confidence ring (dashed amber, solid green, white when selected). Models are **not to scale and their heading is not measured**: they face away from the ego car along their bearing.
+- **Object models** (`models3d.js`): person, car, truck/lorry, bus, motorcycle, bicycle, dog, traffic light and stop sign, each with a rider or a readable silhouette. Any other class gets a generic block. Aliases map `lorry`, `pedestrian`, `motorbike`, `van`, `cyclist`, `train`, `coach` and `cat` onto these. Body paint stays neutral. A ground ring is confidence (dashed amber, solid green) and a ground disc is the hazard fill. A 3D box is drawn only around the selected track. In the dashcam view the same meshes are uniform glyphs and face along their bearing.
 - **2D Plan**: the original bird's-eye SVG.
 
 Panels rebuild only when what they show changes, sample lookups use binary search, and 3D model geometry is built once per class, so playback does not churn the DOM.
@@ -104,16 +103,15 @@ Panels rebuild only when what they show changes, sample lookups use binary searc
 
 Keys: `V` switches plan and 3D, `C` camera view (fixed cameras), `O` ortho, `F` frame (or double-click the view), `[` / `]` previous/next event, `Esc` clear. `P` and `Space` are left to the host, because SPEC 16.1 uses them for play/pause and the hazard click; the dev page uses `P` (and `Space`) for play. Clicking an event seeks to `t - 1.0` and selects its track.
 
-> **AG3: size budget exceeded.** The shipped files (`core.js`, `data.js`, `spatial.js`, `view3d.js`, `models3d.js`, `camera.js`, `style.css`) total 127,311 bytes, about 67 KB over the 60 KB `spatial/` budget (SPEC 6.4 / 16). The lead accepted 4 KB over for the 2D plan plus the 3D viewport. Everything since (workspace polish, fixed-camera mode, auto-calibration and VSS sidecars, the neu / glass / material redesign, and wall-camera mode with lens distortion and proximity events) still needs the lead's OK, and the pod's 900 KB budget in `dh/snapshot.py` must absorb it. If the pod runs short, drop the 2D plan first (about 5 KB), since 3D Top + Ortho replaces it.
+> **Size.** The 60 KB `spatial/` budget (SPEC 6.4 / 16) was waived so the models and the Watch integration could ship together. The snapshot copies the scripts, `style.css` and `spatial/fonts/` into the pod, which still has to stay under the 900 KB limit in `dh/snapshot.py`. Dev-only files (`index.html`, `video.js`, `tests/`, `fixtures/`, this README) do not ship.
 
 ## Hand-off (for Moses)
-1. **AG3 wiring** (`web/watch.js`): `import { mountSpatial } from "../spatial/spatial.js"` (or copy the folder to `web/spatial/`), then
-   `const sp = mountSpatial(el, { clipId, runId, initialMode: "3d", api: { getJSON }, mode: "app", videoEl, frame: {w: 1920, h: 1080}, onSeek: t => player.seek(t), onSelect: () => {} })`. Pass `aurora: false` if the host page already paints its own backdrop behind the glass.
+1. **AG3 wiring** (`web/watch.js`) already mounts the view under the player. The dev server serves this folder at `/spatial` (`dh/server.py`), and the snapshot copies the scripts and fonts. `player.seek(clipTime)` is what event clicks call. Pass `aurora: false` if the host page already paints its own backdrop behind the glass.
    Call `sp.setTime(clipTime)` from `requestVideoFrameCallback`/`timeupdate`; `sp.setFrame({w,h})` when the video reports its size. `videoEl` is optional (the canvas overlay attaches to its parent; without it only the panel renders). `getJSON(relUrl)` must return parsed JSON or `null` on 404.
 2. **Routes the app mode expects**: `api/clips/{id}` (clip, optionally `{clip, hazards}`), `/tracks`, `/det`, `/grid`, `/explain`, `api/runs/{run_id}`. Only the first two plus runs exist in `contracts/api_routes.md`; `/det`, `/grid`, `/explain` are proposals, and missing ones just show as "missing".
 3. **Ownership line for CONTEXT.md**: `spatial/** | <owner> | spatial hazard view add-on; edits only under spatial/`.
 4. **Snapshot** (`dh/snapshot.py`): copy `data/det/` (small, committed), `data/grid/` and `data/runs/` for the pod. Without `det/`, demo mode shows confidence "?" everywhere.
-5. **Size**: shipped files total 127,311 bytes, about 67 KB over the 60 KB budget; see the AG3 note above. Dev-only files (`index.html`, `video.js`, `tests/`, `fixtures/`, this README) do not ship.
+5. **Size**: the 60 KB folder budget was waived. The pod snapshot still has to stay under 900 KB; see the note above.
 
 ## Limitations
 - Fixed mode assumes flat ground and one radial distortion term. Auto-calibration does not fit `k1`; it uses the file's value or 0. Uncalibrated wide lenses, such as the night street camera tried on 2026-10-17, are least accurate near the image edges.

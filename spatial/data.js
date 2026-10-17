@@ -1,6 +1,6 @@
 // Loaders + validation. Every input except the clip is optional; failures become "Inputs" strip entries.
 import { detectNormalised, normBox, indexDets, joinConf, streaks, parseGrid } from './core.js';
-import { validPose, rig, groundPoint, visibleGround, CAMERAS, autoCalibrate, parseVssDetections, WALL_DEFAULT } from './camera.js';
+import { validPose, rig, groundPoint, appearancePoint, visibleGround, CAMERAS, autoCalibrate, parseVssDetections, WALL_DEFAULT } from './camera.js';
 
 export function parseJSONL(text) {
   const rows = []; let bad = 0;
@@ -35,6 +35,7 @@ export function paths(mode, c, runId) {
   if (mode === 'app') return { vss: `api/clips/${c}/vss-detections`, camera: (id) => `api/cameras/${id}`, clip: `api/clips/${c}`, tracks: `api/clips/${c}/tracks`, det: `api/clips/${c}/det`, run: runId && `api/runs/${runId}`, grid: `api/clips/${c}/grid`, explain: `api/clips/${c}/explain` };
   if (mode === 'examples') { const e = '../contracts/examples/'; return { clip: e + 'clips.json', tracks: e + 'tracks_c07.jsonl', hazards: e + 'hazards.json', run: e + 'run_clips.jsonl' }; }
   if (mode === 'fixtures') { const f = `fixtures/SYNTHETIC_${c}.`; return { camera: () => f + 'camera.json', clip: f + 'clips.json', tracks: f + 'tracks.jsonl', det: f + 'det.jsonl', hazards: f + 'hazards.json', run: f + 'run.jsonl', grid: f + 'grid.jsonl' }; }
+  if (mode === 'preset') { const f = `preset:${c}:`; return { camera: () => f + 'camera', clip: f + 'clip', tracks: f + 'tracks', det: f + 'det', hazards: f + 'hazards', run: f + 'run', grid: f + 'grid' }; }
   const d = '../data/';
   return { vss: `${d}vss/${c}.detections.json`, camera: (id) => `${d}cameras/${id}.json`, clip: d + 'clips.json', tracks: `${d}tracks/${c}.jsonl`, det: `${d}det/${c}.jsonl`, hazards: d + 'hazards.json', run: runId && `${d}runs/${runId}/clips.jsonl`, grid: `${d}grid/cosmos_verify_v2/${c}.jsonl`, explain: `${d}cache/explain/${c}.json` };
 }
@@ -72,7 +73,7 @@ export async function loadModel({ clipId, api, frame = { w: 1920, h: 1080 }, mod
   const cal = clip && clip.camera && typeof clip.camera === 'object' ? clip.camera : P.camera && cid ? await api.getJSON(P.camera(cid)) : null;
   const dashcam = (cal && cal.kind === 'dashcam') || (!cal && !!cid && !!CAMERAS[cid] && CAMERAS[cid].kind === 'dashcam');
   let camera = { kind: dashcam ? 'dashcam' : 'fixed', camera_id: cid };
-  const fixCam = (pose, extra) => { const R = rig(pose, frame); camera = { kind: 'fixed', camera_id: cid, pose, scenery: (cal && cal.scenery) || {}, rig: R, visible: visibleGround(R), ...extra }; };
+  const fixCam = (pose, extra) => { const R = rig(pose, frame); camera = { kind: 'fixed', camera_id: cid, pose, scenery: (cal && cal.scenery) || {}, rig: R, visible: visibleGround(R), follow: (cal && cal.follow) || null, ...extra }; };
   if (dashcam) set('camera', 'ok', cal ? 'camera moves with a car (dashcam)' : `camera moves with a car: ${CAMERAS[cid].what}`);
   else if (cal && validPose(cal.pose)) { fixCam(cal.pose, {}); set('camera', 'ok', `fixed camera ${cid || ''}, ${cal.pose.height_m} m up, ${cal.pose.hfov_deg}° lens${cal.pose.k1 ? `, distortion k1 ${cal.pose.k1}` : ''}`); }
 
@@ -115,7 +116,7 @@ export async function loadModel({ clipId, api, frame = { w: 1920, h: 1080 }, mod
       set('camera', cal ? 'malformed' : 'partial', `${bad}${clip ? `no calibration for ${name} and too few clear people to auto-calibrate` : 'no clip, so no camera'}: assuming a house-mounted camera (${WALL_DEFAULT.height_m} m up, ${WALL_DEFAULT.pitch_deg}° down, ${hfov}° lens). Positions are rough; add ${file}.`);
     }
   }
-  if (camera.rig) for (const r of tracks) r.g = groundPoint(camera.rig, r.nb);
+  if (camera.rig) for (const r of tracks) r.g = camera.follow === 'video' ? appearancePoint(r.nb, r.cls) : groundPoint(camera.rig, r.nb);
   const di = indexDets(dets);
   const byId = new Map();
   for (const r of tracks.sort((a, b) => a.t - b.t)) { if (!byId.has(r.track_id)) byId.set(r.track_id, []); byId.get(r.track_id).push(r); }
@@ -143,7 +144,7 @@ export async function loadModel({ clipId, api, frame = { w: 1920, h: 1080 }, mod
   // Cosmos grid (not in contracts/: parse defensively)
   let grid = [];
   const gr = asRows(await get('grid'));
-  if (gr == null) miss('grid', 'Cosmos verdicts come from make grid (AG1).');
+  if (gr == null) mode === 'preset' ? set('grid', 'optional', 'no Cosmos verdicts on a preview clip') : miss('grid', 'Cosmos verdicts come from make grid (AG1).');
   else { const g = parseGrid(gr); grid = g.points; set('grid', grid.length ? 'ok' : 'malformed', `${grid.length} points${g.skipped ? `, ${g.skipped} unrecognised rows skipped` : ''}`); }
   // generated explanations (optional, cache only)
   let explain = [];

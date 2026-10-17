@@ -20,7 +20,9 @@ from dh.api.leaderboard import router as leaderboard_router
 from dh.api.runs import router as runs_router
 from dh.api.video import router as video_router
 
-_WEB_DIR = Path(__file__).resolve().parents[1] / "web"
+_ROOT = Path(__file__).resolve().parents[1]
+_WEB_DIR = _ROOT / "web"
+_SPATIAL_DIR = _ROOT / "spatial"
 
 
 def _root_health() -> dict:
@@ -56,6 +58,12 @@ def create_app() -> FastAPI:
         if labels_router is not None:
             application.include_router(labels_router)
 
+    if _SPATIAL_DIR.is_dir():
+        application.mount(
+            "/spatial",
+            StaticFiles(directory=str(_SPATIAL_DIR)),
+            name="spatial",
+        )
     if _WEB_DIR.is_dir():
         application.mount(
             "/",

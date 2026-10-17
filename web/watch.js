@@ -3,6 +3,48 @@
  */
 
 import { mountPlayer } from "./player.js";
+import { mountSpatial } from "../spatial/spatial.js";
+import { parseJSONL } from "../spatial/data.js";
+
+let activeSpatial = null;
+let activeHost = null;
+let leaveArmed = false;
+
+function releaseSpatial() {
+  if (activeSpatial) {
+    activeSpatial.destroy();
+    activeSpatial = null;
+  }
+  activeHost = null;
+}
+
+function armLeave() {
+  if (leaveArmed) {
+    return;
+  }
+  leaveArmed = true;
+  window.addEventListener("hashchange", () => {
+    if (activeHost && !activeHost.isConnected) {
+      releaseSpatial();
+    }
+  });
+}
+
+async function getJSON(rel) {
+  try {
+    const response = await fetch(rel);
+    if (!response.ok) {
+      return null;
+    }
+    const text = await response.text();
+    if (String(rel).endsWith(".jsonl")) {
+      return { __jsonl: true, ...parseJSONL(text) };
+    }
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
 
 const AGENT_TABS = [
   { id: "naive", label: "naive", test: (agent) => /naive/i.test(agent) },
@@ -23,7 +65,12 @@ const AGENT_TABS = [
  * @param {{ getClip?: Function, videoUrl?: Function }} api
  */
 export function mountWatch(el, runId, clipId, api = {}) {
+  releaseSpatial();
+  armLeave();
   el.replaceChildren();
+  if (el.parentElement) {
+    el.parentElement.classList.add("wide");
+  }
   const videoUrl =
     typeof api.videoUrl === "function"
       ? api.videoUrl
@@ -45,7 +92,9 @@ export function mountWatch(el, runId, clipId, api = {}) {
   stage.className = "watch-stage";
   const side = document.createElement("aside");
   side.className = "watch-side";
-  layout.append(stage, side);
+  const spatialHost = document.createElement("div");
+  spatialHost.className = "watch-spatial";
+  layout.append(stage, side, spatialHost);
   shell.append(title, note, tabs, layout);
   el.append(shell);
 
@@ -100,11 +149,32 @@ export function mountWatch(el, runId, clipId, api = {}) {
     fill.style.height = `${height}%`;
     readout.textContent = value == null ? "risk -" : `risk ${value.toFixed(2)}`;
     paintCurve(stage.querySelector(".risk-curve"), state.row, clipTime, state.clip);
-    const video = state.player && state.player.getActiveVideo ? state.player.getActiveVideo() : null;
-    const canvas = stage.querySelector(".box-overlay");
-    if (video && canvas) {
-      paintBoxes(canvas, video, state.tracks, clipTime);
+    if (state.spatial && clipTime != null) {
+      state.spatial.setTime(clipTime);
     }
+  }
+
+  function attachSpatial(forRun) {
+    if (activeSpatial) {
+      activeSpatial.destroy();
+    }
+    const video = state.player && state.player.getActiveVideo ? state.player.getActiveVideo() : null;
+    activeHost = spatialHost;
+    activeSpatial = mountSpatial(spatialHost, {
+      clipId,
+      runId: forRun || null,
+      initialMode: "3d",
+      api: { getJSON },
+      mode: "app",
+      videoEl: video,
+      frame: video && video.videoWidth ? { w: video.videoWidth, h: video.videoHeight } : { w: 1920, h: 1080 },
+      onSeek: (time) => {
+        if (state.player && typeof state.player.seek === "function") {
+          state.player.seek(time);
+        }
+      },
+    });
+    state.spatial = activeSpatial;
   }
 
   function showRun(nextRunId) {
@@ -130,6 +200,7 @@ export function mountWatch(el, runId, clipId, api = {}) {
       }
     }
     paintLive();
+    attachSpatial(nextRunId);
   }
 
   Promise.all([loadRuns(clipId), loadClip(clipId, api), loadTracks(clipId)])
@@ -140,13 +211,11 @@ export function mountWatch(el, runId, clipId, api = {}) {
       paintTabs(tabs, runs, runId, clipId, showRun);
       const host = document.createElement("div");
       host.className = "watch-player";
-      const canvas = document.createElement("canvas");
-      canvas.className = "box-overlay";
       const curve = document.createElement("svg");
       curve.className = "risk-curve";
       curve.setAttribute("viewBox", "0 0 100 40");
       curve.setAttribute("aria-label", "risk curve");
-      stage.append(host, canvas, curve);
+      stage.append(host, curve);
       if (!clip || !clip.segments) {
         host.textContent = `Clip ${clipId} is not in the clip list.`;
       } else {
@@ -159,6 +228,11 @@ export function mountWatch(el, runId, clipId, api = {}) {
         });
         const video = state.player.getActiveVideo ? state.player.getActiveVideo() : null;
         if (video) {
+          video.addEventListener("loadedmetadata", () => {
+            if (video.videoWidth && state.spatial) {
+              state.spatial.setFrame({ w: video.videoWidth, h: video.videoHeight });
+            }
+          });
           video.addEventListener("timeupdate", paintLive);
           if (typeof video.requestVideoFrameCallback === "function") {
             const tick = () => {
@@ -433,61 +507,6 @@ function timeline(clip, row) {
     bar.append(flag);
   }
   return bar;
-}
-
-function paintBoxes(canvas, video, tracks, clipTime) {
-  const width = video.clientWidth;
-  const height = video.clientHeight;
-  if (!width || !height) {
-    return;
-  }
-  canvas.width = width;
-  canvas.height = height;
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    return;
-  }
-  context.clearRect(0, 0, width, height);
-  const nativeW = video.videoWidth || width;
-  const nativeH = video.videoHeight || height;
-  const scaleX = width / nativeW;
-  const scaleY = height / nativeH;
-  const nearest = nearestTracks(tracks, clipTime);
-  for (const track of nearest) {
-    const box = track.xyxy;
-    if (!box || box.length < 4) {
-      continue;
-    }
-    context.strokeStyle = "#22d3ee";
-    context.lineWidth = 2;
-    context.strokeRect(
-      box[0] * scaleX,
-      box[1] * scaleY,
-      (box[2] - box[0]) * scaleX,
-      (box[3] - box[1]) * scaleY,
-    );
-  }
-}
-
-function nearestTracks(tracks, clipTime) {
-  if (!tracks.length || clipTime == null) {
-    return [];
-  }
-  let best = tracks[0].t;
-  let bestGap = Infinity;
-  for (const track of tracks) {
-    const gap = Math.abs(track.t - clipTime);
-    if (gap < bestGap) {
-      bestGap = gap;
-      best = track.t;
-    }
-  }
-  if (bestGap > 0.3) {
-    return [];
-  }
-  return tracks.filter((track) => track.t === best).slice(0, 3);
 }
 
 function formatTime(value) {

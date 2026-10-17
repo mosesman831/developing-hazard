@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as C from '../core.js';
 import { parseJSONL, loadModel } from '../data.js';
+import { appearancePoint } from '../camera.js';
 
 const F = { w: 1920, h: 1080 };
 
@@ -188,7 +189,10 @@ test('3D class models: every class builds, aliases resolve, unknown -> generic',
   const len = (m) => Math.abs(m.bounds.foot[2][2] - m.bounds.foot[0][2]);
   assert.ok(len(M.modelFaces('bus', [0, 0, 0], 0)) > len(M.modelFaces('car', [0, 0, 0], 0)), 'bus longer than car');
   const car = M.modelFaces('car', [0, 0, 0], 0, M.METRIC.car);
-  assert.ok(Math.abs(len(car) - 4.6) < 1e-9 && Math.abs(car.bounds.h - 1.5) < 1e-9, 'metric dims stretch the model to real size');
+  const glyph = M.modelFaces('car', [0, 0, 0], 0);
+  assert.ok(Math.abs(car.bounds.h - M.METRIC.car[2]) < 1e-6, 'metric height');
+  assert.ok(Math.abs(len(car) / len(glyph) - car.bounds.h / glyph.bounds.h) < 1e-6, 'one scale, so a wheel stays round');
+  assert.ok(len(car) > 3.8 && len(car) < 5.2, 'car length stays a car length');
 });
 
 test('fixed camera: pinhole round trip, horizon, visible ground, motion', async () => {
@@ -341,4 +345,13 @@ test('fixed camera: no ego-path events, proximity measurements instead', () => {
   const extra = [{ t: 0.1, prov: 'MEASURED', track_id: 1, src: {}, title: 'person #1 within 1.0 m of moving car #2', why: 'x' }];
   const ev = C.buildEvents({ tracks, egoPath: false, extra });
   assert.deepEqual(ev.map((e) => e.title), ['person #1 within 1.0 m of moving car #2']);
+});
+
+test('dashcam placement: a smaller box is further away, and the side of the frame is the side of the road', () => {
+  const far = appearancePoint([0.46, 0.42, 0.54, 0.5], 'car');
+  const near = appearancePoint([0.35, 0.45, 0.65, 0.9], 'car');
+  const right = appearancePoint([0.72, 0.4, 0.88, 0.7], 'person');
+  const left = appearancePoint([0.08, 0.4, 0.24, 0.7], 'person');
+  assert.ok(far[1] > near[1] + 4);
+  assert.ok(right[0] > 1 && left[0] < -1);
 });

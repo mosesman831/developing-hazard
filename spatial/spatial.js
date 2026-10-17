@@ -35,14 +35,25 @@ const LOGO = () => S('svg', { viewBox: '0 0 20 20', 'aria-hidden': 'true' },
   S('path', { d: 'M10 17 L2.5 5.5 A11 11 0 0 1 17.5 5.5 Z', fill: 'rgba(138,180,255,.22)', stroke: '#8ab4ff', 'stroke-width': 1.4, 'stroke-linejoin': 'round' }),
   S('circle', { cx: 12.6, cy: 8.2, r: 2.1, fill: '#f85149' }), S('circle', { cx: 7.6, cy: 10.4, r: 1.5, fill: '#3fb950' }));
 const reduced = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function ensureStyles() {
+  const href = new URL('./style.css', import.meta.url).href;
+  if ([...document.querySelectorAll('link[rel="stylesheet"]')].some((l) => l.href === href)) return;
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  link.dataset.spatialCss = '1';
+  document.head.append(link);
+}
 
 export function mountSpatial(el, ctx) {
+  ensureStyles();
   const dbg = !!ctx.debug, uid = Math.random().toString(36).slice(2, 8);
   let model = null, t = 0, sel = null, raf = 0, dead = false, frame = ctx.frame || { w: 1920, h: 1080 };
   let mode = ctx.view3d === false ? '2d' : (ctx.initialMode || '3d');
   const off = new Set();                                   // hidden provenances
   let events = [], cur = -1;
   const memo = {};                                         // last-rendered keys, so panels only rebuild on change
+  let last3d = '';                                         // skip a 3D rebuild when the actors have not moved
   const changed = (k, v) => (memo[k] === v ? false : ((memo[k] = v), true));
   const fixed = () => !!model && model.camera.kind === 'fixed';
   const heads = new Map();                                 // last observed heading per track (fixed camera)
@@ -79,11 +90,12 @@ export function mountSpatial(el, ctx) {
   const legend = h('details', { class: 'sp-legend sp-glass' },
     h('summary', { text: 'Legend' }),
     h('div', { class: 'sp-lg' },
-      h('div', { class: 'sp-lg-h', text: 'Box top · outline = confidence' }),
+      h('div', { class: 'sp-lg-h', text: 'Ground ring = confidence' }),
       h('span', {}, h('i', { class: 'ring g' }), 'conf ≥ 0.6, seen ≥ 5 samples'), h('span', {}, h('i', { class: 'ring a' }), 'low or unknown conf, short, at an edge'),
-      h('div', { class: 'sp-lg-h', text: 'Box base · fill = hazard' }),
+      h('div', { class: 'sp-lg-h', text: 'Ground disc = hazard' }),
       h('span', {}, h('i', { class: 'fill r' }), 'risk ≥ 0.6, human label, Cosmos'), h('span', {}, h('i', { class: 'fill m' }), 'risk 0.4 – 0.6, heading in'),
-      h('span', {}, h('i', { class: 'hatch' }), 'not visible to the camera')));
+      h('span', {}, h('i', { class: 'hatch' }), 'not visible to the camera'),
+      h('span', { text: 'A box is drawn only around the selected track' })));
   const pane = (title, body, extra = null, cls = '') => h('section', { class: 'sp-pane ' + cls, 'aria-label': title }, h('header', { class: 'sp-ph' }, h('span', { class: 'sp-pt', text: title }), extra), body);
 
   el.classList.add('sp');
@@ -93,12 +105,12 @@ export function mountSpatial(el, ctx) {
       h('div', { class: 'sp-brand' }, h('span', { class: 'sp-mark' }, LOGO()), h('span', { class: 'sp-word' }, h('em', { text: 'Spatial' }), 'Hazard View')),
       h('nav', { class: 'sp-crumbs sp-glass', 'aria-label': 'Clip' }, h('span', { text: `clip ${ctx.clipId}` }), ctx.runId ? h('span', { text: `run ${ctx.runId}` }) : null), sources),
     note,
-    h('div', { class: 'sp-work' },
-      pane('Outliner', outliner),
+    h('div', { class: 'sp-stage' },
+      pane('Outliner', outliner, null, 'sp-outpane'),
       h('section', { class: 'sp-pane sp-vpane', 'aria-label': 'Viewport' },
         h('header', { class: 'sp-ph' }, h('div', { class: 'sp-grp', role: 'group', 'aria-label': 'View mode' }, modeBtns['2d'], modeBtns['3d']), v3Tools),
-        h('div', { class: 'sp-viewport' }, svg, c3, vpTag, legend))),
-    h('div', { class: 'sp-dock' }, pane('Properties', detail), pane('Event log', list, chips, 'sp-evpane')),
+        h('div', { class: 'sp-viewport' }, svg, c3, vpTag, legend)),
+      h('div', { class: 'sp-dock' }, pane('Properties', detail), pane('Event log', list, chips, 'sp-evpane'))),
     dbgLine, status].filter(Boolean));
   // material ripple on every pressable surface (skipped when the user prefers reduced motion)
   const ripple = (e) => {
@@ -114,8 +126,10 @@ export function mountSpatial(el, ctx) {
   legendFit.observe(vpEl);
   function setMode(m) {
     mode = m; el.dataset.mode = fixed() ? '3d' : m;
-    if (fixed()) { v3.setView(m === '2d' ? 'top' : 'camera'); setPressed(orthoBtn, v3.setOrtho(m === '2d')); }
+    if (fixed()) { v3.setView(m === '2d' ? 'top' : 'persp'); setPressed(orthoBtn, v3.setOrtho(m === '2d')); }
     viewBtns.camera.hidden = sceneryBtn.hidden = !fixed();
+    togs.path.hidden = !!fixed();
+    last3d = '';
     for (const [k, b] of Object.entries(modeBtns)) setPressed(b, k === m);
     v3Tools.hidden = m !== '3d' && !fixed();
     sched();
@@ -155,9 +169,31 @@ export function mountSpatial(el, ctx) {
     const fill = C.fillState({ risk: row.risk, heading_in: row.heading_in, inHazard, cosmosYes, visible: place.visible });
     return { ring, fill, place, band };
   }
+  // between samples, slide the box and the ground point so the overlay and the models
+  // follow the video instead of stepping every 0.2 s
+  function shownSample(rows) {
+    let lo = 0, hi = rows.length - 1, i = -1;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (rows[m].t <= t + 1e-6) { i = m; lo = m + 1; } else hi = m - 1; }
+    if (i < 0) return null;
+    const r = rows[i], next = rows[i + 1], gap = t - r.t;
+    if (!next || next.t - r.t > C.THRESHOLDS.showGap) {
+      const alpha = Math.max(0, 1 - gap / C.THRESHOLDS.showGap);
+      return alpha < 0.04 ? null : { row: r, alpha };
+    }
+    const f = gap / (next.t - r.t);
+    if (f <= 0) return { row: r, alpha: 1 };
+    const nb = r.nb && next.nb ? r.nb.map((v, k) => v + (next.nb[k] - v) * f) : r.nb;
+    const g = r.g && next.g ? [r.g[0] + (next.g[0] - r.g[0]) * f, r.g[1] + (next.g[1] - r.g[1]) * f] : r.g;
+    return { row: { ...r, nb, g }, alpha: 1 };
+  }
   const actives = () => {
     const out = [];
-    if (model) for (const [id, rows] of model.tracks) { const r = C.activeSample(rows, t); if (r) out.push({ id, row: r, ...state(id, r) }); }
+    if (!model) return out;
+    for (const [id, rows] of model.tracks) {
+      const s = shownSample(rows);
+      if (!s) continue;
+      out.push({ id, row: s.row, alpha: s.alpha, ...state(id, s.row) });
+    }
     return out;
   };
   // observed motion over the last second, as a unit [dx, dz] in the plan (never a forecast)
@@ -172,13 +208,14 @@ export function mountSpatial(el, ctx) {
   // ---- video overlay: same two channels, glass label pills ----
   function drawOverlay(act) {
     if (!canvas) return;
-    const dpr = window.devicePixelRatio || 1, W = canvas.clientWidth, H = canvas.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25), W = canvas.clientWidth, H = canvas.clientHeight;
     if (canvas.width !== W * dpr || canvas.height !== H * dpr) { canvas.width = W * dpr; canvas.height = H * dpr; }
     cx2.setTransform(dpr, 0, 0, dpr, 0, 0); cx2.clearRect(0, 0, W, H);
     const v = videoRect(), sans = fontVar('--sans', 'system-ui'), mono = fontVar('--mono', 'monospace'); boxes = [];
     for (const a of act) {
       const [x1, y1, x2, y2] = [v.x + a.row.nb[0] * v.w, v.y + a.row.nb[1] * v.h, v.x + a.row.nb[2] * v.w, v.y + a.row.nb[3] * v.h];
       const s = isSel(a.id), col = s ? '#8ab4ff' : RING[a.ring.state];
+      cx2.save(); cx2.globalAlpha = a.alpha == null ? 1 : a.alpha;
       cx2.fillStyle = FILL[a.fill.state] || FILL.grey; cx2.fillRect(x1, y1, x2 - x1, y2 - y1);
       cx2.save(); if (s) { cx2.shadowColor = 'rgba(138,180,255,.7)'; cx2.shadowBlur = 10; }
       cx2.lineWidth = s ? 2.5 : 1.8; cx2.setLineDash(a.ring.state === 'amber' && !s ? [6, 4] : []);
@@ -191,6 +228,7 @@ export function mountSpatial(el, ctx) {
       cx2.fillStyle = col; cx2.beginPath(); cx2.arc(x1 + 11, ly + 11, 3.5, 0, 7); cx2.fill();
       cx2.textBaseline = 'middle'; cx2.font = `600 11.5px ${sans}`; cx2.fillStyle = '#eef1f5'; cx2.fillText(name, x1 + 20, ly + 11.5);
       cx2.font = `500 10.5px ${mono}`; cx2.fillStyle = '#a6aeb8'; cx2.fillText(meta, x1 + 28 + wn, ly + 11.5);
+      cx2.restore();
       boxes.push({ x1, y1, x2, y2, id: a.id, row: a.row });
     }
   }
@@ -223,7 +261,7 @@ export function mountSpatial(el, ctx) {
     if (!model || !model.trackRows.length) { dyn.append(T(VB.cx, 190, model ? 'No tracks for this clip. Run make track or merge origin/main.' : 'Loading tracks', 'sp-empty-t', 'middle')); return; }
     for (const a of [...act].sort((x, y) => isSel(x.id) - isSel(y.id))) {           // selected draws last
       const [x, y] = P(a.place.ang, a.place.r), s = isSel(a.id), d = motion(a.id);
-      const grp = S('g', { class: 'sp-mark', onclick: () => choose({ kind: 'track', id: a.id }, true) });
+      const grp = S('g', { class: 'sp-mark', opacity: a.alpha < 1 ? a.alpha.toFixed(2) : null, onclick: () => choose({ kind: 'track', id: a.id }, true) });
       if (d) { const L = 34, ex = x + d[0] * L, ey = y - d[1] * L; grp.append(S('line', { x1: x, y1: y, x2: ex, y2: ey, class: 'sp-arrow' }), S('circle', { cx: ex, cy: ey, r: 3, class: 'sp-arrow-h' })); }
       grp.append(S('circle', { cx: x, cy: y, r: s ? 14 : 11, fill: (FILL[a.fill.state] || FILL.grey).replace(/[\d.]+\)$/, '.85)'), stroke: s ? '#8ab4ff' : RING[a.ring.state], 'stroke-width': s ? 3.5 : 2.5, 'stroke-dasharray': a.ring.state === 'amber' && !s ? '5 4' : null }),
         T(x + 18, y + 4, `${a.row.cls} #${a.id}${a.band === 'uncertain' ? ' · range ?' : ''}`, 'sp-lab'));
@@ -233,27 +271,95 @@ export function mountSpatial(el, ctx) {
     if (act.length) dyn.append(T(VB.w - 16, VB.h - 14, 'ARROWS: OBSERVED PAST 1 S, NOT A FORECAST', 'sp-t', 'end'));
   }
 
+  // nearest lane (or road edge) within 8 m; otherwise face the camera. Never invent a heading once motion has been seen.
+  function laneYaw(pos) {
+    const sc = model.camera.scenery || {};
+    const lines = [];
+    for (const l of sc.lane_lines || []) if (l && Array.isArray(l.pts) && l.pts.length > 1) lines.push(l.pts);
+    for (const road of sc.roads || []) if (Array.isArray(road) && road.length > 1) lines.push(road);
+    let best = 8, heading = null;
+    for (const pts of lines) {
+      for (let i = 1; i < pts.length; i++) {
+        const a = pts[i - 1], b = pts[i], dx = b[0] - a[0], dz = b[1] - a[1], L2 = dx * dx + dz * dz;
+        if (L2 < 0.25) continue;
+        const u = Math.max(0, Math.min(1, ((pos[0] - a[0]) * dx + (pos[1] - a[1]) * dz) / L2));
+        const d = Math.hypot(pos[0] - (a[0] + dx * u), pos[1] - (a[1] + dz * u));
+        if (d < best) { best = d; heading = (Math.atan2(dx, dz) * 180) / Math.PI; }
+      }
+    }
+    if (heading != null) return heading;
+    const R = model.camera.rig;
+    return R ? (Math.atan2(R.c[0] - pos[0], R.c[2] - pos[1]) * 180) / Math.PI : 0;
+  }
+  function push3D(env, objects, empty) {
+    const key = empty + '|' + (env && env.kind) + '|' + objects.map((o) => [o.id, o.cls, o.heading ?? '', o.ang ?? '', o.r ?? '', Array.isArray(o.pos) ? o.pos.map((v) => Number(v).toFixed(2)).join(',') : '', (o.alpha ?? 1).toFixed(2), o.sel ? 1 : 0, o.hz, o.ring, o.motion ? o.motion.map((v) => Number(v).toFixed(2)).join(',') : ''].join(':')).join('|');
+    if (key === last3d) return;
+    last3d = key;
+    v3.render({ env, objects, empty });
+  }
   // ---- 3D ----
+  const vehicle = (cls) => /car|truck|bus|van|motorcycle/.test(String(cls || ''));
+  // roadside flow is the camera driving forward. Take it out so a parked car keeps its nose
+  // down the road, and a person crossing faces across the road instead of at the camera.
+  let egoAt = NaN, egoVal = null;
+  function egoFlow() {
+    if (egoAt === t) return egoVal;
+    const rates = [];
+    for (const rows of model.tracks.values()) {
+      const s = rows.filter((r) => r.g && r.t <= t + 1e-6 && r.t >= t - 0.8);
+      if (s.length < 2 || !vehicle(s[0].cls) || Math.abs(s[0].g[0]) < 1.4) continue;
+      const a = s[0], b = s[s.length - 1], dt = b.t - a.t;
+      if (dt > 0.15) rates.push((b.g[1] - a.g[1]) / dt);
+    }
+    rates.sort((a, b) => a - b);
+    egoAt = t; egoVal = rates.length < 2 ? null : rates[rates.length >> 1];
+    return egoVal;
+  }
+  function travel(id, cls) {
+    const rows = model.tracks.get(id);
+    const s = rows.filter((r) => r.g && r.t <= t + 1e-6 && r.t >= t - 0.8);
+    if (s.length < 2) return { heading: vehicle(cls) ? 0 : 0, world: null };
+    const a = s[0], b = s[s.length - 1], dt = b.t - a.t || 0.2;
+    const vx = (b.g[0] - a.g[0]) / dt, vz = (b.g[1] - a.g[1]) / dt, ego = egoFlow();
+    const wz = ego == null ? 0 : vz - ego;
+    if (vehicle(cls)) {
+      if (ego != null && wz < -2.4) return { heading: 180, world: [vx, wz] };
+      return { heading: 0, world: Math.hypot(vx, wz) > 1.2 ? [vx, wz] : null };
+    }
+    const sp = Math.hypot(vx, wz);
+    if (sp < 0.45) return { heading: 0, world: null };
+    return { heading: (Math.atan2(vx, wz) * 180) / Math.PI, world: [vx, wz] };
+  }
   function draw3D(act) {
     const meta = (a) => confTxt(a.row) + (a.band === 'uncertain' && !fixed() ? ' · range ?' : '');
     if (fixed()) {
       const objects = [];
+      const dash = model.camera.follow === 'video';
       for (const a of act) {
         if (!a.row.g) continue;                            // ray above the horizon: no ground position
         const m = groundMotion(model.tracks.get(a.id), t);
-        if (m && m.speed > 0.5) heads.set(a.id, m.heading);
-        objects.push({ id: a.id, cls: a.row.cls, pos: a.row.g, heading: heads.get(a.id) ?? 0, ring: RING[a.ring.state], amber: a.ring.state === 'amber', hz: a.fill.state,
-          sel: isSel(a.id), motion: m && m.speed > 0.3 ? [m.dx, m.dz] : null, label: `${a.row.cls} #${a.id}`, meta: meta(a) });
+        let heading, motion;
+        if (dash) {
+          const tr = travel(a.id, a.row.cls);
+          heading = tr.heading;
+          motion = tr.world && Math.hypot(tr.world[0], tr.world[1]) > 0.45 ? tr.world : null;
+        } else {
+          if (m && m.speed > 0.5) heads.set(a.id, m.heading);
+          heading = heads.has(a.id) ? heads.get(a.id) : laneYaw(a.row.g);
+          motion = m && m.speed > 0.3 ? [m.dx, m.dz] : null;
+        }
+        objects.push({ id: a.id, cls: a.row.cls, pos: a.row.g, heading, alpha: a.alpha ?? 1, ring: RING[a.ring.state], amber: a.ring.state === 'amber', hz: a.fill.state,
+          sel: isSel(a.id), motion, label: `${a.row.cls} #${a.id}`, meta: meta(a) });
       }
-      v3.render({ env: model.camera, objects, empty: model.trackRows.length ? '' : 'No tracks for this clip yet. Run make track, or merge origin/main.' });
+      push3D(model.camera, objects, model.trackRows.length ? '' : 'No tracks for this clip yet. Run make track, or merge origin/main.');
       return;
     }
     const objects = act.map((a) => {
       const d = motion(a.id);
-      return { id: a.id, cls: a.row.cls, ang: a.place.ang, r: a.place.r, ring: RING[a.ring.state], amber: a.ring.state === 'amber', hz: a.fill.state,
+      return { id: a.id, cls: a.row.cls, ang: a.place.ang, r: a.place.r, alpha: a.alpha ?? 1, ring: RING[a.ring.state], amber: a.ring.state === 'amber', hz: a.fill.state,
         sel: isSel(a.id), motion: d && [d[0] * 0.45, d[1] * 0.45], label: `${a.row.cls} #${a.id}`, meta: meta(a) };
     });
-    v3.render({ env: { kind: 'dashcam' }, objects, empty: !model ? 'Loading tracks' : model.trackRows.length ? '' : 'No tracks for this clip yet. Run make track, or merge origin/main.' });
+    push3D({ kind: 'dashcam' }, objects, !model ? 'Loading tracks' : model.trackRows.length ? '' : 'No tracks for this clip yet. Run make track, or merge origin/main.');
   }
 
   // ---- panels (rebuilt only when their key changes) ----
@@ -356,11 +462,15 @@ export function mountSpatial(el, ctx) {
     if (scroll && first) first.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'auto' : 'smooth' });
   }
 
-  function render() {
+  let drawn3 = -1;
+  function render(ts) {
     raf = 0; if (dead) return;
     const act = actives();
     drawOverlay(act);
-    if (mode === '2d' && !fixed()) drawBird(act); else draw3D(act);
+    // the video overlay follows every frame; the heavier 3D redraw stays near 12 fps unless the view is idle
+    const now = ts || performance.now();
+    if (mode === '2d' && !fixed()) drawBird(act);
+    else if (now - drawn3 > 80) { draw3D(act); drawn3 = now; }
     drawDetail(act); drawOutliner(act); drawStatus(); if (model) markCurrent();
   }
   const sched = () => { if (!raf) raf = requestAnimationFrame(render); };
@@ -373,7 +483,7 @@ export function mountSpatial(el, ctx) {
       const e = events.find((x) => x.id === s.id);
       if (e) { if (e.track_id != null) sel = { kind: 'track', id: e.track_id, event: e.id }; ctx.onSeek && ctx.onSeek(C.seekTime(e)); }
     }
-    markSelected(); sched();
+    drawn3 = -1; markSelected(); sched();
     if (user && ctx.onSelect) ctx.onSelect(s.kind === 'event' ? { kind: 'event', id: s.id, t } : { kind: 'track', id: s.id, t });
   }
   // keys: V plan/3D, C camera view, O ortho, F frame, [ ] events, Esc clear. P and Space stay free for the host (SPEC 16.1).
@@ -404,6 +514,7 @@ export function mountSpatial(el, ctx) {
     note.hidden = !notes.length;
     note.replaceChildren(...notes.slice(0, 3).map(([k, v]) => h('div', {}, h('b', { text: k }), v.detail)), ...(notes.length > 3 ? [h('div', { class: 'sp-muted', text: `+${notes.length - 3} more: hover the input chips above` })] : []));
     for (const k in memo) memo[k] = null;
+    last3d = '';
     if (fixed()) {
       vpTag.textContent = m.camera.assumed ? 'Metres · assumed camera pose, rough' : m.camera.auto ? 'Metres · auto-calibrated, approximate' : 'Metres · from calibration, approximate';
       disc.textContent = 'One fixed camera (wall, house or pole), flat ground assumed. Positions approximate; vehicle sizes are typical, not measured.';

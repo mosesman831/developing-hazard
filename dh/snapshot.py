@@ -95,6 +95,13 @@ def build_snapshot(dest: Path | None = None) -> int:
     web = _REPO / "web"
     _copy_tree(web, target / "web")
 
+    spatial = _REPO / "spatial"
+    for name in ("camera.js", "core.js", "data.js", "models3d.js", "spatial.js", "view3d.js", "style.css"):
+        source = spatial / name
+        if source.is_file():
+            _copy_file(source, target / "spatial" / name)
+    _copy_tree(spatial / "fonts", target / "spatial" / "fonts")
+
     data_src = _REPO / "data"
     for name in _DATA_FILES:
         path = data_src / name

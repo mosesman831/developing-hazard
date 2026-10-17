@@ -71,6 +71,18 @@ export function visibleGround(R, n = 12) {
 }
 // bottom-centre of a normalised box -> ground contact point (flat ground assumed)
 export const groundPoint = (R, nb) => imageToGround(R, (nb[0] + nb[2]) / 2, nb[3]);
+// Dashcam placement. The foot-ray of this fisheye piles every box a few metres ahead, so a car
+// never travels and a person crossing has nowhere to walk. Range comes from how tall the box is
+// for that class; bearing comes from where it sits across the frame (PIE's lens is ~157°).
+export function appearancePoint(nb, cls, hfov = 157) {
+  const h = (METRIC[resolveClass(cls)] || METRIC.generic)[2];
+  const boxH = Math.max(0.02, Math.min(0.9, nb[3] - nb[1]));
+  const vfov = (hfov * 9) / 16 * (Math.PI / 180);
+  const ang = Math.min(1.15, boxH * vfov);
+  const range = Math.max(1.8, Math.min(42, h / (2 * Math.tan(ang / 2))));
+  const bearing = ((nb[0] + nb[2]) / 2 - 0.5) * hfov * (Math.PI / 180);
+  return [range * Math.sin(bearing), range * Math.cos(bearing)];
+}
 // heading (deg, 0 = +z) and speed (m/s) from the track's own ground positions over the last `win` seconds
 export function groundMotion(samples, t, win = 1.0) {
   const s = samples.filter((r) => r.g && r.t <= t + 1e-6 && r.t >= t - win);

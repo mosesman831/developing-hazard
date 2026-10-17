@@ -8,15 +8,23 @@
 html,body{height:100%}
 body{margin:0;color:var(--text);font:400 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;background-attachment:fixed}
 body.banner{padding-top:30px}
-.pg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.32fr);gap:14px;padding:14px;height:100%}
+.pg{display:grid;grid-template-columns:minmax(300px,400px) minmax(0,1fr);gap:14px;padding:14px;height:100%}
 .cam{display:flex;flex-direction:column;min-height:0;gap:12px}
 .cam .sp-pane{flex:none}
 .cam .sp-ph b{font:500 12px var(--mono);color:var(--text)}
 .src{margin-left:auto;height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;font:500 11px var(--sans);color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--hair)}
+.clip-pick{display:flex;flex-direction:column;gap:6px;margin:0 12px 12px;font:600 11px var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.clip-pick select{height:40px;width:100%;border-radius:10px;padding:0 12px;font:500 14px var(--sans);letter-spacing:0;text-transform:none;color:var(--text);background:#161a20;border:1px solid var(--hair);box-shadow:var(--neu-in)}
+.clip-pick select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.preview{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#cam:not(.loaded) .sp-video video{opacity:0}
+.sp-video video{z-index:1}
+.stage .cap{position:absolute;left:12px;bottom:10px;z-index:2;height:24px;display:flex;align-items:center;padding:0 10px;border-radius:999px;font:500 11px var(--sans);color:#d5dbe3;background:rgba(16,19,25,.72);border:1px solid rgba(255,255,255,.08);pointer-events:none}
+.loaded .preview,.loaded .cap{display:none}
 /* the video sits in a recessed screen */
 .stage{position:relative;margin:10px;border-radius:var(--r-m);overflow:hidden;background:#000;box-shadow:inset 0 2px 14px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)}
-.stage .empty{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;white-space:nowrap;height:30px;padding:0 14px;border-radius:999px;
-  font-size:12px;color:var(--muted);background:rgba(16,19,25,.78);border:1px solid var(--hair);backdrop-filter:blur(10px);pointer-events:none}
+.stage .empty{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;max-width:92%;padding:6px 14px;border-radius:999px;z-index:2;
+  font-size:12px;color:var(--muted);background:rgba(16,19,25,.78);border:1px solid var(--hair);backdrop-filter:blur(10px);pointer-events:none;text-align:center}
 .stage .empty b{color:var(--text);font-weight:600}
 .loaded .stage .empty{display:none}
 /* transport: neumorphic play key, inset timeline groove */
@@ -63,7 +71,10 @@ kbd{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 
   <div class="cam">
     <section class="sp-pane" id="cam" aria-label="Camera">
       <header class="sp-ph"><span class="sp-pt">Camera</span><b id="title">-</b><span class="src" id="src"></span></header>
-      <div class="stage"><div id="vbox"></div><div class="empty"><b>No video loaded</b><span>Open an mp4 or stream segments; boxes still follow the timeline.</span></div></div>
+      <label class="clip-pick" id="presets">Recorded clips
+        <select id="presetPick" aria-label="Recorded clips"></select>
+      </label>
+      <div class="stage"><div id="vbox"></div><div class="empty" id="empty"><b id="emptyb">No video loaded</b><span id="blurb">Open an mp4 or stream segments; boxes still follow the timeline.</span></div><div class="cap" id="cap"></div></div>
       <div class="transport">
         <button class="play" id="play" title="Play or pause (P)" aria-label="Play or pause" aria-pressed="false"><svg viewBox="0 0 14 14" id="icon"><path d="M3.5 1.5v11l9-5.5z"/></svg></button>
         <span class="clock" id="clock"><b>0.00</b> / - s</span>
@@ -85,25 +96,72 @@ kbd{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 
 import { mountSpatial } from './spatial.js';
 import { createPlayer, segmentUrls } from './video.js';
 import { devApi } from './data.js';
+import { PRESETS, presetById, loadPreset, paintPreview } from './presets.js';
 const q = new URLSearchParams(location.search);
-// no params: open the house-camera fixture; ?clip=<id> alone reads the real data/ files
-const clipId = q.get('clip') || 'c97', src = q.get('src') || (q.get('clip') ? 'dev' : 'fixtures'), runId = q.get('run');
+// no params: a hazard preset. ?clip=<id> still opens fixture or dev data.
+const usePreset = !q.get('clip');
 const $ = (id) => document.getElementById(id);
-$('title').textContent = clipId; $('src').textContent = src + (q.get('debug') ? ' · debug' : '');
-if (src === 'fixtures') document.body.classList.add('banner');
+let presetId = presetById(q.get('preset')).id;
+let clipId = usePreset ? presetId : q.get('clip');
+let src = usePreset ? 'preset' : (q.get('src') || 'dev');
+let runId = usePreset ? 'preview' : q.get('run');
+const fileApi = devApi();
+const api = {
+  async getJSON(rel) {
+    if (String(rel).startsWith('preset:')) {
+      const [, id, kind] = String(rel).split(':');
+      if (kind === 'grid') return null;
+      const body = await loadPreset(id);
+      const part = body[kind];
+      return kind === 'tracks' || kind === 'det' || kind === 'run' ? { rows: part } : part;
+    }
+    return fileApi.getJSON(rel);
+  },
+};
+function title() {
+  if (!usePreset) { $('title').textContent = clipId; $('src').textContent = src; $('presets').hidden = true; return; }
+  const p = presetById(presetId);
+  $('title').textContent = p.file.replaceAll('_', ' ');
+  $('src').textContent = 'preset';
+  $('emptyb').textContent = p.label;
+  $('blurb').textContent = p.blurb;
+  $('cap').textContent = p.video ? 'Loading recording' : 'No recording for this clip';
+  document.body.classList.add('banner');
+}
+title();
 let panel, dur = 30, t = 0, sim = null;
 const PLAY = 'M3.5 1.5v11l9-5.5z', PAUSE = 'M2.5 1.5h3v11h-3zM8.5 1.5h3v11h-3z';
 const icon = (p) => { $('icon').firstElementChild.setAttribute('d', p ? PAUSE : PLAY); $('play').classList.toggle('on', p); $('play').setAttribute('aria-pressed', String(p)); };
+function setDur(next) {
+  if (!Number.isFinite(next) || next < 0.5) return;
+  dur = next; $('scrub').max = dur;
+}
 function setT(v) {
   t = Math.max(0, Math.min(dur, v));
-  $('scrub').value = t; $('clock').innerHTML = `<b>${t.toFixed(2)}</b> / ${dur.toFixed(2)} s`;
+  $('scrub').value = t;
+  $('clock').firstElementChild.textContent = t.toFixed(2);
+  $('clock').lastChild.textContent = ` / ${dur.toFixed(2)} s`;
   $('fill').style.setProperty('--p', `${(100 * t) / dur}%`);
-  panel && panel.setTime(t); moveCur();
+  panel && panel.setTime(t); moveCur(); drawPreview();
+}
+const preview = document.createElement('canvas');
+preview.className = 'preview';
+$('vbox').appendChild(preview);
+const pg = preview.getContext('2d');
+function drawPreview() {
+  if (!usePreset || $('cam').classList.contains('loaded')) return;
+  const r = preview.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  if (preview.width !== Math.round(r.width * dpr) || preview.height !== Math.round(r.height * dpr)) {
+    preview.width = Math.round(r.width * dpr); preview.height = Math.round(r.height * dpr);
+  }
+  pg.setTransform(dpr, 0, 0, dpr, 0, 0);
+  paintPreview(pg, r.width, r.height);
 }
 const player = createPlayer($('vbox'), {
   onTime: setT,
   onError: (m) => { $('err').textContent = m; },
-  onMeta: (m) => { $('err').textContent = ''; $('cam').classList.add('loaded'); panel && panel.setFrame(m); },
+  onMeta: (m) => { $('err').textContent = ''; $('cam').classList.add('loaded'); setDur(player.video().duration); panel && panel.setFrame(m); setT(player.time); },
 });
 // without a video, Play advances a wall-clock timeline so the panels can still be reviewed
 function toggle() {
@@ -138,13 +196,54 @@ function marks(m) {
     ...m.hazards.map((z) => Object.assign(document.createElement('i'), { className: 'hz', title: `human label ${z.window_start}-${z.window_end} s`, style: `left:${pct(z.window_start)};width:${pct(z.window_end - z.window_start)}` })),
     ...m.clicks.map((c) => Object.assign(document.createElement('i'), { className: 'ck', title: `agent click ${c.t} s`, style: `left:${pct(c.t)}` })));
 }
-panel = mountSpatial($('sp'), {
-  clipId, api: devApi(), mode: src, runId, debug: !!q.get('debug'), videoEl: player.video(), aurora: false,
-  banner: src === 'fixtures' ? 'Synthetic fixture · not real data' : null,
-  frame: { w: 1920, h: 1080 },
-  onSeek: (v) => (player.loaded ? player.seek(v) : setT(v)),
-  onLoaded: (m) => { if (m.clip) { dur = m.clip.duration_s || m.clip.segments.at(-1).end_s; $('scrub').max = dur; } marks(m); riskChart(m); setT(t); },
-});
+function mount() {
+  if (panel) panel.destroy();
+  panel = mountSpatial($('sp'), {
+    clipId, api, mode: src, runId, debug: !!q.get('debug'), videoEl: player.video(), aurora: false,
+    banner: usePreset ? 'Recorded clip · models sit where the detector sees them and face the way they travel' : (src === 'fixtures' ? 'Synthetic fixture · not real data' : null),
+    frame: { w: 1920, h: 1080 },
+    onSeek: (v) => (player.loaded ? player.seek(v) : setT(v)),
+    onLoaded: (m) => {
+      const clipDur = m.clip ? (m.clip.duration_s || m.clip.segments.at(-1).end_s) : 0;
+      const vid = player.video().duration;
+      setDur(Number.isFinite(vid) && vid > 1 ? vid : clipDur);
+      marks(m); riskChart(m); setT(Math.min(t, dur));
+    },
+  });
+}
+function loadRecording(p) {
+  $('cam').classList.remove('loaded');
+  const v = player.video();
+  if (!v.paused) v.pause();
+  icon(false);
+  if (!p || !p.video) { $('err').textContent = 'This clip has no recording file.'; return; }
+  $('err').textContent = '';
+  player.loadSegments([{ url: p.video, start: 0, end: 1e9 }]);
+}
+function showPreset(id) {
+  if (sim) { cancelAnimationFrame(sim); sim = null; icon(false); }
+  presetId = presetById(id).id; clipId = presetId; t = 0;
+  title();
+  $('presetPick').value = presetId;
+  const url = new URL(location.href); url.searchParams.set('preset', presetId); history.replaceState(null, '', url);
+  mount();
+  loadRecording(presetById(presetId));
+}
+if (usePreset) {
+  const pick = $('presetPick');
+  for (const p of PRESETS) {
+    const o = document.createElement('option');
+    o.value = p.id;
+    const m = p.file.match(/set(\d+)_video_chunk_(\d+)/);
+    o.textContent = m ? `set${m[1]} chunk ${m[2]} — ${p.label}` : `${p.file} — ${p.label}`;
+    pick.appendChild(o);
+  }
+  pick.value = presetId;
+  pick.onchange = () => showPreset(pick.value);
+  $('presets').hidden = false;
+} else $('presets').hidden = true;
+mount();
+if (usePreset) loadRecording(presetById(presetId));
 $('file').onchange = (e) => { const f = e.target.files[0]; if (f) { player.loadFile(f); $('err').textContent = ''; } };
 $('seg').onclick = () => { const m = panel.model; if (!m || !m.clip) { $('err').textContent = 'No clip metadata, so no segment URLs to stream.'; return; } player.loadSegments(segmentUrls(m.clip, q.get('vbase') || 'video?source=')); };
 $('play').onclick = toggle;

@@ -211,6 +211,49 @@ export function mountPlayer(host, options) {
     getActiveVideo() {
       return activeVideo();
     },
+    seek(clipTime) {
+      const t = Number(clipTime);
+      if (!Number.isFinite(t) || !segments.length) {
+        return;
+      }
+      let idx = segments.length - 1;
+      for (let i = 0; i < segments.length; i++) {
+        if (t < segments[i].end_s) {
+          idx = i;
+          break;
+        }
+      }
+      const seg = segments[idx];
+      const local = Math.max(0, Math.min(segmentDuration(seg), t - seg.start_s));
+      const apply = (video) => {
+        video.currentTime = local;
+        latestMediaTime = local;
+      };
+      if (idx !== segmentIndex) {
+        segmentIndex = idx;
+        cancelRvfc();
+        const video = activeVideo();
+        const wasPlaying = !video.paused;
+        loadSegmentInto(video, idx);
+        const go = () => {
+          apply(video);
+          scheduleRvfc();
+          if (wasPlaying) {
+            const p = video.play();
+            if (p && typeof p.catch === "function") {
+              p.catch(() => {});
+            }
+          }
+        };
+        if (video.readyState >= HTMLMediaElement.HAVE_METADATA) {
+          go();
+        } else {
+          video.addEventListener("loadedmetadata", go, { once: true });
+        }
+        return;
+      }
+      apply(activeVideo());
+    },
   };
 }
 
