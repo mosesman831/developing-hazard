@@ -348,6 +348,24 @@ async function renderWatch(root, runId, clipId) {
   mod.mountWatch(mountPoint, runId, clipId, api);
 }
 
+async function renderLeaderboard(root) {
+  root.replaceChildren();
+  const shell = document.createElement("div");
+  shell.className = "app-shell";
+  renderHealthStrip(shell);
+  const mountPoint = document.createElement("div");
+  shell.append(mountPoint);
+  root.append(shell);
+  void fetchHealth().then(() => {
+    const strip = shell.querySelector(".health-strip");
+    if (strip) {
+      updateHealthStrip(strip);
+    }
+  });
+  const mod = await import("./leaderboard.js");
+  mod.mountLeaderboard(mountPoint);
+}
+
 async function renderLabel(root, clipId) {
   root.replaceChildren();
   const shell = document.createElement("div");
@@ -395,7 +413,7 @@ function renderRoute() {
       void renderWatch(appEl, route.runId, route.clipId);
       break;
     case "leaderboard":
-      renderOneLine(appEl, "Leaderboard arrives in Phase 3.");
+      void renderLeaderboard(appEl);
       break;
     default:
       renderOneLine(appEl, "Unknown route.");

@@ -59,6 +59,31 @@ def _clip_results(run_id: str, path: Path | None) -> list[dict]:
     return [row for row in example_clip_results() if row.get("run_id") == run_id]
 
 
+def recorded_clip_rows() -> list[dict]:
+    """Clip results from ``data/runs`` only. Example runs are not included."""
+    directory = data_dir() / "runs"
+    if not directory.is_dir():
+        return []
+    rows: list[dict] = []
+    for run, path in _iter_runs():
+        run_id = run.get("run_id")
+        if not isinstance(run_id, str):
+            continue
+        for clip in _clip_results(run_id, path):
+            rows.append(
+                {
+                    "run_id": run_id,
+                    "agent": run.get("agent"),
+                    "latency_mode": run.get("latency_mode"),
+                    "weave_url": run.get("weave_url") or "",
+                    "clip_id": clip.get("clip_id"),
+                    "clip_score": clip.get("clip_score"),
+                    "clicks": clip.get("clicks") or [],
+                }
+            )
+    return rows
+
+
 @router.get("/api/runs")
 def list_runs() -> list[dict]:
     return [run for run, _path in _iter_runs()]

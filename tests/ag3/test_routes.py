@@ -226,6 +226,152 @@ def test_post_run(api):
     assert isinstance(response.json()["run_id"], str)
 
 
+def test_post_run_calls_start_run(api, monkeypatch):
+    import sys
+    import types
+
+    called = {}
+
+    def start_run(agent, config, testset_id, latency_mode):
+        called["args"] = (agent, config, testset_id, latency_mode)
+        return "r_from_evals"
+
+    module = types.ModuleType("dh.evals")
+    module.start_run = start_run
+    monkeypatch.setitem(sys.modules, "dh.evals", module)
+
+    response = api.post(
+        "/api/runs",
+        json={
+            "agent": "yolo_risk",
+            "config": {"split": "dev"},
+            "testset_id": "testset_v0",
+            "latency_mode": "zero",
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["run_id"] == "r_from_evals"
+    assert called["args"] == ("yolo_risk", {"split": "dev"}, "testset_v0", "zero")
+
+
+def test_leaderboard_adds_blind_humans(api, tmp_path):
+    (tmp_path / "humans.jsonl").write_text(
+        json.dumps(
+            {
+                "session_id": "h_test",
+                "name": "fmd",
+                "role": "judge",
+                "blind": True,
+                "clip_id": "c01",
+                "clicks": [21.0],
+                "clip_score": 4,
+                "created_at": "2026-10-17T12:00:00+00:00",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    response = api.get("/api/leaderboard")
+    assert response.status_code == 200
+    body = response.json()
+    assert body["_note"]
+    assert body["per_clip"] == [
+        {
+            "clip_id": "c01",
+            "name": "fmd",
+            "human_score": 4,
+            "best_agent": None,
+            "best_agent_score": None,
+        }
+    ]
+    assert "full_set_humans" not in body
+
+    filtered = api.get("/api/leaderboard", params={"latency": "zero"})
+    assert filtered.status_code == 200
+    assert filtered.json()["latency_applied"] is False
+    assert filtered.json()["rows"] == body["rows"]
+
+
+def test_leaderboard_filters_latency_and_serves_file(api, tmp_path):
+    payload = {
+        "testset_id": "testset_v2",
+        "max": 10,
+        "dvsa_reference_pct": 0.587,
+        "rows": [
+            {
+                "name": "yolo_risk",
+                "kind": "agent",
+                "score": 3,
+                "pct": 0.3,
+                "latency_mode": "zero",
+                "lift_vs_chance": 0.1,
+            },
+            {
+                "name": "yolo_risk",
+                "kind": "agent",
+                "score": 1,
+                "pct": 0.1,
+                "latency_mode": "measured",
+                "lift_vs_chance": 0.0,
+            },
+        ],
+        "by_type": [{"type": "pedestrian", "points": 3}],
+    }
+    (tmp_path / "leaderboard.json").write_text(json.dumps(payload), encoding="utf-8")
+    response = api.get("/api/leaderboard", params={"latency": "zero"})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["latency_applied"] is True
+    assert [row["score"] for row in body["rows"]] == [3]
+    assert "_note" not in body
+
+
+def test_human_includes_recorded_agent_score(api, tmp_path):
+    run_dir = tmp_path / "runs" / "r_test"
+    run_dir.mkdir(parents=True)
+    (run_dir / "run.json").write_text(
+        json.dumps(
+            {
+                "run_id": "r_test",
+                "agent": "yolo_risk",
+                "testset_id": "testset_v0",
+                "testset_sha256": "abc",
+                "scorer_version": "score_v1",
+                "pattern_version": "PATTERN_V1",
+                "latency_mode": "zero",
+                "totals": {"score": 0},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (run_dir / "clips.jsonl").write_text(
+        json.dumps(
+            {
+                "run_id": "r_test",
+                "clip_id": "c07",
+                "clicks": [],
+                "clip_score": 0,
+                "pattern": {"flag": False, "reasons": []},
+                "hazard_points": {},
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    response = api.post(
+        "/api/human",
+        json={
+            "name": "Judge 1",
+            "role": "judge",
+            "blind": True,
+            "clip_id": "c07",
+            "clicks": [16.9],
+        },
+    )
+    assert response.status_code == 200
+    assert response.json()["agents"]["yolo_risk"] == 0
+
+
 class _FakeUpstream:
     def __init__(self, range_header):
         self.range_header = range_header
