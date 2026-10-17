@@ -230,24 +230,106 @@ def _round_numbers(value):
     return value
 
 
-def write_tracks(clip_id: str, rows: list[dict], data_dir: str = "data") -> Path:
+_OVERLAY_KEYS = ("t", "xyxy")
+
+
+def _round_xyxy(xyxy, digits: int) -> list:
+    if digits <= 0:
+        return [int(round(float(value))) for value in xyxy]
+    return [round(float(value), digits) for value in xyxy]
+
+
+def thin_tracks(
+    rows: list[dict],
+    *,
+    every_n: int = 1,
+    top_k: int = 3,
+    coord_digits: int = 0,
+    keys: tuple[str, ...] = _OVERLAY_KEYS,
+) -> list[dict]:
+    """Keep every Nth frame for the overlay file.
+
+    Frames are the sorted unique timestamps. A kept frame keeps the top_k
+    highest risks; a tie keeps the earlier row. xyxy is rounded to
+    coord_digits (0 stores ints). Only ``keys`` are copied. The default is
+    t and xyxy, which is the schema the watch overlay already draws.
+    """
+    if every_n < 1:
+        raise ValueError("every_n must be >= 1")
+    if top_k < 1:
+        raise ValueError("top_k must be >= 1")
+    if coord_digits < 0:
+        raise ValueError("coord_digits must be >= 0")
+
+    grouped: dict[float, list[dict]] = {}
+    for row in rows:
+        key = round(float(row["t"]), _DECIMALS)
+        grouped.setdefault(key, []).append(row)
+
+    kept: list[dict] = []
+    for index, t_key in enumerate(sorted(grouped)):
+        if index % every_n != 0:
+            continue
+        ranked = sorted(
+            grouped[t_key],
+            key=lambda row: float(row.get("risk", 0.0)),
+            reverse=True,
+        )
+        t_out: int | float = int(t_key) if t_key == int(t_key) else t_key
+        for row in ranked[:top_k]:
+            box = _round_xyxy(row["xyxy"], coord_digits)
+            out: dict = {}
+            for key in keys:
+                if key == "t":
+                    out["t"] = t_out
+                elif key == "xyxy":
+                    out["xyxy"] = box
+                elif key in row:
+                    out[key] = row[key]
+            kept.append(out)
+    return kept
+
+
+def write_tracks(
+    clip_id: str,
+    rows: list[dict],
+    data_dir: str = "data",
+    *,
+    thin: dict | None = None,
+) -> Path:
     """Write data/tracks/<clip_id>.jsonl. Round every float to 3 decimals.
 
     Each row must include track_id, t, cls, xyxy, risk. Include vx, vy, h_rate,
     in_corridor, heading_in, ttc, t_lat when present. Create the directory.
+
+    Pass ``thin`` to thin_tracks (every_n, top_k, coord_digits, keys). Thinned
+    rows are written with compact separators and only the keys that remain.
     """
+    key_order: tuple[str, ...] | None = None
+    if thin is not None:
+        rows = thin_tracks(rows, **thin)
+        key_order = tuple(thin.get("keys", _OVERLAY_KEYS))
     path = Path(data_dir) / "tracks" / f"{clip_id}.jsonl"
     path.parent.mkdir(parents=True, exist_ok=True)
     lines: list[str] = []
     for row in rows:
-        missing = [key for key in _REQUIRED_KEYS if key not in row]
-        if missing:
-            raise KeyError(missing[0])
+        if key_order is None:
+            missing = [key for key in _REQUIRED_KEYS if key not in row]
+            if missing:
+                raise KeyError(missing[0])
+            out = {}
+            for key in _ROW_KEYS:
+                if key in _REQUIRED_KEYS or key in row:
+                    out[key] = _round_numbers(row[key])
+            lines.append(json.dumps(out))
+            continue
+        if "t" not in row or "xyxy" not in row:
+            raise KeyError("t" if "t" not in row else "xyxy")
         out = {}
-        for key in _ROW_KEYS:
-            if key in _REQUIRED_KEYS or key in row:
+        for key in key_order:
+            if key in row:
                 out[key] = _round_numbers(row[key])
-        lines.append(json.dumps(out))
+        lines.append(json.dumps(out, separators=(",", ":")))
     text = ("\n".join(lines) + "\n") if lines else ""
     path.write_text(text, encoding="utf-8")
     return path

@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
-from dh.track import IoUTracker, run_clip, select_top, write_tracks
+from dh.track import IoUTracker, run_clip, select_top, thin_tracks, write_tracks
 
 
 class _Box:
@@ -134,6 +135,52 @@ def test_write_tracks_round_trips_and_keeps_at_most_three_per_t(tmp_path):
     assert loaded[3]["vx"] == round(-3.14159, 3)
     again = write_tracks("c07", loaded, data_dir=str(tmp_path))
     assert again.read_text(encoding="utf-8") == text
+
+
+def test_thin_tracks_keeps_overlay_schema_every_nth_frame(tmp_path):
+    rows = []
+    for step in range(6):
+        t = step * 0.2
+        for risk, x in ((0.2, 10.4), (0.9, 20.6)):
+            rows.append(
+                {
+                    "track_id": 1 if risk < 0.5 else 2,
+                    "t": t,
+                    "cls": "car",
+                    "xyxy": [x, 30.2, 40.8, 50.1],
+                    "vx": 1.2349,
+                    "risk": risk,
+                }
+            )
+    thinned = thin_tracks(
+        rows, every_n=3, top_k=1, coord_digits=0, keys=("t", "xyxy")
+    )
+    assert [row["t"] for row in thinned] == [0, 0.6]
+    assert thinned[0]["xyxy"] == [21, 30, 41, 50]
+    assert set(thinned[0]) == {"t", "xyxy"}
+    path = write_tracks(
+        "c30",
+        rows,
+        data_dir=str(tmp_path),
+        thin={"every_n": 3, "top_k": 1, "coord_digits": 0, "keys": ("t", "xyxy")},
+    )
+    assert path.read_text(encoding="utf-8").splitlines()[0] == (
+        '{"t":0,"xyxy":[21,30,41,50]}'
+    )
+
+
+def test_c30_c33_tracks_use_the_overlay_schema():
+    root = Path(__file__).resolve().parents[2] / "data" / "tracks"
+    template = json.loads(
+        (root / "c02.jsonl").read_text(encoding="utf-8").splitlines()[0]
+    )
+    assert set(template) == {"t", "xyxy"}
+    for clip_id in ("c30", "c31", "c32", "c33"):
+        lines = (root / f"{clip_id}.jsonl").read_text(encoding="utf-8").splitlines()
+        assert lines
+        row = json.loads(lines[0])
+        assert set(row) == {"t", "xyxy"}
+        assert len(row["xyxy"]) == 4
 
 
 def test_run_clip_keeps_three_rows_ordered_by_time_and_id():
