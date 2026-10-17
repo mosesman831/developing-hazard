@@ -12,7 +12,6 @@ from dh.api._stubs import (
     current_mode,
     example_clip_results,
     example_run,
-    example_score,
 )
 from dh.clips import data_dir
 
@@ -187,14 +186,12 @@ def stream_run(run_id: str, clip: str | None = None) -> StreamingResponse:
             continue
         chosen = row
         break
+    if clip and chosen is None:
+        raise HTTPException(status_code=404, detail="clip not in run")
     if chosen is None and rows and not clip:
         chosen = rows[0]
     score = chosen.get("clip_score") if chosen else None
-    if score is None:
-        try:
-            score = example_score()["clip_score"]
-        except (OSError, IndexError, KeyError):
-            score = None
+
     def events():
         yield from _stream_events(chosen, score)
 
