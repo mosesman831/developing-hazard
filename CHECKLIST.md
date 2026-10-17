@@ -47,11 +47,11 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG1-P1-PR | Phase 1 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 10:30 | [ ] | #6 | [ ] | [ ] |
 | AG2-P1-1 | `dh/clients/vss.py` (SPEC 11.4): login, `search`, `stream`, `detections`, re-login on 401, timeouts 30 s /... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-2 | `dh/clips.py`: loaders from `contracts/python_interfaces.md`, stdlib only, plus the 30 s chunk clip... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
-| AG2-P1-3 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 1 and 4 with AG3): run the 10 queries from 7.1; open the... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [ ] | [ ] |
+| AG2-P1-3 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 1 and 4 with AG3): run the 10 queries from 7.1; open the... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-4 | `dh/api/labels.py` skeleton: `router = APIRouter()` with the routes in `contracts/api_routes.md` owned by... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-5 | `web/label.js` v0: `export function mountLabel(el, clipId, api)` rendering the blind sit then timeline... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-6 | `mk/ag2.mk`: `mine`, `build`, `freeze`. | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
-| AG2-P1-PR | Phase 1 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [ ] | [ ] |
+| AG2-P1-PR | Phase 1 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG3-P1-1 | Hello-world deploy to `/app` with `/deploy-app-no-registry` (SPEC 6.4, 20 row 09:30, risk 14). Install... | AG3 (fmdplt33) | 10:30 | [x] | #11 | [x] | [x] |
 | AG3-P1-2 | `dh/server.py`: FastAPI, `DH_MODE` dev or demo, listens on `0.0.0.0:$PORT` (pod) or `DH_PORT` (VM),... | AG3 (fmdplt33) | 10:30 | [x] | #11 | [x] | [x] |
 | AG3-P1-3 | `dh/api/_stubs.py`: serves `contracts/examples/` when real modules or data are missing (scorer stub returns... | AG3 (fmdplt33) | 10:30 | [x] | #11 | [x] | [x] |
