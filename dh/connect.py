@@ -66,13 +66,19 @@ def has(*names: str) -> bool:
 
 # ---- clip record ---------------------------------------------------------------------------
 def clip_id_for(path: Path) -> str:
-    h = hashlib.sha1(path.name.encode()).hexdigest()[:6]
-    stem = _SAFE.sub("_", path.stem)[-28:].strip("_")
-    return f"u_{stem}_{h}"
+    """Readable and stable: 20261001_101025_sf4_chunk_0008_segment_005_of_006 -> sf4_chunk_0008_s5_<hash>."""
+    h = hashlib.sha1(path.name.encode()).hexdigest()[:4]
+    stem = re.sub(r"^\d{8}_\d{6}_", "", path.stem)
+    stem = re.sub(r"_segment_0*(\d+)_of_\d+$", r"_s\1", stem)
+    stem = re.sub(r"_20\d{6}", "", stem)
+    return f"{_SAFE.sub('_', stem)[:32].strip('_')}_{h}"
 
 
 def camera_id_for(path: Path) -> str:
     name = path.stem.lower()
+    m = re.search(r"(?:^|_)sf(?:_streets)?_?(\d)(?:_|$)", name)
+    if m:
+        return f"sf_streets_cam-{m.group(1)}"
     for key, cid in (("neighborhood", "neighborhood_cam-1"), ("neighbourhood", "neighborhood_cam-1"), ("set0", "pie_cam-3"), ("pie", "pie_cam-3"),
                      ("i24", "i24_cam-1"), ("sf_streets", "sf_streets_cam-1"), ("warehouse", "sdg_warehouse_cam-2"), ("smartspace", "smartspace_cam-1")):
         if key in name:

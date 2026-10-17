@@ -40,7 +40,20 @@ def _local_file(source: str):
     if not name or Path(name).name != name or name.startswith("."):
         return None
     path = data_dir() / "clips" / name
-    return path if path.is_file() else None
+    if path.is_file():
+        return path
+    # added with --no-copy: play the original file where it is, but only the exact path a clip record names
+    from dh.api.clips import load_clip_records
+
+    clips, _hazards, _examples = load_clip_records()
+    for clip in clips:
+        local = clip.get("local_path")
+        if isinstance(local, str) and Path(local).name == name and any(
+            (seg or {}).get("source") == source for seg in clip.get("segments") or []
+        ):
+            found = Path(local)
+            return found if found.is_file() else None
+    return None
 
 
 @router.get("/video")
