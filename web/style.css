@@ -319,3 +319,145 @@ a:hover {
   border: 1px dashed var(--border);
   border-radius: 8px;
 }
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+}
+
+button:disabled {
+  color: var(--muted);
+}
+
+button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.sit-compare {
+  display: grid;
+  grid-template-columns: minmax(16rem, 24rem) minmax(16rem, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+  align-items: start;
+}
+
+.compare-row {
+  display: grid;
+  grid-template-columns: 8rem 3rem minmax(8rem, 1fr);
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.35rem 0;
+}
+
+.agent-tabs,
+.latency-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.risk-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.risk-meter {
+  position: relative;
+  width: 18px;
+  height: 120px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.risk-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0;
+  background: var(--cyan);
+}
+
+.risk-curve {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: 72px;
+  margin-top: 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+}
+
+.example-banner {
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  padding: 0.5rem 0.75rem;
+}
+
+.board {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.board th,
+.board td {
+  text-align: left;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.interval {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 9rem;
+}
+
+.interval-track {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.interval-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--cyan);
+}
+
+.interval-ci {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--text);
+  border-right: 2px solid var(--text);
+}
+
+.dvsa-line {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  border-left: 1px dashed var(--amber);
+}
+
+.type-bar {
+  display: grid;
+  grid-template-columns: 8rem 1fr 4rem;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.35rem 0;
+}

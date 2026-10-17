@@ -10,6 +10,7 @@ from fastapi import APIRouter, HTTPException
 
 from dh.api._stubs import current_mode, example_score
 from dh.api.clips import clip_with_hazards
+from dh.api.runs import recorded_clip_rows
 from dh.clips import data_dir
 
 router = APIRouter()
@@ -17,6 +18,19 @@ router = APIRouter()
 _ROLES = frozenset({"team", "judge", "guest"})
 
 sessions: list[dict] = []
+
+
+def _recorded_agents(clip_id: str) -> dict[str, int]:
+    """Scores from recorded runs for this clip. Missing runs stay absent."""
+    scores: dict[str, int] = {}
+    for row in recorded_clip_rows():
+        if row.get("clip_id") != clip_id:
+            continue
+        agent = row.get("agent")
+        score = row.get("clip_score")
+        if isinstance(agent, str) and isinstance(score, int) and not isinstance(score, bool):
+            scores[agent] = score
+    return scores
 
 
 def _score(clicks: list[float], hazards: list[dict], duration_s: float) -> dict:
@@ -98,5 +112,5 @@ def post_human(body: dict) -> dict:
         "clip_score": scored["clip_score"],
         "pattern": scored["pattern"],
         "hazards": scored["hazards"],
-        "agents": scored.get("agents") or {},
+        "agents": _recorded_agents(clip_id) or scored.get("agents") or {},
     }

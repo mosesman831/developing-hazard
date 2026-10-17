@@ -28,8 +28,8 @@ export function mountSit(el, clipId, api = {}) {
     <label>Name <input name="name" type="text" autocomplete="name" placeholder="Anonymous"></label>
     <label>Role
       <select name="role">
-        <option value="judge">judge</option>
-        <option value="guest" selected>guest</option>
+        <option value="judge" selected>judge</option>
+        <option value="guest">guest</option>
         <option value="team">team</option>
       </select>
     </label>
@@ -105,12 +105,13 @@ export function mountSit(el, clipId, api = {}) {
             }
             return res.json();
           });
-    post
-      .then((scored) => renderScore(result, scored, clipMeta))
+    Promise.all([post, loadAgentRows(clipId)])
+      .then(([scored, agents]) => {
+        renderScore(result, scored, clicks.map((click) => click.t), agents, durationS);
+      })
       .catch(() => {
         result.textContent = "Score could not be saved.";
       });
-    loadAgents(result, clipId);
   }
 
   function begin(clipMeta) {
@@ -207,8 +208,11 @@ async function loadClip(clipId, api) {
   return response.json();
 }
 
-function renderScore(host, scored, clipMeta) {
+function renderScore(host, scored, humanClicks, agents, durationS) {
   host.replaceChildren();
+  const compare = document.createElement("div");
+  compare.className = "sit-compare";
+
   const card = document.createElement("div");
   card.className = "score-card";
   const score = document.createElement("p");
@@ -224,36 +228,84 @@ function renderScore(host, scored, clipMeta) {
   }
   card.append(score, pattern);
   const hazards = scored.hazards || [];
-  if (!hazards.length && clipMeta && clipMeta.hazards) {
-    /* blind response should still include windows from the server */
-  }
   for (const hazard of hazards) {
     const line = document.createElement("p");
     line.className = "mono";
     const window = hazard.window || [];
     const first = hazard.first_click == null ? "-" : hazard.first_click;
-    line.textContent = `${hazard.hazard_id} ${window[0]}–${window[1]} points ${hazard.points} first ${first}`;
+    line.textContent = `${hazard.hazard_id} ${window[0]}-${window[1]} points ${hazard.points} first ${first}`;
     card.append(line);
   }
-  host.append(card);
+
+  const board = document.createElement("div");
+  board.className = "compare-board";
+  const heading = document.createElement("h2");
+  heading.textContent = "You and the agents";
+  board.append(heading);
+  board.append(compareRow("You", scored.clip_score, humanClicks, "human", durationS, hazards));
+  if (!agents.length) {
+    const empty = document.createElement("p");
+    empty.className = "muted";
+    empty.textContent = "No recorded agent run for this clip.";
+    board.append(empty);
+  }
+  for (const agent of agents) {
+    board.append(compareRow(agent.name, agent.score, agent.clicks, "agent", durationS, hazards));
+  }
+
+  compare.append(card, board);
+  host.append(compare);
 }
 
-async function loadAgents(host, clipId) {
+function compareRow(name, score, clicks, kind, durationS, hazards) {
+  const row = document.createElement("div");
+  row.className = "compare-row";
+  const label = document.createElement("span");
+  label.textContent = name;
+  const value = document.createElement("span");
+  value.className = "mono";
+  value.textContent = score == null ? "-" : String(score);
+  const bar = document.createElement("div");
+  bar.className = "timeline-bar";
+  const duration = durationS > 0 ? durationS : 30;
+  for (const hazard of hazards || []) {
+    const window = hazard.window || [];
+    if (window.length < 2 || window[0] == null || window[1] == null) {
+      continue;
+    }
+    const band = document.createElement("span");
+    band.className = "window-band";
+    band.style.left = `${(Number(window[0]) / duration) * 100}%`;
+    band.style.width = `${((Number(window[1]) - Number(window[0])) / duration) * 100}%`;
+    bar.append(band);
+  }
+  for (const click of clicks || []) {
+    const t = typeof click === "number" ? click : click.t;
+    if (t == null || Number.isNaN(Number(t))) {
+      continue;
+    }
+    const flag = document.createElement("span");
+    flag.className = kind === "human" ? "flag human" : "flag agent";
+    flag.style.left = `${(Number(t) / duration) * 100}%`;
+    flag.title = `${Number(t).toFixed(2)}s`;
+    bar.append(flag);
+  }
+  row.append(label, value, bar);
+  return row;
+}
+
+async function loadAgentRows(clipId) {
   let runs = [];
   try {
     const response = await fetch("api/runs");
-    if (response.ok) {
-      runs = await response.json();
+    if (!response.ok) {
+      return [];
     }
+    runs = await response.json();
   } catch {
-    return;
+    return [];
   }
-  const block = document.createElement("div");
-  block.className = "agent-scores";
-  const heading = document.createElement("h2");
-  heading.textContent = "Agents on this clip";
-  block.append(heading);
-  let any = false;
+  const agents = [];
   for (const run of runs) {
     if (!run.run_id) {
       continue;
@@ -268,23 +320,14 @@ async function loadAgents(host, clipId) {
       if (!row) {
         continue;
       }
-      any = true;
-      const line = document.createElement("p");
-      line.className = "mono";
-      const times = (row.clicks || [])
-        .map((click) => (typeof click === "number" ? click : click.t))
-        .filter((value) => value != null);
-      line.textContent = `${run.agent || run.run_id}: ${row.clip_score} clicks ${times.join(", ") || "-"}`;
-      block.append(line);
+      agents.push({
+        name: run.agent || run.run_id,
+        score: row.clip_score,
+        clicks: row.clicks || [],
+      });
     } catch {
       /* skip this run */
     }
   }
-  if (!any) {
-    const empty = document.createElement("p");
-    empty.className = "muted";
-    empty.textContent = "No recorded agent run for this clip.";
-    block.append(empty);
-  }
-  host.append(block);
+  return agents;
 }

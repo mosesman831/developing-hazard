@@ -5,29 +5,29 @@ Only AG3 edits this file, inside its own PR.
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
 | 1 | Merged | ag3/phase-1 | #11 | 2026-10-17 11:59 |
-| 2 | PR open | ag3/phase-2 | #15 | 2026-10-17 12:14 |
-| 3 | Not started | ag3/phase-3 | | |
+| 2 | Merged | ag3/phase-2 | #15 | 2026-10-17 12:15 |
+| 3 | PR open | ag3/phase-3 | #17 | 2026-10-17 12:30 |
 | 4 | Not started | ag3/phase-4 | | |
 
 ## Now
 
-Doing: waiting on the merge bot for #15.
-Next: wait for the merge bot. Do not start Phase 3.
-Blocked: nothing on the code. `data/tracks/` is not on main, so the watch screen has no boxes for the recorded run. Laptop port-forward was not confirmed.
+Doing: waiting on the merge bot for #17.
+Next: wait for the merge bot. Do not start Phase 4.
+Blocked: `data/leaderboard.json` is not on main, so the board is the example file and the screen says "Example data. Not a result." `data/tracks/` is still empty, so watch has no boxes. No run has a Weave URL, so the watch screen says there is no Weave trace.
 
 ## Handoffs ready for others
 
-- Dev server: `DH_MODE=dev` on `0.0.0.0:8000`. Home lists the 26 clips. Sit is `#/sit/:clipId`. Watch is `#/watch/:runId/:clipId`.
-- `GET /video` proxies VSS with the JWT on the server and Range passed through. A Range request returned 206 and an MP4 `ftyp` header, on the VM and on `/app`.
-- Blind sit `POST /api/human` for `fmd` on `c01` at 21.0s scored 4. Sessions are in `data/humans.jsonl`.
-- Snapshot is 204835 bytes, under the 900 KB budget. Deployed app: https://workshop.thecosmoslabs.com App button. `/app/api/clips` returned 26 clips.
-- `web/player.js` exports `mountPlayer` and `getActiveVideo` for the label, sit, and watch screens.
-- `#/label/:clipId` still calls `mountLabel` from `label.js`.
+- Dev server: `DH_MODE=dev` on `0.0.0.0:8000`. Sit is `#/sit/:clipId` (name, role judge/guest/team, seen-before). After the clip, the score sits next to each recorded agent's clicks.
+- Leaderboard is `#/leaderboard`: interval bars, lift, the dashed 58.7% line labelled "DVSA car pass rate (44/75), for reference only", latency toggle, per-clip humans, full-set line when someone has sat every test clip.
+- Watch is `#/watch/:runId/:clipId` with agent tabs (naive, risk, gate, async, vlm), event feed, vertical risk meter, and "Recorded run, replayed."
+- `POST /api/runs` in dev calls `dh.evals.start_run`. Demo mode still returns 404. `dh.evals` is not on main yet, so a missing import returns the example run id and `stub: true`.
+- Snapshot is 234197 bytes, under the 900 KB budget. Judges open https://workshop.thecosmoslabs.com and click App.
+- `POST /api/human` for a recorded clip includes that clip's agent scores. On `c07` the recorded `yolo_risk` score is 0.
 
 ## Needs from others
 
-- AG1: `data/tracks/` is empty, so overlays have nothing to draw. The recorded run `r_yolo_risk_20261017T113337` is on `c07` with score 0 and no clicks. That is what the watch screen shows.
-- AG2: clips and hazards are on main and are what the app lists.
+- AG1: `data/leaderboard.json` for a real board. Runs for naive, gate, async, and vlm, plus any `weave_url`, so those tabs and the Weave links light up. `data/tracks/` for boxes.
+- AG2: nothing new. Clips and hazards on main are what the app lists.
 
 ## Go / no-go question 4
 
@@ -36,10 +36,14 @@ A segment does play from inside the pod via the in-cluster backend.
 - VM DNS: `video-backend-service.team-36.svc.cluster.local` does not resolve on the VM.
 - From the hello-world pod: `GET http://video-backend-service.team-36.svc.cluster.local:8000/health` returned 200. A `Range: bytes=0-1023` request to `/api/v1/videos/stream` returned 206, `content-type` `binary/octet-stream`, magic `ftyp` / `isom` (MP4).
 - The same stream via the public ingress also returned 206 with the same magic.
-- Port forwarding to a laptop browser was not confirmed here. The Cursor browser in this session could not open `127.0.0.1:8000` (chrome error page). On the VM, headless Chrome rendered the home screen: title, three cards, label link, clips 1, hazards 1, frozen at `-`, hash `-`. Health dots are red because Phase 1 does not probe VSS, Cosmos, or W&B.
+- Port forwarding to a laptop browser was not confirmed here. The Cursor browser in this session could not open `127.0.0.1:8000` (chrome error page). On the VM, headless Chrome rendered the leaderboard, the watch screen for `c07`, and the sit form for `c01` once all 6 segments were ready.
 
 ## Log (newest first)
 
+- 2026-10-17 12:30 BST. PR #17 open: https://github.com/mosesman831/developing-hazard/pull/17
+- 2026-10-17 12:28 BST. Redeployed after the Phase 2 merge. `deploy/deploy.sh` rolled out and `/app/health` returned `{"ok":true}`. Deployed smoke passed, including video 206 and demo `POST /api/runs` 404. The pod board has no `data/leaderboard.json`, so it shows no agent rows and does not show the example scores. Per-clip sits for smoke and fmd are there. Headless Chrome on `/app` showed the sit form with 6 segments ready.
+- 2026-10-17 12:25 BST. Phase 3 checks: `make test` 137 passed, `pytest tests/ag3` 22 passed. `make snapshot` 234197 bytes. Dev `scripts/smoke.sh` passed, including video 206. Headless Chrome: leaderboard shows the example banner, the reference line, and the per-clip sits; watch shows score 0, risk 0.00, the five agent tabs, and no Weave URL; sit shows name, role, seen-before, and "6 segments ready."
+- 2026-10-17 12:15 BST. Phase 2 merged: https://github.com/mosesman831/developing-hazard/pull/15
 - 2026-10-17 12:14 BST. PR #15 open: https://github.com/mosesman831/developing-hazard/pull/15
 - 2026-10-17 12:12 BST. Phase 2 checks: `pytest tests/ag3` 18 passed, full suite 133 passed before the health fallback tweak. `make snapshot` 204835 bytes. Dev smoke and `/app` smoke passed, including video 206. Blind sit on `c01` at 21.0s scored 4. Headless Chrome showed the 26-clip list, sit reached "segments ready", and the watch screen showed score 0, risk 0.00, no clicks, and a window band for the recorded run.
 - 2026-10-17 11:57 BST. PR #11 open: https://github.com/mosesman831/developing-hazard/pull/11
