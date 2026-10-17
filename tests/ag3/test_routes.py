@@ -455,11 +455,11 @@ def test_real_clip_without_tracks_is_empty(monkeypatch, tmp_path):
 
 
 def test_snapshot_under_budget(tmp_path):
-    from dh.snapshot import SnapshotError, build_snapshot, budget_bytes
+    from dh.snapshot import SnapshotError, build_snapshot
 
     size = build_snapshot(tmp_path / "snapshot")
     assert size > 0
-    assert size <= budget_bytes()
+    assert size <= 1048576
     assert (tmp_path / "snapshot" / "dh" / "server.py").is_file()
     assert (tmp_path / "snapshot" / "web" / "index.html").is_file()
     assert not list((tmp_path / "snapshot").rglob("*.mp4"))
