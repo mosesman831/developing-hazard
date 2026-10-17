@@ -6,13 +6,13 @@ Only AG3 edits this file, inside its own PR.
 |---|---|---|---|---|
 | 1 | Merged | ag3/phase-1 | #11 | 2026-10-17 11:59 |
 | 2 | Merged | ag3/phase-2 | #15 | 2026-10-17 12:15 |
-| 3 | In progress | ag3/phase-3 | | 2026-10-17 12:25 |
+| 3 | PR open | ag3/phase-3 | #17 | 2026-10-17 12:30 |
 | 4 | Not started | ag3/phase-4 | | |
 
 ## Now
 
-Doing: Phase 3 judge mode, leaderboard, watch tabs, and redeploy.
-Next: open the Phase 3 PR and stop. Do not start Phase 4.
+Doing: waiting on the merge bot for #17.
+Next: wait for the merge bot. Do not start Phase 4.
 Blocked: `data/leaderboard.json` is not on main, so the board is the example file and the screen says "Example data. Not a result." `data/tracks/` is still empty, so watch has no boxes. No run has a Weave URL, so the watch screen says there is no Weave trace.
 
 ## Handoffs ready for others
@@ -40,6 +40,7 @@ A segment does play from inside the pod via the in-cluster backend.
 
 ## Log (newest first)
 
+- 2026-10-17 12:30 BST. PR #17 open: https://github.com/mosesman831/developing-hazard/pull/17
 - 2026-10-17 12:28 BST. Redeployed after the Phase 2 merge. `deploy/deploy.sh` rolled out and `/app/health` returned `{"ok":true}`. Deployed smoke passed, including video 206 and demo `POST /api/runs` 404. The pod board has no `data/leaderboard.json`, so it shows no agent rows and does not show the example scores. Per-clip sits for smoke and fmd are there. Headless Chrome on `/app` showed the sit form with 6 segments ready.
 - 2026-10-17 12:25 BST. Phase 3 checks: `make test` 137 passed, `pytest tests/ag3` 22 passed. `make snapshot` 234197 bytes. Dev `scripts/smoke.sh` passed, including video 206. Headless Chrome: leaderboard shows the example banner, the reference line, and the per-clip sits; watch shows score 0, risk 0.00, the five agent tabs, and no Weave URL; sit shows name, role, seen-before, and "6 segments ready."
 - 2026-10-17 12:15 BST. Phase 2 merged: https://github.com/mosesman831/developing-hazard/pull/15

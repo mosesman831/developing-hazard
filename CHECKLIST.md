@@ -113,12 +113,12 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG2-P3-5 | `dh/store.py` and `dh/clients/vastdb.py` (7.13, 10.10): schema `developing_hazard`, table `hazards`. Never... | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG2-P3-6 | `dh/clients/embed.py` "more like this" (7.1 should) only if mining is short. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG2-P3-PR | Phase 3 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG3-P3-1 | Judge mode in the pod: name, role, "seen before?", side-by-side agent clicks after the clip. | AG3 (fmdplt33) | 14:00 | [x] |  | [ ] | [ ] |
-| AG3-P3-2 | `dh/api/leaderboard.py` serving AG1's `data/leaderboard.json`; leaderboard screen (16.7) with interval bars,... | AG3 (fmdplt33) | 14:00 | [x] |  | [ ] | [ ] |
-| AG3-P3-3 | `POST /api/runs` (dev) calling `dh.evals.start_run` (AG1). | AG3 (fmdplt33) | 14:00 | [x] |  | [ ] | [ ] |
-| AG3-P3-4 | Watch screen: agent tabs, event feed, risk meter, "Open in Weave" links, labelled "recorded run, replayed". | AG3 (fmdplt33) | 14:00 | [x] |  | [ ] | [ ] |
-| AG3-P3-5 | Redeploy after each merge to `main` that changes data. | AG3 (fmdplt33) | 14:00 | [x] |  | [ ] | [ ] |
-| AG3-P3-PR | Phase 3 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 14:00 | [x] |  | [ ] | [ ] |
+| AG3-P3-1 | Judge mode in the pod: name, role, "seen before?", side-by-side agent clicks after the clip. | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-2 | `dh/api/leaderboard.py` serving AG1's `data/leaderboard.json`; leaderboard screen (16.7) with interval bars,... | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-3 | `POST /api/runs` (dev) calling `dh.evals.start_run` (AG1). | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-4 | Watch screen: agent tabs, event feed, risk meter, "Open in Weave" links, labelled "recorded run, replayed". | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-5 | Redeploy after each merge to `main` that changes data. | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-PR | Phase 3 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
 | M-P3 | All three Phase 3 PRs reviewed, tested and merged | Merge bot | 14:00 | - |  | - | [ ] |
 
 ## Phase 4 (due 15:30)
