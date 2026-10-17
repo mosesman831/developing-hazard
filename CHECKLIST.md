@@ -118,7 +118,7 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG3-P3-3 | `POST /api/runs` (dev) calling `dh.evals.start_run` (AG1). | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
 | AG3-P3-4 | Watch screen: agent tabs, event feed, risk meter, "Open in Weave" links, labelled "recorded run, replayed". | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
 | AG3-P3-5 | Redeploy after each merge to `main` that changes data. | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
-| AG3-P3-PR | Phase 3 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-PR | Phase 3 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
 | M-P3 | All three Phase 3 PRs reviewed, tested and merged | Merge bot | 14:00 | - |  | - | [ ] |
 
 ## Phase 4 (due 15:30)
