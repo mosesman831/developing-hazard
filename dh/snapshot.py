@@ -31,7 +31,13 @@ _PY_FILES = (
     "dh/clients/vss.py",
 )
 
-_DATA_FILES = ("clips.json", "hazards.json", "leaderboard.json", "humans.jsonl")
+_DATA_FILES = (
+    "clips.json",
+    "hazards.json",
+    "leaderboard.json",
+    "humans.jsonl",
+    "testset_v2.json",
+)
 _SKIP_PARTS = {"__pycache__", ".git"}
 _SKIP_SUFFIXES = {".mp4", ".jpg", ".jpeg", ".png", ".pyc"}
 
