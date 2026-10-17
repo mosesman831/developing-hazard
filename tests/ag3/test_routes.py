@@ -36,22 +36,32 @@ def _require_keys(obj: dict, required: tuple[str, ...], name: str) -> None:
     assert not missing, f"{name} missing {missing}"
 
 
+def _reset_live_sits() -> None:
+    from dh.api import human
+
+    human.sessions.clear()
+
+
 @pytest.fixture
 def api(monkeypatch, tmp_path):
     monkeypatch.setenv("DH_MODE", "dev")
     monkeypatch.setenv("DH_DATA_DIR", str(tmp_path))
+    _reset_live_sits()
     application = create_app()
     with TestClient(application) as client:
         yield client
+    _reset_live_sits()
 
 
 @pytest.fixture
 def demo(monkeypatch, tmp_path):
     monkeypatch.setenv("DH_MODE", "demo")
     monkeypatch.setenv("DH_DATA_DIR", str(tmp_path))
+    _reset_live_sits()
     application = create_app()
     with TestClient(application) as client:
         yield client
+    _reset_live_sits()
 
 
 def test_health(api):
@@ -306,6 +316,59 @@ def test_leaderboard_adds_blind_humans(api, tmp_path):
     assert filtered.status_code == 200
     assert filtered.json()["latency_applied"] is False
     assert filtered.json()["rows"] == body["rows"]
+
+
+def _sit(client, name: str, blind: bool):
+    return client.post(
+        "/api/human",
+        json={
+            "name": name,
+            "role": "judge",
+            "blind": blind,
+            "clip_id": "c07",
+            "clicks": [16.9],
+        },
+    )
+
+
+def _board_names(client) -> list[str]:
+    body = client.get("/api/leaderboard").json()
+    return [
+        row["name"]
+        for row in body.get("per_clip", [])
+        if isinstance(row, dict) and isinstance(row.get("name"), str)
+    ]
+
+
+def test_demo_memory_sit_appears_on_leaderboard(demo, tmp_path):
+    posted = _sit(demo, "Ada", True)
+    assert posted.status_code == 200
+    assert not (tmp_path / "humans.jsonl").exists()
+    assert _board_names(demo) == ["Ada"]
+
+    hidden = _sit(demo, "Bea", False)
+    assert hidden.status_code == 200
+    assert _board_names(demo) == ["Ada"]
+
+    smoke = _sit(demo, "smoke", True)
+    assert smoke.status_code == 200
+    assert _board_names(demo) == ["Ada"]
+
+
+def test_dev_leaderboard_does_not_double_count_memory(api, tmp_path):
+    posted = _sit(api, "Cam", True)
+    assert posted.status_code == 200
+    lines = [
+        line
+        for line in (tmp_path / "humans.jsonl").read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    assert len(lines) == 1
+    assert _board_names(api) == ["Cam"]
+
+    hidden = _sit(api, "Dee", False)
+    assert hidden.status_code == 200
+    assert _board_names(api) == ["Cam"]
 
 
 def test_leaderboard_filters_latency_and_serves_file(api, tmp_path):
