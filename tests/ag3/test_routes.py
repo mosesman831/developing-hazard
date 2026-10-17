@@ -286,6 +286,22 @@ def test_leaderboard_adds_blind_humans(api, tmp_path):
     ]
     assert "full_set_humans" not in body
 
+    (tmp_path / "humans.jsonl").write_text(
+        json.dumps(
+            {
+                "name": "smoke",
+                "blind": True,
+                "clip_id": "c01",
+                "clip_score": 0,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    smoke = api.get("/api/leaderboard")
+    assert smoke.status_code == 200
+    assert smoke.json().get("per_clip", []) == []
+
     filtered = api.get("/api/leaderboard", params={"latency": "zero"})
     assert filtered.status_code == 200
     assert filtered.json()["latency_applied"] is False
@@ -424,10 +440,28 @@ def test_video(api, monkeypatch):
     assert seen["source"] != "s3://not-in-list"
 
 
-def test_explain_and_stream(api):
+def test_explain_and_stream(api, tmp_path, monkeypatch):
+    monkeypatch.setenv("DH_DATA_DIR", str(tmp_path))
+    missing = api.post("/api/explain/r_EXAMPLE_yolo_risk/c07_h1")
+    assert missing.status_code == 404
+
+    cached = tmp_path / "cache" / "explain" / "r_EXAMPLE_yolo_risk"
+    cached.mkdir(parents=True)
+    (cached / "c07_h1.json").write_text(
+        json.dumps({"explanation": "The click was late.", "approved": False}),
+        encoding="utf-8",
+    )
+    unapproved = api.post("/api/explain/r_EXAMPLE_yolo_risk/c07_h1")
+    assert unapproved.status_code == 404
+
+    (cached / "c07_h1.json").write_text(
+        json.dumps({"explanation": "The click was late.", "approved": True}),
+        encoding="utf-8",
+    )
     explained = api.post("/api/explain/r_EXAMPLE_yolo_risk/c07_h1")
     assert explained.status_code == 200
-    assert explained.json()["explanation"] is None
+    assert explained.json()["approved"] is True
+    assert explained.json()["explanation"] == "The click was late."
 
     stream = api.get("/api/runs/r_EXAMPLE_yolo_risk/stream", params={"clip": "c07"})
     assert stream.status_code == 200
