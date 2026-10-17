@@ -4,7 +4,7 @@ Only AG1 edits this file, inside its own PR.
 
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
-| 1 | PR open | ag1/phase-1 | | 2026-10-17 11:00 |
+| 1 | PR open | ag1/phase-1 | #6 | 2026-10-17 11:05 |
 | 2 | Not started | ag1/phase-2 | | |
 | 3 | Not started | ag1/phase-3 | | |
 | 4 | Not started | ag1/phase-4 | | |
@@ -53,5 +53,6 @@ W&B inference: not run (`WANDB_API_KEY` unset). `weave.init`: not called (`WANDB
 
 ## Log (newest first)
 
+- 2026-10-17 11:05 BST: PR #6 opened. https://github.com/mosesman831/developing-hazard/pull/6
 - 2026-10-17 11:00 BST: Phase 1 code complete and late. Scorer implements SPEC 9.1-9.3 (points and `PATTERN_V1`), not only the points skeleton. Pattern tests from SPEC 9.7 are in `tests/ag1/test_score.py`. Probes blocked as above.
 - 2026-10-17 10:37 BST: Started Phase 1 from `main` on `ag1/phase-1`, after the 10:30 due time.
