@@ -103,3 +103,29 @@ def test_routes_use_only_this_router(monkeypatch, tmp_path):
     hazards = load_hazards()
     assert hazards[0]["hazard_id"] == "c07_h1"
     assert (directory / "hazards.json").is_file()
+
+
+def test_lone_surrogate_is_422(monkeypatch, tmp_path):
+    client, directory = _client(monkeypatch, tmp_path)
+    hazards_before = (directory / "hazards.json").read_bytes()
+    clips_before = (directory / "clips.json").read_bytes()
+    headers = {"content-type": "application/json"}
+    hazard = client.post(
+        "/api/hazards",
+        content=(
+            b'{"clip_id":"c07","labeller":"riyu","ws":1.0,"we":2.0,'
+            b'"type":"other","description":"bad \\ud800"}'
+        ),
+        headers=headers,
+    )
+    assert hazard.status_code == 422
+    assert hazard.json()["detail"] == "input contains a lone UTF-16 surrogate"
+    status = client.post(
+        "/api/clips/c07/status",
+        content=b'{"status":"\\ud800"}',
+        headers=headers,
+    )
+    assert status.status_code == 422
+    assert status.json()["detail"] == "input contains a lone UTF-16 surrogate"
+    assert (directory / "hazards.json").read_bytes() == hazards_before
+    assert (directory / "clips.json").read_bytes() == clips_before

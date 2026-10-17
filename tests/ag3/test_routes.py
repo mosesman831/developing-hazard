@@ -254,6 +254,16 @@ def test_post_run_calls_start_run(api, monkeypatch):
     assert called["args"] == ("yolo_risk", {"split": "dev"}, "testset_v0", "zero")
 
 
+def test_post_run_missing_agent_is_422(api, monkeypatch):
+    def start_run(*_args, **_kwargs):
+        raise AssertionError("start_run must not run without an agent")
+
+    monkeypatch.setattr("dh.evals.start_run", start_run)
+    response = api.post("/api/runs", json={})
+    assert response.status_code == 422
+    assert response.json()["detail"] == "agent is required"
+
+
 def test_leaderboard_adds_blind_humans(api, tmp_path):
     (tmp_path / "humans.jsonl").write_text(
         json.dumps(
@@ -467,6 +477,13 @@ def test_explain_and_stream(api, tmp_path, monkeypatch):
     assert stream.status_code == 200
     assert "event: score" in stream.text
     assert "clip_score" in stream.text
+
+
+def test_explain_overlong_run_id_is_404(api, tmp_path):
+    (tmp_path / "cache" / "explain").mkdir(parents=True)
+    response = api.post("/api/explain/" + ("r" * 300) + "/c07_h1")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "explanation not approved"
 
 
 def test_real_clip_without_tracks_is_empty(monkeypatch, tmp_path):
