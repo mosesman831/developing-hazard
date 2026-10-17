@@ -552,6 +552,7 @@ def _known_six_sources(rows: list[dict]) -> dict[tuple[str, int], list[str]]:
 
 
 def _concat_segments(vss: Any, segments: list[dict], output: Path) -> None:
+    output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         folder = Path(tmp)

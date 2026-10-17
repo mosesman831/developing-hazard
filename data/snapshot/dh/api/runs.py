@@ -120,9 +120,51 @@ def post_run(body: dict) -> dict:
     return {"run_id": run_id}
 
 
+def _approved_explanation(run_id: str, hazard_id: str) -> dict | None:
+    path = data_dir() / "cache" / "explain" / run_id / f"{hazard_id}.json"
+    if not path.is_file():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(payload, dict) or payload.get("approved") is not True:
+        return None
+    return payload
+
+
 @router.post("/api/explain/{run_id}/{hazard_id}")
 def explain(run_id: str, hazard_id: str) -> dict:
-    return {"run_id": run_id, "hazard_id": hazard_id, "explanation": None}
+    payload = _approved_explanation(run_id, hazard_id)
+    if payload is None:
+        raise HTTPException(status_code=404, detail="explanation not approved")
+    return payload
+
+
+def _sse(event: str, payload: dict) -> str:
+    return f"event: {event}\ndata: {json.dumps(payload)}\n\n"
+
+
+def _stream_events(chosen: dict | None, score) -> list[str]:
+    lines: list[str] = []
+    if isinstance(chosen, dict):
+        for point in chosen.get("risk_curve") or []:
+            if isinstance(point, (list, tuple)) and len(point) >= 2:
+                lines.append(_sse("risk", {"t": point[0], "risk": point[1]}))
+        for click in chosen.get("clicks") or []:
+            if isinstance(click, dict) and "t" in click:
+                lines.append(_sse("click", {"t": click["t"]}))
+        for call in chosen.get("calls") or []:
+            if isinstance(call, dict):
+                lines.append(_sse("cosmos_call", call))
+        hazards = chosen.get("hazard_points")
+        score_payload = {"clip_score": score}
+        if isinstance(hazards, dict):
+            score_payload["hazards"] = hazards
+        lines.append(_sse("score", score_payload))
+        return lines
+    lines.append(_sse("score", {"clip_score": score}))
+    return lines
 
 
 @router.get("/api/runs/{run_id}/stream")
@@ -146,9 +188,7 @@ def stream_run(run_id: str, clip: str | None = None) -> StreamingResponse:
             score = example_score()["clip_score"]
         except (OSError, IndexError, KeyError):
             score = None
-    payload = json.dumps({"clip_score": score})
-
     def events():
-        yield f"event: score\ndata: {payload}\n\n"
+        yield from _stream_events(chosen, score)
 
     return StreamingResponse(events(), media_type="text/event-stream")

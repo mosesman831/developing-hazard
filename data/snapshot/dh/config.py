@@ -234,7 +234,7 @@ def __getattr__(name: str) -> Any:
     if name == "random_draws_matched":
         return 1000
     if name == "pod_budget_kb":
-        return 900
+        return 1024
     if name in _LAZY_ENV_NAMES or name in _CONFIG_FIRST_KEYS:
         return lookup(name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

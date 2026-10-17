@@ -59,7 +59,7 @@ a:hover {
 }
 
 .app-shell {
-  max-width: 1200px;
+  max-width: 1760px;
   margin: 0 auto;
 }
 
@@ -200,7 +200,7 @@ a:hover {
 
 .score {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 48px;
+  font-size: 64px;
   line-height: 1;
   font-weight: 400;
   color: var(--green);

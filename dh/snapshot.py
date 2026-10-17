@@ -5,6 +5,7 @@ Code plus JSON must stay under the pod budget (SPEC 6.4). Media is not copied.
 
 from __future__ import annotations
 
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -67,6 +68,22 @@ def _copy_tree(src: Path, dest: Path) -> None:
         _copy_file(path, dest / relative)
 
 
+def _copy_approved_explanations(src: Path, dest: Path) -> None:
+    """Copy only explanations a human has marked approved."""
+    if not src.is_dir():
+        return
+    for path in src.rglob("*.json"):
+        if not path.is_file():
+            continue
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(payload, dict) or payload.get("approved") is not True:
+            continue
+        _copy_file(path, dest / path.relative_to(src))
+
+
 def directory_size(root: Path) -> int:
     total = 0
     for path in root.rglob("*"):
@@ -113,6 +130,11 @@ def build_snapshot(dest: Path | None = None) -> int:
     requirements = _REPO / "requirements-pod.txt"
     if requirements.is_file():
         _copy_file(requirements, target / "requirements-pod.txt")
+
+    _copy_approved_explanations(
+        data_src / "cache" / "explain",
+        target / "data" / "cache" / "explain",
+    )
 
     size = directory_size(target)
     limit = budget_bytes()

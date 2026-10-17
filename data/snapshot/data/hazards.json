@@ -229,5 +229,223 @@
       "s3://team-36-vss-chunks-segments/segments/20261001_061917_set02_video_chunk_0002_segment_005_of_006.mp4"
     ],
     "description": "A cyclist rides toward the camera car in the middle of the road."
+  },
+  {
+    "hazard_id": "c12_h1",
+    "clip_id": "c12",
+    "type": "pedestrian_crossing",
+    "window_start": 9.5,
+    "window_end": 13.0,
+    "labellers": {
+      "riyu": [
+        9.5,
+        13.0
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_065358_set04_video_chunk_0021_segment_002_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_065358_set04_video_chunk_0021_segment_003_of_006.mp4"
+    ],
+    "description": "A pedestrian steps off the left kerb into the lane ahead of the camera car."
+  },
+  {
+    "hazard_id": "c16_h1",
+    "clip_id": "c16",
+    "type": "vehicle_pulling_out",
+    "window_start": 14.0,
+    "window_end": 17.5,
+    "labellers": {
+      "riyu": [
+        14.0,
+        17.5
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_070026_set05_video_chunk_0006_segment_003_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_070026_set05_video_chunk_0006_segment_004_of_006.mp4"
+    ],
+    "description": "A dark car pulls out from the right side of the road into the lane ahead."
+  },
+  {
+    "hazard_id": "c22_h1",
+    "clip_id": "c22",
+    "type": "pedestrian_crossing",
+    "window_start": 14.0,
+    "window_end": 17.5,
+    "labellers": {
+      "riyu": [
+        14.0,
+        17.5
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_071807_set06_video_chunk_0018_segment_003_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_071807_set06_video_chunk_0018_segment_004_of_006.mp4"
+    ],
+    "description": "Pedestrians cross the junction in front of the moving camera car."
+  },
+  {
+    "hazard_id": "c23_h1",
+    "clip_id": "c23",
+    "type": "pedestrian_crossing",
+    "window_start": 14.5,
+    "window_end": 18.0,
+    "labellers": {
+      "riyu": [
+        14.5,
+        18.0
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_071858_set06_video_chunk_0020_segment_003_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_071858_set06_video_chunk_0020_segment_004_of_006.mp4"
+    ],
+    "description": "Pedestrians cross the junction while the camera car approaches."
+  },
+  {
+    "hazard_id": "c25_h1",
+    "clip_id": "c25",
+    "type": "pedestrian_crossing",
+    "window_start": 19.0,
+    "window_end": 22.5,
+    "labellers": {
+      "riyu": [
+        19.0,
+        22.5
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_072014_set06_video_chunk_0023_segment_004_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_072014_set06_video_chunk_0023_segment_005_of_006.mp4"
+    ],
+    "description": "A pedestrian crosses from the right side of the junction in front of the camera car."
+  },
+  {
+    "hazard_id": "c30_h1",
+    "clip_id": "c30",
+    "type": "lead_vehicle_braking",
+    "window_start": 9.0,
+    "window_end": 12.5,
+    "labellers": {
+      "riyu": [
+        9.0,
+        12.5
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_002_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_003_of_006.mp4"
+    ],
+    "description": "The vehicle ahead shows brake lights as the camera car closes on it."
+  },
+  {
+    "hazard_id": "c31_h1",
+    "clip_id": "c31",
+    "type": "cyclist",
+    "window_start": 5.0,
+    "window_end": 8.0,
+    "labellers": {
+      "riyu": [
+        5.0,
+        8.0
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_002_of_006.mp4"
+    ],
+    "description": "A cyclist rides ahead in the lane as the camera car approaches a junction."
+  },
+  {
+    "hazard_id": "c32_h1",
+    "clip_id": "c32",
+    "type": "pedestrian_crossing",
+    "window_start": 19.5,
+    "window_end": 23.0,
+    "labellers": {
+      "riyu": [
+        19.5,
+        23.0
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_004_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_005_of_006.mp4"
+    ],
+    "description": "A person crosses from the right while a cyclist rides ahead of the camera car."
+  },
+  {
+    "hazard_id": "c33_h1",
+    "clip_id": "c33",
+    "type": "cyclist",
+    "window_start": 14.0,
+    "window_end": 17.0,
+    "labellers": {
+      "riyu": [
+        14.0,
+        17.0
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_003_of_006.mp4",
+      "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_004_of_006.mp4"
+    ],
+    "description": "A cyclist rides ahead in the same lane as the camera car."
+  },
+  {
+    "hazard_id": "c33_h2",
+    "clip_id": "c33",
+    "type": "pedestrian_crossing",
+    "window_start": 15.0,
+    "window_end": 18.0,
+    "labellers": {
+      "riyu": [
+        15.0,
+        18.0
+      ]
+    },
+    "agreed": false,
+    "arbitrated_by": null,
+    "auto_window": null,
+    "track_id": null,
+    "segment_sources": [
+      "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_004_of_006.mp4"
+    ],
+    "description": "Pedestrians are in the crosswalk in front of the camera car."
   }
 ]

@@ -143,6 +143,35 @@ def get_proposal(clip_id: str) -> dict:
     return payload
 
 
+def agreement_summary(hazards: list[dict]) -> dict:
+    """Count labeller windows and pairwise agreement without mutating hazards."""
+    windows = 0
+    paired = 0
+    agreed = 0
+    for hazard in hazards:
+        labellers = hazard.get("labellers")
+        if not isinstance(labellers, dict):
+            continue
+        hazard_windows = [window for window in labellers.values() if _is_window(window)]
+        if hazard_windows:
+            windows += 1
+        if len(hazard_windows) >= 2:
+            paired += 1
+            starts = [window[0] for window in hazard_windows]
+            ends = [window[1] for window in hazard_windows]
+            if (
+                max(starts) - min(starts) <= _AGREE_START_S
+                and max(ends) - min(ends) <= _AGREE_END_S
+            ):
+                agreed += 1
+    return {
+        "windows": windows,
+        "paired": paired,
+        "agreed": agreed,
+        "status_text": f"{agreed} of {paired} windows agreed within tolerance",
+    }
+
+
 def visible_hazard(hazard: dict, caller: str) -> dict:
     """Return hazard JSON safe for the caller (HTTP); disk keeps the full record."""
     out = dict(hazard)

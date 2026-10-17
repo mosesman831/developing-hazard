@@ -1,0 +1,10 @@
+{
+  "run_id": "r_yolo_risk_20261017T122620",
+  "hazard_id": "c01_h1",
+  "clip_id": "c01",
+  "points": 0,
+  "text": "The agent missed the hazard because it produced no risk samples inside the 20\u201324s window, so it never clicked. Its model only flagged the hazard at t=24, the very end of the window, and had said NO_HAZARD at t=21.",
+  "approved": true,
+  "prompt_version": "explain_miss_v1",
+  "model": "deepseek-ai/DeepSeek-V4-Flash-0731"
+}

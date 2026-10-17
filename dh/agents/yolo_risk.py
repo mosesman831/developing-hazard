@@ -20,10 +20,11 @@ class YoloRisk:
 
     name = "yolo_risk"
 
-    def __init__(self) -> None:
-        self.theta_up = float(config.theta_up)
+    def __init__(self, overrides: dict | None = None) -> None:
+        chosen = overrides or {}
+        self.theta_up = float(chosen.get("theta_up", config.theta_up))
         self.theta_down = float(config.theta_down)
-        self.ema_weight = float(config.ema_weight)
+        self.ema_weight = float(chosen.get("ema_weight", config.ema_weight))
         self.max_clicks = int(config.max_clicks)
         self.min_click_gap_s = float(config.min_click_gap_s)
         self.frame_wh = (1920, 1080)

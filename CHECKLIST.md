@@ -47,11 +47,11 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG1-P1-PR | Phase 1 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 10:30 | [ ] | #6 | [ ] | [ ] |
 | AG2-P1-1 | `dh/clients/vss.py` (SPEC 11.4): login, `search`, `stream`, `detections`, re-login on 401, timeouts 30 s /... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-2 | `dh/clips.py`: loaders from `contracts/python_interfaces.md`, stdlib only, plus the 30 s chunk clip... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
-| AG2-P1-3 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 1 and 4 with AG3): run the 10 queries from 7.1; open the... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [ ] | [ ] |
+| AG2-P1-3 | Go/no-go probes (SPEC 20 row 09:30, 20.1 questions 1 and 4 with AG3): run the 10 queries from 7.1; open the... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-4 | `dh/api/labels.py` skeleton: `router = APIRouter()` with the routes in `contracts/api_routes.md` owned by... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-5 | `web/label.js` v0: `export function mountLabel(el, clipId, api)` rendering the blind sit then timeline... | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG2-P1-6 | `mk/ag2.mk`: `mine`, `build`, `freeze`. | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
-| AG2-P1-PR | Phase 1 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [ ] | [ ] |
+| AG2-P1-PR | Phase 1 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 10:30 | [ ] | #4 | [x] | [x] |
 | AG3-P1-1 | Hello-world deploy to `/app` with `/deploy-app-no-registry` (SPEC 6.4, 20 row 09:30, risk 14). Install... | AG3 (fmdplt33) | 10:30 | [x] | #11 | [x] | [x] |
 | AG3-P1-2 | `dh/server.py`: FastAPI, `DH_MODE` dev or demo, listens on `0.0.0.0:$PORT` (pod) or `DH_PORT` (VM),... | AG3 (fmdplt33) | 10:30 | [x] | #11 | [x] | [x] |
 | AG3-P1-3 | `dh/api/_stubs.py`: serves `contracts/examples/` when real modules or data are missing (scorer stub returns... | AG3 (fmdplt33) | 10:30 | [x] | #11 | [x] | [x] |
@@ -99,18 +99,18 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 
 | ID | Task | Owner | Due | Agent | PR | Gate | Merged |
 |---|---|---|---|---|---|---|---|
-| AG1-P3-1 | Verdict grid finished for every dev and candidate test clip (`data/grid/cosmos_verify_v2/<clip>.jsonl`), 2 in... | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-2 | `dh/agents/yolo_cosmos.py`: `yolo_cosmos_gate` then `yolo_cosmos_async` (7.10.3, 7.10.4, 12.3). Latency sweep. | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-3 | `vlm_wb` (7.10.5) only if Cosmos is slow or says HAZARD to everything (risk 6). | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-4 | `dh/evals.py`: Weave EvaluationLogger (section 15), bootstrap, paired difference, matched chance (App E),... | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-5 | `dh/windows.py` (7.7, App D) writing `data/proposals/<clip_id>.json`. AG2's labels API reveals it only after... | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-6 | Threshold tuning on dev only (12.6). Nothing tuned on test. | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG1-P3-PR | Phase 3 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 14:00 | [ ] |  | [ ] | [ ] |
+| AG1-P3-1 | Verdict grid finished for every dev and candidate test clip (`data/grid/cosmos_verify_v2/<clip>.jsonl`), 2 in... | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
+| AG1-P3-2 | `dh/agents/yolo_cosmos.py`: `yolo_cosmos_gate` then `yolo_cosmos_async` (7.10.3, 7.10.4, 12.3). Latency sweep. | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
+| AG1-P3-3 | `vlm_wb` (7.10.5) only if Cosmos is slow or says HAZARD to everything (risk 6). | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
+| AG1-P3-4 | `dh/evals.py`: Weave EvaluationLogger (section 15), bootstrap, paired difference, matched chance (App E),... | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
+| AG1-P3-5 | `dh/windows.py` (7.7, App D) writing `data/proposals/<clip_id>.json`. AG2's labels API reveals it only after... | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
+| AG1-P3-6 | Threshold tuning on dev only (12.6). Nothing tuned on test. | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
+| AG1-P3-PR | Phase 3 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 14:00 | [x] | #20 | [x] | [x] |
 | AG2-P3-1 | Mine more; get blind sits from Moses and fmd; label 8-10 more (13.7, 13.8 mix). | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-2 | `GET /api/clips/{clip_id}/proposal` serving AG1's `data/proposals/` after both labellers saved. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-3 | Agreement stats (13.5) into your status file. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-4 | Freeze `testset_v2` at 14:00 (10.6): commit file and hash. After this, no label or window changes. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
-| AG2-P3-5 | `dh/store.py` and `dh/clients/vastdb.py` (7.13, 10.10): schema `developing_hazard`, table `hazards`. Never... | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
+| AG2-P3-2 | `GET /api/clips/{clip_id}/proposal` serving AG1's `data/proposals/` after both labellers saved. | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [x] | [x] |
+| AG2-P3-3 | Agreement stats (13.5) into your status file. | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [x] | [x] |
+| AG2-P3-4 | Freeze `testset_v2` at 14:00 (10.6): commit file and hash. After this, no label or window changes. | AG2 (Riyu-D1) | 14:00 | [x] | #35 | [x] | [x] |
+| AG2-P3-5 | `dh/store.py` and `dh/clients/vastdb.py` (7.13, 10.10): schema `developing_hazard`, table `hazards`. Never... | AG2 (Riyu-D1) | 14:00 | [x] | #22 | [x] | [x] |
 | AG2-P3-6 | `dh/clients/embed.py` "more like this" (7.1 should) only if mining is short. | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG2-P3-PR | Phase 3 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 14:00 | [ ] |  | [ ] | [ ] |
 | AG3-P3-1 | Judge mode in the pod: name, role, "seen before?", side-by-side agent clicks after the clip. | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
@@ -118,30 +118,30 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG3-P3-3 | `POST /api/runs` (dev) calling `dh.evals.start_run` (AG1). | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
 | AG3-P3-4 | Watch screen: agent tabs, event feed, risk meter, "Open in Weave" links, labelled "recorded run, replayed". | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
 | AG3-P3-5 | Redeploy after each merge to `main` that changes data. | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
-| AG3-P3-PR | Phase 3 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 14:00 | [x] | #17 | [ ] | [ ] |
+| AG3-P3-PR | Phase 3 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 14:00 | [x] | #17 | [x] | [x] |
 | M-P3 | All three Phase 3 PRs reviewed, tested and merged | Merge bot | 14:00 | - |  | - | [ ] |
 
 ## Phase 4 (due 15:30)
 
 | ID | Task | Owner | Due | Agent | PR | Gate | Merged |
 |---|---|---|---|---|---|---|---|
-| AG1-P4-1 | After AG2 freezes `testset_v2` at 14:00: final runs of every agent on test via EvaluationLogger; rebuild... | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-2 | Sanity checks in 14.5 with AG2. | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-3 | Stretch, in order, only if time: miss explanations via W&B LLM (`dh/explain.py`, 7.12, cached in... | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-4 | Pick the demo clip and the miss for the demo (24.3). | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-5 | Numbers final by 15:30. No code after 15:30. | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG1-P4-PR | Phase 4 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-1 | Sanity checks (14.5) with AG1's numbers; write results in your status file. | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-2 | Write `runs` and `hazard_scores` tables to VastDB from AG1's run files (10.10), keyed by segment `source`. | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-3 | `scripts/secret_scan.sh` over the full history; result in the PR body. Decide repo access for reviewers with... | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-4 | `SUBMISSION.md`: one-liner, 150-word description, stack, honest limitations line (25). | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG2-P4-PR | Phase 4 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG3-P4-1 | Final snapshot from AG1's final runs (by 15:15) and final deploy. | AG3 (fmdplt33) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG3-P4-2 | Polish dark UI for the projector (1920x1080, score numbers >= 48 px). | AG3 (fmdplt33) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG3-P4-3 | Stretch only if time: miss panel (16.8) via `POST /api/explain/...` serving precomputed explanations; SSE... | AG3 (fmdplt33) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG3-P4-4 | `scripts/smoke.sh` on the deployed URL; every link opens logged out. | AG3 (fmdplt33) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG3-P4-5 | No code after 15:30. | AG3 (fmdplt33) | 15:30 | [ ] |  | [ ] | [ ] |
-| AG3-P4-PR | Phase 4 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 15:30 | [ ] |  | [ ] | [ ] |
+| AG1-P4-1 | After AG2 freezes `testset_v2` at 14:00: final runs of every agent on test via EvaluationLogger; rebuild... | AG1 (mosesman831) | 15:30 | [x] | #37 | [x] | [x] |
+| AG1-P4-2 | Sanity checks in 14.5 with AG2. | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG1-P4-3 | Stretch, in order, only if time: miss explanations via W&B LLM (`dh/explain.py`, 7.12, cached in... | AG1 (mosesman831) | 15:30 | [x] | #30 | [x] | [x] |
+| AG1-P4-4 | Pick the demo clip and the miss for the demo (24.3). Moses approved 14:52. | AG1 (mosesman831) | 15:30 | [x] | #37 | [x] | [x] |
+| AG1-P4-5 | Numbers final by 15:30. No code after 15:30. | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG1-P4-PR | Phase 4 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 15:30 | [ ] | #30 | [ ] | [ ] |
+| AG2-P4-1 | Sanity checks (14.5) with AG1's numbers; write results in your status file. | AG2 (Riyu-D1) | 15:30 | [ ] | #29 | [ ] | [ ] |
+| AG2-P4-2 | Write `runs` and `hazard_scores` tables to VastDB from AG1's run files (10.10), keyed by segment `source`. | AG2 (Riyu-D1) | 15:30 | [ ] | #29 | [ ] | [ ] |
+| AG2-P4-3 | `scripts/secret_scan.sh` over the full history; result in the PR body. Decide repo access for reviewers with... | AG2 (Riyu-D1) | 15:30 | [x] | #29 | [x] | [x] |
+| AG2-P4-4 | `SUBMISSION.md`: one-liner, 150-word description, stack, honest limitations line (25). | AG2 (Riyu-D1) | 15:30 | [x] | #29 | [x] | [x] |
+| AG2-P4-PR | Phase 4 acceptance checks pass, status/ag2.md updated, PR open | AG2 (Riyu-D1) | 15:30 | [x] | #29 | [x] | [x] |
+| AG3-P4-1 | Final snapshot from AG1's final runs (by 15:15) and final deploy. | AG3 (fmdplt33) | 15:30 | [ ] | #32 | [ ] | [ ] |
+| AG3-P4-2 | Polish dark UI for the projector (1920x1080, score numbers >= 48 px). | AG3 (fmdplt33) | 15:30 | [x] | #32 | [x] | [x] |
+| AG3-P4-3 | Stretch only if time: miss panel (16.8) via `POST /api/explain/...` serving precomputed explanations; SSE... | AG3 (fmdplt33) | 15:30 | [x] | #32 | [x] | [x] |
+| AG3-P4-4 | `scripts/smoke.sh` on the deployed URL; every link opens logged out. | AG3 (fmdplt33) | 15:30 | [ ] | #32 | [ ] | [ ] |
+| AG3-P4-5 | No code after 15:30. | AG3 (fmdplt33) | 15:30 | [x] | #32 | [ ] | [ ] |
+| AG3-P4-PR | Phase 4 acceptance checks pass, status/ag3.md updated, PR open | AG3 (fmdplt33) | 15:30 | [ ] | #32 | [ ] | [ ] |
 | M-P4 | All three Phase 4 PRs reviewed, tested and merged | Merge bot | 15:30 | - |  | - | [ ] |
 
 ## Submission (due 16:30)

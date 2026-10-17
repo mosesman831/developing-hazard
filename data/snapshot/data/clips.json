@@ -1220,5 +1220,381 @@
       "riyu"
     ],
     "notes": ""
+  },
+  {
+    "clip_id": "c27",
+    "candidate_id": "pie_set01_c0001",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_060554_set01_video_chunk_0001.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_060554_set01_video_chunk_0001_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_060554_set01_video_chunk_0001_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_060554_set01_video_chunk_0001_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_060554_set01_video_chunk_0001_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_060554_set01_video_chunk_0001_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_060554_set01_video_chunk_0001_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c27.mp4"
+  },
+  {
+    "clip_id": "c28",
+    "candidate_id": "pie_set01_c0011",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061008_set01_video_chunk_0011.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061008_set01_video_chunk_0011_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061008_set01_video_chunk_0011_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061008_set01_video_chunk_0011_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061008_set01_video_chunk_0011_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061008_set01_video_chunk_0011_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061008_set01_video_chunk_0011_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c28.mp4"
+  },
+  {
+    "clip_id": "c29",
+    "candidate_id": "pie_set01_c0016",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061215_set01_video_chunk_0016.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061215_set01_video_chunk_0016_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061215_set01_video_chunk_0016_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061215_set01_video_chunk_0016_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061215_set01_video_chunk_0016_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061215_set01_video_chunk_0016_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061215_set01_video_chunk_0016_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c29.mp4"
+  },
+  {
+    "clip_id": "c30",
+    "candidate_id": "pie_set01_c0018",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061306_set01_video_chunk_0018.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061306_set01_video_chunk_0018_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c30.mp4"
+  },
+  {
+    "clip_id": "c31",
+    "candidate_id": "pie_set01_c0025",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061604_set01_video_chunk_0025.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061604_set01_video_chunk_0025_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c31.mp4"
+  },
+  {
+    "clip_id": "c32",
+    "candidate_id": "pie_set01_c0026",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061629_set01_video_chunk_0026.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061629_set01_video_chunk_0026_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c32.mp4"
+  },
+  {
+    "clip_id": "c33",
+    "candidate_id": "pie_set01_c0027",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061655_set01_video_chunk_0027.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061655_set01_video_chunk_0027_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c33.mp4"
+  },
+  {
+    "clip_id": "c34",
+    "candidate_id": "pie_set01_c0028",
+    "camera_id": "pie_cam-3",
+    "original_video": "s3://team-36-vss-chunks/team-36/20261001_061720_set01_video_chunk_0028.mp4",
+    "segments": [
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061720_set01_video_chunk_0028_segment_001_of_006.mp4",
+        "start_s": 0.0,
+        "end_s": 5.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061720_set01_video_chunk_0028_segment_002_of_006.mp4",
+        "start_s": 5.0,
+        "end_s": 10.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061720_set01_video_chunk_0028_segment_003_of_006.mp4",
+        "start_s": 10.0,
+        "end_s": 15.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061720_set01_video_chunk_0028_segment_004_of_006.mp4",
+        "start_s": 15.0,
+        "end_s": 20.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061720_set01_video_chunk_0028_segment_005_of_006.mp4",
+        "start_s": 20.0,
+        "end_s": 25.0
+      },
+      {
+        "source": "s3://team-36-vss-chunks-segments/segments/20261001_061720_set01_video_chunk_0028_segment_006_of_006.mp4",
+        "start_s": 25.0,
+        "end_s": 30.0
+      }
+    ],
+    "duration_s": 30.0,
+    "fps_native": 30,
+    "fps_sample": 5,
+    "split": "test",
+    "seen_by": [
+      "riyu"
+    ],
+    "notes": "",
+    "local_path": "data/clips/c34.mp4"
   }
 ]
