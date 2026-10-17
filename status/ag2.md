@@ -7,13 +7,43 @@ Only AG2 edits this file, inside its own PR.
 | 1 | Merged | ag2/phase-1 | #4 | 2026-10-17 10:54 |
 | 2 | Merged | ag2/phase-2-b | #19 | 2026-10-17 12:40 |
 | 3 | In progress, freeze blocked | ag2/phase-3 | | 2026-10-17 13:25 |
-| 4 | Not started | ag2/phase-4 | | |
+| 4 | Code ready, VastDB write on lab VM | ag2/phase-4 | | 2026-10-17 15:30 |
 
 ## Now
 
-Doing: Phase 3 on `ag2/phase-3`. Ten more labeller A windows are in `data/hazards.json`, written by `POST /api/hazards`.
-Next: VastDB hazards table and the proposal route tests, then a pull request. Freeze `testset_v2` only when a second labeller has windows.
-Blocked: 0 of 0 paired windows agreed within tolerance. All 21 hazards have only riyu's window. `data/humans.jsonl` has two blind team sessions, both on `c01` (fmd and a smoke session). Moses has no blind sit on these clips. `testset_v2` was not written.
+Doing: Phase 4 on `ag2/phase-4`. Row builders and `refuse()` allowlist are in place; live VastDB insert is not run from this session.
+Next: parent agent opens the PR. On the lab VM, run the VastDB write command below once credentials are loaded.
+Blocked: window proposal vs agreed-window MAE (no agreed windows; fmd pass parked). AG2-P4-2 stays open until the lab VM write succeeds.
+
+## Phase 4 sanity (SPEC 14.5, dev only)
+
+Numbers below are copied from `status/ag1.md` on this branch and from `data/runs/*/run.json`. Label: **dev**. `testset_id` is `dev` and `testset_sha256` is `unfrozen` in these run files.
+
+| Check | Result (dev) | Source |
+|---|---|---|
+| `yolo_risk` (tuned) | score 6, max 15, pct 0.4, `lift_vs_chance` 0.3202000000000003, `pattern_rate` 0.0. Clicks on c01 to c06: 0, 1, 3, 1, 1, 1 | `status/ag1.md` Phase 4; `data/runs/r_yolo_risk_20261017T122620/run.json` totals |
+| Gaming | `random_at_k` seed 0, 200 draws: k=1 0.07566666666666666, k=2 0.1589999999999998, k=4 0.22833333333333333, k=6 0.3310000000000002, k=8 0.4613333333333334. `matched_chance` on the run's own counts, seed 0, 1000 draws: 0.07979999999999972 | `status/ag1.md` Phase 4 sanity |
+| `yolo_naive` | `pattern_rate` 0.8333333333333334. Five of six clips flagged | `status/ag1.md`; `data/runs/r_yolo_naive_20261017T122551/run.json` totals |
+| Verifier false alarms | Dev grid c01 to c06: 315 points, 270 with no labelled hazard within 3 s, 4 of those `is_hazard` true. Share 4/270 = 0.014814814814814815. Not yes on everything | `status/ag1.md` Phase 4 sanity |
+| Blind humans | `fmd` session `h_92a39e35` on c01, `clip_score` 4. `smoke` session `h_74f0758e` is a test entry, not a human | `status/ag1.md`; `data/humans.jsonl` |
+| Window proposal vs agreed MAE | **BLOCKED** | No agreed windows. All 21 hazards have only labeller riyu. fmd pass parked |
+
+## VastDB runs and hazard_scores (AG2-P4-2)
+
+**Needs the lab VM.** Code-only here: `run_rows`, `hazard_score_rows`, and `write_runs_and_scores` in `dh/store.py`. Dev runs under `data/runs/` use `testset_id` `dev` and `testset_sha256` `unfrozen` (or empty if absent in a file).
+
+On the lab VM, after merging this branch and with `S3_ENDPOINT`, `ACCESS_KEY`, `SECRET_KEY`, and `VASTDB_BUCKET` set:
+
+```bash
+cd /home/mosesman831/dh-ag2 && PYTHONPATH=. /home/mosesman831/developing-hazard/.venv/bin/python -m dh.store
+```
+
+That calls `write_runs_and_scores(testset_id="dev")` and inserts into `developing_hazard.runs` and `developing_hazard.hazard_scores` only.
+
+## Secret scan (AG2-P4-3)
+
+From `/home/mosesman831/dh-ag2`: `bash scripts/secret_scan.sh`  
+Summary after the scanner stopped matching its own pattern file: `files_scanned=302`, `hits=0`. The earlier hit was the pattern line inside `scripts/secret_scan.sh`, not a stored key.
 
 ## Blocked on the fmd pass
 
@@ -47,6 +77,7 @@ Re-checked against VSS on 17 Oct, about 12:05 BST. Counts are from this run.
 - `data/hazards.json`: 21 hazards, labeller `riyu` only, `agreed` false. The extra 10 were written by `POST /api/hazards` in Phase 3, not by hand.
 - `dh.api.labels.router` hides another labeller's window and `auto_window` until the caller has a saved window. Disk keeps the full record. Freeze keeps `split: "test"` clips only.
 - `web/label.js`: `mountLabel`. Blind sit, then handles, type, description, labeller select, and the four buttons. The other window, the dashed proposal, and a risk curve are drawn only after this labeller has saved.
+- `SUBMISSION.md`: paste-ready project blurb for the challenge form.
 
 ## Needs from others
 
@@ -56,6 +87,7 @@ Re-checked against VSS on 17 Oct, about 12:05 BST. Counts are from this run.
 
 ## Log (newest first)
 
+- 2026-10-17 15:30 BST. Phase 4: VastDB row builders, widened `refuse()` allowlist, `scripts/secret_scan.sh` clean (`files_scanned=300`, `hits=0`), `SUBMISSION.md`, sanity table in this file. `pytest tests`: 182 passed. AG2-P4-2 live write not run (needs lab VM).
 - 2026-10-17 13:35 BST. Phase 3 PR is #22. Agent cells ticked for the proposal route, the agreement line, and the VastDB writer. Freeze, labeller B, and arbitration stay open.
 - 2026-10-17 12:40 BST. Re-ingested five parent chunks, `chunk_count` 1, custom prompt, metadata unchanged. Each still has segments 1 to 6. Dashboard `duplicate_segment_rows` is 0 and `segment_rows` is still 3537. The progress URL returned 404 before a `completed` status; caption text had changed by then. `c01`'s chunk (`20261001_061917_set02_video_chunk_0002.mp4`) was submitted twice because the first progress record disappeared while its captions were still the old text. The other four were submitted once. `testset_v1` was not frozen.
 - 2026-10-17 12:20 BST. Phase 2-b probes and eight more set01 clips (`c27` to `c34`, test). `pytest tests/ag2`: 33 passed, 1 warning. Re-ingest not started. `testset_v1` not frozen. Hazards file not edited.
