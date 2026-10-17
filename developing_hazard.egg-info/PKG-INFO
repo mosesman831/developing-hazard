@@ -1,0 +1,21 @@
+Metadata-Version: 2.4
+Name: developing-hazard
+Version: 0.1.0
+Requires-Python: >=3.11
+Requires-Dist: fastapi
+Requires-Dist: uvicorn
+Requires-Dist: pydantic>=2
+Requires-Dist: requests
+Requires-Dist: numpy
+Requires-Dist: opencv-python-headless
+Requires-Dist: pillow
+Requires-Dist: weave
+Requires-Dist: wandb
+Requires-Dist: openai
+Requires-Dist: typer
+Requires-Dist: python-dotenv
+Requires-Dist: pytest
+Provides-Extra: extra
+Requires-Dist: supervision; extra == "extra"
+Requires-Dist: vastdb; extra == "extra"
+Requires-Dist: pyarrow; extra == "extra"
