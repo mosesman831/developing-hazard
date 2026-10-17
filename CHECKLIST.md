@@ -75,7 +75,7 @@ How to tick: agent task rows have four status columns. Edit only your own rows a
 | AG1-P2-8 | 11:00-11:15: your human does blind sits through AG3's sit screen or the label screen. | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
 | AG1-P2-9 | Gaming check before 12:30 (SPEC 14.5, risk 11): random clickers on the dev clips with the real scorer. Random... | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
 | AG1-P2-10 | Start the verdict grid (`dh/grid.py`, 12.3) in the background if time allows. | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
-| AG1-P2-PR | Phase 2 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 12:30 | [x] |  | [ ] | [ ] |
+| AG1-P2-PR | Phase 2 acceptance checks pass, status/ag1.md updated, PR open | AG1 (mosesman831) | 12:30 | [ ] |  | [ ] | [ ] |
 | AG2-P2-1 | `dh/mine.py` (7.1): search plus scrubbing sets 2-6; 20+ candidate chunks (moving ego, onset >= 5 s) into... | AG2 (Riyu-D1) | 12:30 | [ ] |  | [ ] | [ ] |
 | AG2-P2-2 | `make build`: `data/clips.json` with dev/test split (aim 6 dev, 14+ test), joined local clips (`data/clips/`,... | AG2 (Riyu-D1) | 12:30 | [ ] |  | [ ] | [ ] |
 | AG2-P2-3 | `dh/frames.py` (7.3) at 5 fps into `data/frames/` (gitignored), for AG1's Cosmos inputs. | AG2 (Riyu-D1) | 12:30 | [ ] |  | [ ] | [ ] |

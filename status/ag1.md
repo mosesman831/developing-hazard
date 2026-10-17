@@ -5,15 +5,17 @@ Only AG1 edits this file, inside its own PR.
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
 | 1 | Merged | ag1/phase-1 | #6 | 2026-10-17 11:05 |
-| 2 | PR open | ag1/phase-2 | | 2026-10-17 11:34 |
+| 2 | Committed, push blocked | ag1/phase-2 | | 2026-10-17 11:36 |
 | 3 | Not started | ag1/phase-3 | | |
 | 4 | Not started | ag1/phase-4 | | |
 
 ## Now
 
-Doing: Phase 2 PR.
-Next: stop. Do not start Phase 3.
-Blocked: blind human sits (AG1-P2-8). The 11:00-11:15 BST window has passed and this session has no AG3 sit screen. No blind clicks exist, so `PATTERN_V1` was not retuned.
+Doing: Phase 2 is committed on `ag1/phase-2` (`d17f811`). The pull request is not open.
+Next: push `ag1/phase-2` and open the PR once GitHub credentials exist on this machine. Do not start Phase 3.
+Blocked:
+- Push. `git push` failed: no GitHub username, `gh` is not installed, and there is no SSH key. `sudo` cannot install packages (`/etc/sudoers` is not usable).
+- Blind human sits (AG1-P2-8). The 11:00-11:15 BST window has passed and this session has no AG3 sit screen. No blind clicks exist, so `PATTERN_V1` was not retuned.
 
 ## Phase 2
 
@@ -79,6 +81,7 @@ Questions 2 and 3 were not measured. No team config file, and GPU, VSS, and W&B 
 
 ## Log (newest first)
 
+- 2026-10-17 11:36 BST: Commit `d17f811` is local only. Push blocked (no GitHub credentials).
 - 2026-10-17 11:34 BST: Phase 2 code complete, before the 12:30 due time. Blind sit missed. `PATTERN_V1` frozen.
 - 2026-10-17 11:05 BST: Phase 1 PR #6 opened. https://github.com/mosesman831/developing-hazard/pull/6
 - 2026-10-17 11:00 BST: Phase 1 code complete and late. Scorer implements SPEC 9.1-9.3. Probes blocked.
