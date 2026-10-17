@@ -4,14 +4,14 @@ Only AG3 edits this file, inside its own PR.
 
 | Phase | Status | Branch | PR | Updated (BST) |
 |---|---|---|---|---|
-| 1 | In progress | ag3/phase-1 | | 2026-10-17 11:52 |
+| 1 | PR open | ag3/phase-1 | #11 | 2026-10-17 11:57 |
 | 2 | Not started | ag3/phase-2 | | |
 | 3 | Not started | ag3/phase-3 | | |
 | 4 | Not started | ag3/phase-4 | | |
 
 ## Now
 
-Doing: Phase 1 PR (past the 10:30 gate; started after the other Phase 1 merges).
+Doing: waiting on the merge bot for #11 (past the 10:30 gate).
 Next: wait for the merge bot. Do not start Phase 2.
 Blocked: nothing on the code. Laptop port-forward of the VM dev server was not confirmed from this session.
 
@@ -39,5 +39,6 @@ A segment does play from inside the pod via the in-cluster backend.
 
 ## Log (newest first)
 
+- 2026-10-17 11:57 BST. PR #11 open: https://github.com/mosesman831/developing-hazard/pull/11
 - 2026-10-17 11:52 BST. Phase 1 checks passed. `make test`: 67 passed. `pytest tests/ag3`: 15 passed. `make serve` on port 8011 returned the home HTML. `scripts/smoke.sh` against `127.0.0.1:8000` ok for `/health`, `/api/health`, `/api/clips`, `/api/leaderboard`. `deploy/deploy.sh` exited 0 after a retry on the ingress (first curl was 503 while endpoints caught up). Past the 10:30 due time.
 - 2026-10-17 11:23 BST. Phase 1 started. AG1 and AG2 Phase 1 were already merged.
