@@ -1,450 +1,450 @@
-{"track_id": 1, "t": 0.0, "cls": "car", "xyxy": [622.0, 780.0, 910.0, 887.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 2, "t": 0.0, "cls": "car", "xyxy": [1025.0, 784.0, 1366.0, 898.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 3, "t": 0.0, "cls": "person", "xyxy": [1567.0, 482.0, 1766.0, 943.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 1, "t": 0.2, "cls": "car", "xyxy": [621.0, 780.0, 910.0, 886.0], "vx": -2.5, "vy": -2.5, "h_rate": -0.047, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 2, "t": 0.2, "cls": "car", "xyxy": [940.0, 788.0, 1289.0, 902.0], "vx": -405.0, "vy": 20.0, "h_rate": 0.0, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.509, "risk": 0.608}
-{"track_id": 3, "t": 0.2, "cls": "person", "xyxy": [1659.0, 432.0, 1855.0, 940.0], "vx": 452.5, "vy": -132.5, "h_rate": 0.485, "in_corridor": false, "heading_in": false, "ttc": 2.06, "t_lat": null, "risk": 0.378}
-{"track_id": 1, "t": 0.4, "cls": "car", "xyxy": [618.0, 780.0, 907.0, 882.0], "vx": -8.75, "vy": -6.25, "h_rate": -0.12, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 2, "t": 0.4, "cls": "car", "xyxy": [846.0, 792.0, 1208.0, 907.0], "vx": -421.25, "vy": 21.25, "h_rate": 0.022, "in_corridor": true, "heading_in": true, "ttc": 45.8, "t_lat": 0.705, "risk": 0.603}
-{"track_id": 3, "t": 0.4, "cls": "person", "xyxy": [1759.0, 355.0, 1919.0, 939.0], "vx": 431.25, "vy": -163.75, "h_rate": 0.591, "in_corridor": false, "heading_in": false, "ttc": 1.691, "t_lat": null, "risk": 0.403}
-{"track_id": 1, "t": 0.6, "cls": "car", "xyxy": [614.0, 778.0, 896.0, 880.0], "vx": -18.0, "vy": -7.75, "h_rate": -0.091, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 2, "t": 0.6, "cls": "car", "xyxy": [763.0, 793.0, 1124.0, 905.0], "vx": -421.75, "vy": 14.25, "h_rate": -0.022, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 11, "t": 0.6, "cls": "bicycle", "xyxy": [1121.0, 799.0, 1196.0, 855.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 1, "t": 0.8, "cls": "car", "xyxy": [638.0, 784.0, 1038.0, 906.0], "vx": 188.75, "vy": 35.0, "h_rate": 0.448, "in_corridor": true, "heading_in": true, "ttc": 2.234, "t_lat": 1.278, "risk": 0.835}
-{"track_id": 9, "t": 0.8, "cls": "car", "xyxy": [1653.0, 715.0, 1808.0, 803.0], "vx": 25.0, "vy": 2.5, "h_rate": 0.177, "in_corridor": false, "heading_in": false, "ttc": 5.664, "t_lat": null, "risk": 0.078}
-{"track_id": 11, "t": 0.8, "cls": "bicycle", "xyxy": [1133.0, 801.0, 1200.0, 854.0], "vx": 40.0, "vy": 2.5, "h_rate": -0.275, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 1, "t": 1.0, "cls": "car", "xyxy": [587.0, 779.0, 941.0, 906.0], "vx": 43.75, "vy": 25.25, "h_rate": 0.418, "in_corridor": true, "heading_in": true, "ttc": 2.39, "t_lat": 3.82, "risk": 0.623}
-{"track_id": 10, "t": 1.0, "cls": "car", "xyxy": [1842.0, 687.0, 1905.0, 751.0], "vx": 52.5, "vy": -15.0, "h_rate": 0.334, "in_corridor": false, "heading_in": false, "ttc": 2.996, "t_lat": null, "risk": 0.246}
-{"track_id": 11, "t": 1.0, "cls": "bicycle", "xyxy": [1132.0, 798.0, 1199.0, 855.0], "vx": 17.5, "vy": -1.25, "h_rate": 0.044, "in_corridor": true, "heading_in": false, "ttc": 22.599, "t_lat": null, "risk": 0.4}
-{"track_id": 1, "t": 1.2, "cls": "car", "xyxy": [500.0, 790.0, 857.0, 906.0], "vx": -151.75, "vy": 27.25, "h_rate": 0.213, "in_corridor": true, "heading_in": false, "ttc": 4.695, "t_lat": null, "risk": 0.399}
-{"track_id": 11, "t": 1.2, "cls": "bicycle", "xyxy": [1133.0, 799.0, 1199.0, 856.0], "vx": 10.75, "vy": 0.25, "h_rate": 0.063, "in_corridor": true, "heading_in": false, "ttc": 15.891, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 1.2, "cls": "car", "xyxy": [720.0, 780.0, 904.0, 873.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 11, "t": 1.4, "cls": "bicycle", "xyxy": [1133.0, 798.0, 1199.0, 856.0], "vx": -0.5, "vy": -0.25, "h_rate": 0.135, "in_corridor": true, "heading_in": false, "ttc": 7.395, "t_lat": null, "risk": 0.401}
-{"track_id": 12, "t": 1.4, "cls": "car", "xyxy": [695.0, 778.0, 903.0, 890.0], "vx": -65.0, "vy": 37.5, "h_rate": 0.929, "in_corridor": true, "heading_in": false, "ttc": 1.076, "t_lat": null, "risk": 0.699}
-{"track_id": 13, "t": 1.4, "cls": "person", "xyxy": [0.0, 614.0, 86.0, 934.0], "vx": 117.5, "vy": 42.5, "h_rate": 0.016, "in_corridor": false, "heading_in": true, "ttc": 63.9, "t_lat": 4.554, "risk": 0.102}
-{"track_id": 11, "t": 1.6, "cls": "bicycle", "xyxy": [1134.0, 808.0, 1202.0, 858.0], "vx": 3.75, "vy": 9.5, "h_rate": -0.188, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 1.6, "cls": "car", "xyxy": [650.0, 778.0, 903.0, 891.0], "vx": -88.75, "vy": 20.0, "h_rate": 0.487, "in_corridor": true, "heading_in": false, "ttc": 2.054, "t_lat": null, "risk": 0.648}
-{"track_id": 13, "t": 1.6, "cls": "person", "xyxy": [1.0, 616.0, 100.0, 944.0], "vx": 77.5, "vy": 36.25, "h_rate": 0.07, "in_corridor": false, "heading_in": true, "ttc": 14.377, "t_lat": 6.72, "risk": 0.1}
-{"track_id": 11, "t": 1.8, "cls": "bicycle", "xyxy": [1135.0, 801.0, 1202.0, 857.0], "vx": 6.25, "vy": 5.0, "h_rate": -0.088, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 1.8, "cls": "car", "xyxy": [593.0, 778.0, 902.0, 892.0], "vx": -128.75, "vy": 2.5, "h_rate": 0.044, "in_corridor": true, "heading_in": false, "ttc": 22.599, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 1.8, "cls": "person", "xyxy": [4.0, 601.0, 80.0, 947.0], "vx": -2.5, "vy": 0.0, "h_rate": 0.195, "in_corridor": false, "heading_in": false, "ttc": 5.12, "t_lat": null, "risk": 0.116}
-{"track_id": 11, "t": 2.0, "cls": "bicycle", "xyxy": [1133.0, 797.0, 1216.0, 857.0], "vx": 13.0, "vy": -2.0, "h_rate": 0.108, "in_corridor": true, "heading_in": false, "ttc": 9.301, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 2.0, "cls": "car", "xyxy": [589.0, 775.0, 903.0, 890.0], "vx": -94.0, "vy": -2.0, "h_rate": 0.044, "in_corridor": true, "heading_in": false, "ttc": 22.699, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 2.0, "cls": "person", "xyxy": [3.0, 604.0, 106.0, 955.0], "vx": 13.0, "vy": 5.25, "h_rate": 0.165, "in_corridor": false, "heading_in": false, "ttc": 6.046, "t_lat": null, "risk": 0.104}
-{"track_id": 11, "t": 2.2, "cls": "bicycle", "xyxy": [1140.0, 800.0, 1208.0, 856.0], "vx": 12.0, "vy": -8.5, "h_rate": 0.204, "in_corridor": true, "heading_in": false, "ttc": 4.89, "t_lat": null, "risk": 0.422}
-{"track_id": 12, "t": 2.2, "cls": "car", "xyxy": [584.0, 774.0, 901.0, 892.0], "vx": -51.75, "vy": -3.5, "h_rate": 0.069, "in_corridor": true, "heading_in": false, "ttc": 14.428, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 2.2, "cls": "person", "xyxy": [5.0, 596.0, 122.0, 948.0], "vx": 25.75, "vy": -9.25, "h_rate": 0.113, "in_corridor": false, "heading_in": true, "ttc": 8.842, "t_lat": 19.618, "risk": 0.1}
-{"track_id": 11, "t": 2.4, "cls": "bicycle", "xyxy": [1141.0, 797.0, 1214.0, 856.0], "vx": 13.25, "vy": -3.25, "h_rate": 0.044, "in_corridor": true, "heading_in": false, "ttc": 22.84, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 2.4, "cls": "car", "xyxy": [577.0, 774.0, 901.0, 893.0], "vx": -14.5, "vy": -2.0, "h_rate": 0.077, "in_corridor": true, "heading_in": false, "ttc": 12.943, "t_lat": null, "risk": 0.37}
-{"track_id": 14, "t": 2.4, "cls": "car", "xyxy": [1860.0, 675.0, 1919.0, 745.0], "vx": 45.0, "vy": -15.0, "h_rate": 0.294, "in_corridor": false, "heading_in": false, "ttc": 3.399, "t_lat": null, "risk": 0.196}
-{"track_id": 11, "t": 2.6, "cls": "bicycle", "xyxy": [1141.0, 799.0, 1217.0, 855.0], "vx": 8.5, "vy": -0.75, "h_rate": -0.077, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 2.6, "cls": "car", "xyxy": [571.0, 772.0, 900.0, 893.0], "vx": -17.5, "vy": 0.25, "h_rate": 0.081, "in_corridor": true, "heading_in": false, "ttc": 12.421, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 2.6, "cls": "person", "xyxy": [6.0, 577.0, 132.0, 958.0], "vx": 25.25, "vy": -21.5, "h_rate": 0.153, "in_corridor": false, "heading_in": true, "ttc": 6.522, "t_lat": 19.522, "risk": 0.102}
-{"track_id": 11, "t": 2.8, "cls": "bicycle", "xyxy": [1149.0, 786.0, 1228.0, 851.0], "vx": 22.5, "vy": -14.0, "h_rate": 0.197, "in_corridor": true, "heading_in": false, "ttc": 5.064, "t_lat": null, "risk": 0.417}
-{"track_id": 12, "t": 2.8, "cls": "car", "xyxy": [567.0, 766.0, 900.0, 889.0], "vx": -15.25, "vy": -8.75, "h_rate": 0.071, "in_corridor": true, "heading_in": false, "ttc": 14.168, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 2.8, "cls": "person", "xyxy": [7.0, 565.0, 133.0, 957.0], "vx": 9.0, "vy": -15.25, "h_rate": 0.171, "in_corridor": false, "heading_in": false, "ttc": 5.858, "t_lat": null, "risk": 0.106}
-{"track_id": 11, "t": 3.0, "cls": "bicycle", "xyxy": [1149.0, 784.0, 1227.0, 851.0], "vx": 20.5, "vy": -17.75, "h_rate": 0.265, "in_corridor": true, "heading_in": false, "ttc": 3.77, "t_lat": null, "risk": 0.487}
-{"track_id": 12, "t": 3.0, "cls": "car", "xyxy": [564.0, 766.0, 898.0, 890.0], "vx": -13.0, "vy": -10.75, "h_rate": 0.07, "in_corridor": true, "heading_in": false, "ttc": 14.299, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 3.0, "cls": "person", "xyxy": [11.0, 550.0, 165.0, 954.0], "vx": 26.75, "vy": -22.75, "h_rate": 0.13, "in_corridor": false, "heading_in": true, "ttc": 7.694, "t_lat": 17.818, "risk": 0.1}
-{"track_id": 12, "t": 3.2, "cls": "car", "xyxy": [563.0, 766.0, 898.0, 893.0], "vx": -8.75, "vy": -4.25, "h_rate": 0.077, "in_corridor": true, "heading_in": false, "ttc": 13.047, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 3.2, "cls": "person", "xyxy": [28.0, 554.0, 220.0, 960.0], "vx": 91.5, "vy": -20.25, "h_rate": 0.11, "in_corridor": false, "heading_in": true, "ttc": 9.057, "t_lat": 4.772, "risk": 0.101}
-{"track_id": 14, "t": 3.2, "cls": "car", "xyxy": [1865.0, 669.0, 1919.0, 742.0], "vx": 1.0, "vy": -4.5, "h_rate": 0.144, "in_corridor": false, "heading_in": false, "ttc": 6.925, "t_lat": null, "risk": 0.071}
-{"track_id": 11, "t": 3.4, "cls": "bicycle", "xyxy": [1153.0, 787.0, 1227.0, 851.0], "vx": 2.857, "vy": 1.25, "h_rate": -0.039, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 3.4, "cls": "car", "xyxy": [561.0, 766.0, 900.0, 894.0], "vx": -4.75, "vy": 4.5, "h_rate": 0.072, "in_corridor": true, "heading_in": false, "ttc": 13.943, "t_lat": null, "risk": 0.37}
-{"track_id": 15, "t": 3.4, "cls": "car", "xyxy": [0.0, 686.0, 73.0, 779.0], "vx": 97.5, "vy": 15.0, "h_rate": 0.569, "in_corridor": false, "heading_in": true, "ttc": 1.758, "t_lat": 6.622, "risk": 0.369}
-{"track_id": 11, "t": 3.6, "cls": "bicycle", "xyxy": [1154.0, 786.0, 1227.0, 851.0], "vx": 4.286, "vy": 1.964, "h_rate": -0.06, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 3.6, "cls": "car", "xyxy": [562.0, 766.0, 898.0, 893.0], "vx": -1.5, "vy": 2.5, "h_rate": 0.04, "in_corridor": true, "heading_in": false, "ttc": 25.138, "t_lat": null, "risk": 0.37}
-{"track_id": 15, "t": 3.6, "cls": "car", "xyxy": [3.0, 688.0, 131.0, 786.0], "vx": 125.0, "vy": 18.75, "h_rate": 0.415, "in_corridor": false, "heading_in": true, "ttc": 2.408, "t_lat": 4.884, "risk": 0.316}
-{"track_id": 11, "t": 3.8, "cls": "bicycle", "xyxy": [1152.0, 785.0, 1228.0, 851.0], "vx": 0.0, "vy": -2.5, "h_rate": 0.077, "in_corridor": true, "heading_in": false, "ttc": 12.999, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 3.8, "cls": "car", "xyxy": [563.0, 767.0, 900.0, 894.0], "vx": 1.25, "vy": 1.25, "h_rate": -0.004, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 3.8, "cls": "person", "xyxy": [194.0, 559.0, 343.0, 972.0], "vx": 240.25, "vy": 11.0, "h_rate": 0.051, "in_corridor": false, "heading_in": true, "ttc": 19.756, "t_lat": 1.182, "risk": 0.309}
-{"track_id": 11, "t": 4.0, "cls": "bicycle", "xyxy": [1152.0, 785.0, 1228.0, 851.0], "vx": -0.25, "vy": -1.75, "h_rate": 0.054, "in_corridor": true, "heading_in": false, "ttc": 18.59, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 4.0, "cls": "car", "xyxy": [563.0, 767.0, 900.0, 893.0], "vx": 2.25, "vy": 0.5, "h_rate": -0.024, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 4.0, "cls": "person", "xyxy": [280.0, 584.0, 448.0, 978.0], "vx": 357.75, "vy": 32.0, "h_rate": -0.081, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 0.516, "risk": 0.338}
-{"track_id": 11, "t": 4.2, "cls": "bicycle", "xyxy": [1149.0, 786.0, 1226.0, 851.0], "vx": -4.5, "vy": 0.0, "h_rate": -0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 4.2, "cls": "car", "xyxy": [563.0, 767.0, 898.0, 892.0], "vx": 0.75, "vy": -0.25, "h_rate": -0.028, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 4.2, "cls": "person", "xyxy": [384.0, 574.0, 532.0, 992.0], "vx": 440.0, "vy": 44.5, "h_rate": -0.069, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 0.184, "risk": 0.344}
-{"track_id": 11, "t": 4.4, "cls": "bicycle", "xyxy": [1143.0, 786.0, 1225.0, 852.0], "vx": -15.0, "vy": 2.5, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 4.4, "cls": "car", "xyxy": [613.0, 767.0, 897.0, 891.0], "vx": 58.75, "vy": -2.5, "h_rate": -0.04, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 2.52, "risk": 0.435}
-{"track_id": 13, "t": 4.4, "cls": "person", "xyxy": [475.0, 586.0, 708.0, 1027.0], "vx": 568.75, "vy": 63.75, "h_rate": 0.282, "in_corridor": true, "heading_in": true, "ttc": 3.549, "t_lat": 0.133, "risk": 0.754}
-{"track_id": 11, "t": 4.6, "cls": "bicycle", "xyxy": [1146.0, 787.0, 1226.0, 852.0], "vx": -7.75, "vy": 2.5, "h_rate": -0.015, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 4.6, "cls": "car", "xyxy": [570.0, 766.0, 897.0, 893.0], "vx": 15.25, "vy": -1.0, "h_rate": 0.008, "in_corridor": true, "heading_in": false, "ttc": 127.524, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 4.6, "cls": "person", "xyxy": [592.0, 604.0, 799.0, 1028.0], "vx": 564.0, "vy": 64.25, "h_rate": 0.137, "in_corridor": true, "heading_in": true, "ttc": 7.307, "t_lat": 0.32, "risk": 0.642}
-{"track_id": 11, "t": 4.8, "cls": "bicycle", "xyxy": [1152.0, 785.0, 1231.0, 852.0], "vx": 7.0, "vy": 0.25, "h_rate": 0.038, "in_corridor": true, "heading_in": false, "ttc": 26.438, "t_lat": null, "risk": 0.4}
-{"track_id": 13, "t": 4.8, "cls": "person", "xyxy": [704.0, 584.0, 861.0, 1025.0], "vx": 538.75, "vy": 37.0, "h_rate": 0.061, "in_corridor": true, "heading_in": true, "ttc": 16.477, "t_lat": 0.493, "risk": 0.638}
-{"track_id": 18, "t": 4.8, "cls": "car", "xyxy": [830.0, 772.0, 899.0, 874.0], "vx": 277.5, "vy": -35.0, "h_rate": -1.057, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.887, "risk": 0.596}
-{"track_id": 11, "t": 5.0, "cls": "bicycle", "xyxy": [1152.0, 786.0, 1227.0, 851.0], "vx": 11.0, "vy": -1.25, "h_rate": -0.008, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 13, "t": 5.0, "cls": "person", "xyxy": [802.0, 611.0, 1040.0, 1027.0], "vx": 537.75, "vy": 13.0, "h_rate": -0.068, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.754, "risk": 0.631}
-{"track_id": 15, "t": 5.0, "cls": "car", "xyxy": [10.0, 697.0, 298.0, 870.0], "vx": 132.75, "vy": 71.5, "h_rate": 0.784, "in_corridor": false, "heading_in": true, "ttc": 1.276, "t_lat": 3.518, "risk": 0.404}
-{"track_id": 11, "t": 5.2, "cls": "bicycle", "xyxy": [1151.0, 787.0, 1227.0, 851.0], "vx": -6.25, "vy": 1.25, "h_rate": -0.115, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 5.2, "cls": "car", "xyxy": [563.0, 767.0, 898.0, 892.0], "vx": -2.5, "vy": 1.25, "h_rate": 0.23, "in_corridor": true, "heading_in": false, "ttc": 4.342, "t_lat": null, "risk": 0.415}
-{"track_id": 15, "t": 5.2, "cls": "car", "xyxy": [61.0, 716.0, 412.0, 896.0], "vx": 338.75, "vy": 97.5, "h_rate": 0.294, "in_corridor": false, "heading_in": true, "ttc": 3.396, "t_lat": 1.084, "risk": 0.412}
-{"track_id": 11, "t": 5.4, "cls": "bicycle", "xyxy": [1148.0, 786.0, 1226.0, 851.0], "vx": -6.25, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 12, "t": 5.4, "cls": "car", "xyxy": [562.0, 766.0, 898.0, 892.0], "vx": 100.0, "vy": 6.25, "h_rate": 0.143, "in_corridor": true, "heading_in": true, "ttc": 6.998, "t_lat": 1.237, "risk": 0.576}
-{"track_id": 17, "t": 5.4, "cls": "car", "xyxy": [1.0, 690.0, 142.0, 791.0], "vx": 32.5, "vy": 42.5, "h_rate": 1.042, "in_corridor": false, "heading_in": true, "ttc": 0.96, "t_lat": 18.541, "risk": 0.402}
-{"track_id": 12, "t": 5.6, "cls": "car", "xyxy": [569.0, 767.0, 899.0, 893.0], "vx": 65.75, "vy": 5.0, "h_rate": 0.09, "in_corridor": true, "heading_in": true, "ttc": 11.146, "t_lat": 1.953, "risk": 0.501}
-{"track_id": 13, "t": 5.6, "cls": "person", "xyxy": [1088.0, 625.0, 1275.0, 1019.0], "vx": 428.75, "vy": 1.25, "h_rate": -0.071, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 15, "t": 5.6, "cls": "car", "xyxy": [222.0, 746.0, 694.0, 946.0], "vx": 508.5, "vy": 104.25, "h_rate": 0.25, "in_corridor": false, "heading_in": true, "ttc": 4.003, "t_lat": 0.22, "risk": 0.381}
-{"track_id": 12, "t": 5.8, "cls": "car", "xyxy": [666.0, 769.0, 899.0, 886.0], "vx": 80.0, "vy": -2.5, "h_rate": -0.099, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 2.153, "risk": 0.476}
-{"track_id": 13, "t": 5.8, "cls": "person", "xyxy": [1201.0, 616.0, 1337.0, 1017.0], "vx": 427.25, "vy": -6.0, "h_rate": -0.04, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 15, "t": 5.8, "cls": "car", "xyxy": [330.0, 759.0, 856.0, 962.0], "vx": 593.0, "vy": 91.25, "h_rate": 0.201, "in_corridor": true, "heading_in": true, "ttc": 4.98, "t_lat": 0.057, "risk": 0.634}
-{"track_id": 11, "t": 6.0, "cls": "bicycle", "xyxy": [1153.0, 781.0, 1266.0, 853.0], "vx": 37.5, "vy": -2.5, "h_rate": 0.17, "in_corridor": true, "heading_in": false, "ttc": 5.866, "t_lat": null, "risk": 0.406}
-{"track_id": 12, "t": 6.0, "cls": "car", "xyxy": [728.0, 770.0, 897.0, 835.0], "vx": 148.0, "vy": -41.0, "h_rate": -1.03, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 1.135, "risk": 0.582}
-{"track_id": 15, "t": 6.0, "cls": "car", "xyxy": [460.0, 771.0, 1027.0, 970.0], "vx": 670.5, "vy": 72.5, "h_rate": 0.061, "in_corridor": true, "heading_in": true, "ttc": 16.351, "t_lat": 0.283, "risk": 0.612}
-{"track_id": 13, "t": 6.2, "cls": "person", "xyxy": [1308.0, 625.0, 1533.0, 1013.0], "vx": 378.75, "vy": 6.25, "h_rate": -0.082, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 15, "t": 6.2, "cls": "car", "xyxy": [604.0, 773.0, 1194.0, 968.0], "vx": 765.0, "vy": 25.0, "h_rate": -0.101, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.449, "risk": 0.609}
-{"track_id": 21, "t": 6.2, "cls": "car", "xyxy": [561.0, 769.0, 833.0, 874.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 6.4, "cls": "person", "xyxy": [1410.0, 618.0, 1566.0, 1000.0], "vx": 327.5, "vy": -7.5, "h_rate": -0.165, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 15, "t": 6.4, "cls": "car", "xyxy": [769.0, 773.0, 1349.0, 970.0], "vx": 788.75, "vy": 2.5, "h_rate": -0.025, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 6.4, "cls": "car", "xyxy": [558.0, 769.0, 877.0, 882.0], "vx": 102.5, "vy": 20.0, "h_rate": 0.367, "in_corridor": true, "heading_in": true, "ttc": 2.724, "t_lat": 1.02, "risk": 0.798}
-{"track_id": 13, "t": 6.6, "cls": "person", "xyxy": [1475.0, 612.0, 1595.0, 993.0], "vx": 300.75, "vy": -19.25, "h_rate": -0.11, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 15, "t": 6.6, "cls": "car", "xyxy": [941.0, 766.0, 1478.0, 969.0], "vx": 779.0, "vy": -4.0, "h_rate": 0.035, "in_corridor": true, "heading_in": false, "ttc": 28.609, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 6.6, "cls": "car", "xyxy": [559.0, 768.0, 899.0, 895.0], "vx": 80.0, "vy": 25.0, "h_rate": 0.476, "in_corridor": true, "heading_in": true, "ttc": 2.103, "t_lat": 1.559, "risk": 0.821}
-{"track_id": 13, "t": 6.8, "cls": "person", "xyxy": [1538.0, 619.0, 1656.0, 966.0], "vx": 288.25, "vy": -43.0, "h_rate": -0.169, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 15, "t": 6.8, "cls": "car", "xyxy": [1097.0, 749.0, 1557.0, 955.0], "vx": 717.25, "vy": -29.75, "h_rate": 0.097, "in_corridor": true, "heading_in": false, "ttc": 10.276, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 6.8, "cls": "car", "xyxy": [557.0, 767.0, 900.0, 895.0], "vx": 53.0, "vy": 17.25, "h_rate": 0.356, "in_corridor": true, "heading_in": true, "ttc": 2.813, "t_lat": 2.344, "risk": 0.652}
-{"track_id": 9, "t": 7.0, "cls": "car", "xyxy": [1741.0, 684.0, 1867.0, 793.0], "vx": 10.0, "vy": -2.75, "h_rate": 0.046, "in_corridor": false, "heading_in": false, "ttc": 21.651, "t_lat": null, "risk": 0.07}
-{"track_id": 13, "t": 7.0, "cls": "person", "xyxy": [1608.0, 599.0, 1728.0, 944.0], "vx": 301.0, "vy": -61.25, "h_rate": -0.2, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 21, "t": 7.0, "cls": "car", "xyxy": [556.0, 767.0, 901.0, 895.0], "vx": 16.25, "vy": 8.0, "h_rate": 0.191, "in_corridor": true, "heading_in": false, "ttc": 5.239, "t_lat": null, "risk": 0.384}
-{"track_id": 13, "t": 7.2, "cls": "person", "xyxy": [1647.0, 597.0, 1795.0, 938.0], "vx": 310.0, "vy": -62.5, "h_rate": -0.044, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 17, "t": 7.2, "cls": "car", "xyxy": [0.0, 687.0, 130.0, 789.0], "vx": -2.5, "vy": -2.5, "h_rate": 0.05, "in_corridor": false, "heading_in": false, "ttc": 20.199, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 7.2, "cls": "car", "xyxy": [555.0, 767.0, 902.0, 895.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 13, "t": 7.4, "cls": "person", "xyxy": [1721.0, 599.0, 1838.0, 943.0], "vx": 278.75, "vy": -1.25, "h_rate": -0.007, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 21, "t": 7.4, "cls": "car", "xyxy": [553.0, 766.0, 903.0, 897.0], "vx": -1.25, "vy": 1.25, "h_rate": 0.058, "in_corridor": true, "heading_in": false, "ttc": 17.266, "t_lat": null, "risk": 0.37}
-{"track_id": 24, "t": 7.4, "cls": "bicycle", "xyxy": [1162.0, 792.0, 1243.0, 855.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 21, "t": 7.6, "cls": "car", "xyxy": [554.0, 769.0, 904.0, 902.0], "vx": 0.5, "vy": 7.0, "h_rate": 0.069, "in_corridor": true, "heading_in": false, "ttc": 14.48, "t_lat": null, "risk": 0.37}
-{"track_id": 22, "t": 7.6, "cls": "car", "xyxy": [1440.0, 705.0, 1709.0, 847.0], "vx": 325.0, "vy": -32.5, "h_rate": 0.8, "in_corridor": false, "heading_in": false, "ttc": 1.25, "t_lat": null, "risk": 0.393}
-{"track_id": 24, "t": 7.6, "cls": "bicycle", "xyxy": [1167.0, 794.0, 1245.0, 856.0], "vx": 17.5, "vy": 7.5, "h_rate": -0.08, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 9, "t": 7.8, "cls": "car", "xyxy": [1716.0, 678.0, 1858.0, 837.0], "vx": -55.833, "vy": 43.333, "h_rate": 0.824, "in_corridor": false, "heading_in": true, "ttc": 1.214, "t_lat": 9.138, "risk": 0.395}
-{"track_id": 21, "t": 7.8, "cls": "car", "xyxy": [554.0, 770.0, 910.0, 905.0], "vx": 5.75, "vy": 11.75, "h_rate": 0.087, "in_corridor": true, "heading_in": false, "ttc": 11.436, "t_lat": null, "risk": 0.37}
-{"track_id": 24, "t": 7.8, "cls": "bicycle", "xyxy": [1172.0, 798.0, 1251.0, 859.0], "vx": 22.5, "vy": 12.5, "h_rate": -0.081, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 21, "t": 8.0, "cls": "car", "xyxy": [556.0, 769.0, 918.0, 905.0], "vx": 15.0, "vy": 9.25, "h_rate": 0.064, "in_corridor": true, "heading_in": false, "ttc": 15.711, "t_lat": null, "risk": 0.37}
-{"track_id": 24, "t": 8.0, "cls": "bicycle", "xyxy": [1186.0, 788.0, 1264.0, 858.0], "vx": 36.5, "vy": 1.0, "h_rate": 0.15, "in_corridor": true, "heading_in": false, "ttc": 6.671, "t_lat": null, "risk": 0.402}
-{"track_id": 25, "t": 8.0, "cls": "car", "xyxy": [0.0, 718.0, 99.0, 830.0], "vx": 110.0, "vy": 40.0, "h_rate": 1.321, "in_corridor": false, "heading_in": true, "ttc": 0.757, "t_lat": 5.44, "risk": 0.407}
-{"track_id": 17, "t": 8.2, "cls": "car", "xyxy": [0.0, 684.0, 156.0, 855.0], "vx": 22.75, "vy": 44.5, "h_rate": 0.76, "in_corridor": false, "heading_in": true, "ttc": 1.315, "t_lat": 24.313, "risk": 0.391}
-{"track_id": 21, "t": 8.2, "cls": "car", "xyxy": [560.0, 766.0, 928.0, 906.0], "vx": 25.0, "vy": 0.5, "h_rate": 0.081, "in_corridor": true, "heading_in": true, "ttc": 12.402, "t_lat": 5.886, "risk": 0.37}
-{"track_id": 24, "t": 8.2, "cls": "bicycle", "xyxy": [1200.0, 784.0, 1296.0, 856.0], "vx": 69.75, "vy": -10.25, "h_rate": 0.293, "in_corridor": true, "heading_in": false, "ttc": 3.412, "t_lat": null, "risk": 0.525}
-{"track_id": 17, "t": 8.4, "cls": "car", "xyxy": [0.0, 687.0, 237.0, 885.0], "vx": 127.5, "vy": 117.5, "h_rate": 1.562, "in_corridor": false, "heading_in": true, "ttc": 0.64, "t_lat": 3.862, "risk": 0.414}
-{"track_id": 21, "t": 8.4, "cls": "car", "xyxy": [565.0, 766.0, 942.0, 907.0], "vx": 41.25, "vy": -1.25, "h_rate": 0.09, "in_corridor": true, "heading_in": true, "ttc": 11.079, "t_lat": 3.814, "risk": 0.376}
-{"track_id": 24, "t": 8.4, "cls": "bicycle", "xyxy": [1217.0, 784.0, 1299.0, 853.0], "vx": 82.5, "vy": -11.25, "h_rate": -0.036, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 17, "t": 8.6, "cls": "car", "xyxy": [1.0, 695.0, 345.0, 918.0], "vx": 178.5, "vy": 109.5, "h_rate": 1.189, "in_corridor": false, "heading_in": true, "ttc": 0.841, "t_lat": 2.329, "risk": 0.49}
-{"track_id": 21, "t": 8.6, "cls": "car", "xyxy": [576.0, 766.0, 957.0, 909.0], "vx": 49.0, "vy": 1.0, "h_rate": 0.079, "in_corridor": true, "heading_in": true, "ttc": 12.683, "t_lat": 3.503, "risk": 0.382}
-{"track_id": 24, "t": 8.6, "cls": "bicycle", "xyxy": [1239.0, 787.0, 1316.0, 854.0], "vx": 83.75, "vy": -4.5, "h_rate": -0.087, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.4}
-{"track_id": 17, "t": 8.8, "cls": "car", "xyxy": [55.0, 721.0, 500.0, 961.0], "vx": 397.5, "vy": 137.5, "h_rate": 0.481, "in_corridor": false, "heading_in": true, "ttc": 2.079, "t_lat": 0.71, "risk": 0.578}
-{"track_id": 21, "t": 8.8, "cls": "car", "xyxy": [590.0, 769.0, 979.0, 912.0], "vx": 77.5, "vy": 10.0, "h_rate": 0.035, "in_corridor": true, "heading_in": true, "ttc": 28.4, "t_lat": 2.473, "risk": 0.44}
-{"track_id": 24, "t": 8.8, "cls": "bicycle", "xyxy": [1261.0, 776.0, 1345.0, 854.0], "vx": 112.5, "vy": -8.75, "h_rate": 0.307, "in_corridor": false, "heading_in": false, "ttc": 3.263, "t_lat": null, "risk": 0.243}
-{"track_id": 17, "t": 9.0, "cls": "car", "xyxy": [135.0, 736.0, 711.0, 1014.0], "vx": 509.0, "vy": 150.75, "h_rate": 0.546, "in_corridor": false, "heading_in": true, "ttc": 1.832, "t_lat": 0.199, "risk": 0.608}
-{"track_id": 21, "t": 9.0, "cls": "car", "xyxy": [608.0, 768.0, 1003.0, 915.0], "vx": 87.0, "vy": 9.0, "h_rate": 0.063, "in_corridor": true, "heading_in": true, "ttc": 15.998, "t_lat": 2.468, "risk": 0.44}
-{"track_id": 25, "t": 9.0, "cls": "car", "xyxy": [19.0, 698.0, 159.0, 802.0], "vx": 92.5, "vy": 77.5, "h_rate": 1.128, "in_corridor": false, "heading_in": true, "ttc": 0.887, "t_lat": 6.245, "risk": 0.404}
-{"track_id": 17, "t": 9.2, "cls": "car", "xyxy": [255.0, 755.0, 995.0, 1027.0], "vx": 750.75, "vy": 143.75, "h_rate": 0.371, "in_corridor": true, "heading_in": true, "ttc": 2.692, "t_lat": 0.146, "risk": 0.827}
-{"track_id": 21, "t": 9.2, "cls": "car", "xyxy": [713.0, 769.0, 1025.0, 895.0], "vx": 164.25, "vy": -7.75, "h_rate": -0.176, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 1.612, "risk": 0.541}
-{"track_id": 25, "t": 9.2, "cls": "car", "xyxy": [29.0, 700.0, 171.0, 807.0], "vx": 73.75, "vy": 47.5, "h_rate": 0.635, "in_corridor": false, "heading_in": true, "ttc": 1.575, "t_lat": 7.639, "risk": 0.38}
-{"track_id": 16, "t": 9.4, "cls": "car", "xyxy": [199.0, 755.0, 433.0, 865.0], "vx": 230.0, "vy": 70.0, "h_rate": 1.231, "in_corridor": false, "heading_in": true, "ttc": 0.813, "t_lat": 1.341, "risk": 0.602}
-{"track_id": 17, "t": 9.4, "cls": "car", "xyxy": [429.0, 766.0, 1330.0, 1029.0], "vx": 1004.0, "vy": 92.75, "h_rate": 0.126, "in_corridor": true, "heading_in": true, "ttc": 7.914, "t_lat": 0.364, "risk": 0.611}
-{"track_id": 25, "t": 9.4, "cls": "car", "xyxy": [40.0, 701.0, 184.0, 810.0], "vx": 67.75, "vy": 33.25, "h_rate": 0.423, "in_corridor": false, "heading_in": true, "ttc": 2.364, "t_lat": 8.108, "risk": 0.319}
-{"track_id": 16, "t": 9.6, "cls": "car", "xyxy": [214.0, 756.0, 448.0, 867.0], "vx": 152.5, "vy": 38.75, "h_rate": 0.638, "in_corridor": false, "heading_in": true, "ttc": 1.568, "t_lat": 1.915, "risk": 0.516}
-{"track_id": 17, "t": 9.6, "cls": "car", "xyxy": [698.0, 760.0, 1665.0, 1028.0], "vx": 1265.0, "vy": 31.75, "h_rate": -0.072, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 28, "t": 9.6, "cls": "car", "xyxy": [660.0, 765.0, 971.0, 908.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 16, "t": 9.8, "cls": "car", "xyxy": [225.0, 757.0, 460.0, 868.0], "vx": 66.25, "vy": 6.25, "h_rate": 0.023, "in_corridor": false, "heading_in": true, "ttc": 44.2, "t_lat": 4.225, "risk": 0.073}
-{"track_id": 17, "t": 9.8, "cls": "car", "xyxy": [1044.0, 721.0, 1906.0, 1021.0], "vx": 1488.75, "vy": -66.25, "h_rate": 0.329, "in_corridor": false, "heading_in": false, "ttc": 3.039, "t_lat": null, "risk": 0.24}
-{"track_id": 21, "t": 9.8, "cls": "car", "xyxy": [675.0, 765.0, 1099.0, 922.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 16, "t": 10.0, "cls": "car", "xyxy": [236.0, 757.0, 473.0, 869.0], "vx": 63.5, "vy": 5.0, "h_rate": 0.027, "in_corridor": false, "heading_in": true, "ttc": 36.999, "t_lat": 4.208, "risk": 0.073}
-{"track_id": 17, "t": 10.0, "cls": "car", "xyxy": [1396.0, 633.0, 1918.0, 991.0], "vx": 1313.0, "vy": -139.75, "h_rate": 0.519, "in_corridor": false, "heading_in": false, "ttc": 1.927, "t_lat": null, "risk": 0.358}
-{"track_id": 21, "t": 10.0, "cls": "car", "xyxy": [691.0, 763.0, 1121.0, 924.0], "vx": 95.0, "vy": 0.0, "h_rate": 0.126, "in_corridor": true, "heading_in": true, "ttc": 7.95, "t_lat": 3.381, "risk": 0.385}
-{"track_id": 16, "t": 10.2, "cls": "car", "xyxy": [246.0, 758.0, 488.0, 872.0], "vx": 60.0, "vy": 5.5, "h_rate": 0.044, "in_corridor": false, "heading_in": true, "ttc": 22.479, "t_lat": 4.212, "risk": 0.073}
-{"track_id": 17, "t": 10.2, "cls": "car", "xyxy": [1678.0, 634.0, 1919.0, 927.0], "vx": 1016.5, "vy": -199.75, "h_rate": 0.222, "in_corridor": false, "heading_in": false, "ttc": 4.501, "t_lat": null, "risk": 0.107}
-{"track_id": 21, "t": 10.2, "cls": "car", "xyxy": [707.0, 763.0, 1141.0, 925.0], "vx": 92.5, "vy": 1.25, "h_rate": 0.078, "in_corridor": true, "heading_in": true, "ttc": 12.759, "t_lat": 3.675, "risk": 0.378}
-{"track_id": 21, "t": 10.4, "cls": "car", "xyxy": [718.0, 762.0, 1166.0, 924.0], "vx": 91.5, "vy": -0.5, "h_rate": 0.05, "in_corridor": true, "heading_in": true, "ttc": 19.951, "t_lat": 3.904, "risk": 0.375}
-{"track_id": 22, "t": 10.4, "cls": "car", "xyxy": [1768.0, 629.0, 1919.0, 792.0], "vx": 55.0, "vy": 9.167, "h_rate": 0.277, "in_corridor": false, "heading_in": false, "ttc": 3.604, "t_lat": null, "risk": 0.174}
-{"track_id": 29, "t": 10.4, "cls": "bicycle", "xyxy": [1461.0, 767.0, 1541.0, 837.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 10.6, "cls": "car", "xyxy": [271.0, 763.0, 516.0, 881.0], "vx": 64.75, "vy": 15.25, "h_rate": 0.091, "in_corridor": false, "heading_in": true, "ttc": 10.957, "t_lat": 3.4, "risk": 0.084}
-{"track_id": 21, "t": 10.6, "cls": "car", "xyxy": [740.0, 758.0, 1189.0, 926.0], "vx": 96.75, "vy": -2.75, "h_rate": 0.064, "in_corridor": true, "heading_in": false, "ttc": 15.664, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 10.6, "cls": "bicycle", "xyxy": [1485.0, 753.0, 1572.0, 836.0], "vx": 137.5, "vy": -37.5, "h_rate": 0.852, "in_corridor": false, "heading_in": false, "ttc": 1.174, "t_lat": null, "risk": 0.426}
-{"track_id": 16, "t": 10.8, "cls": "car", "xyxy": [283.0, 764.0, 534.0, 880.0], "vx": 72.5, "vy": 8.75, "h_rate": -0.021, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 2.839, "risk": 0.109}
-{"track_id": 21, "t": 10.8, "cls": "car", "xyxy": [754.0, 756.0, 1219.0, 926.0], "vx": 111.25, "vy": -5.0, "h_rate": 0.121, "in_corridor": true, "heading_in": false, "ttc": 8.298, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 10.8, "cls": "bicycle", "xyxy": [1512.0, 755.0, 1601.0, 830.0], "vx": 138.75, "vy": -23.75, "h_rate": 0.172, "in_corridor": false, "heading_in": false, "ttc": 5.798, "t_lat": null, "risk": 0.106}
-{"track_id": 16, "t": 11.0, "cls": "car", "xyxy": [299.0, 763.0, 552.0, 879.0], "vx": 76.5, "vy": 3.75, "h_rate": -0.021, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 2.477, "risk": 0.14}
-{"track_id": 21, "t": 11.0, "cls": "car", "xyxy": [783.0, 753.0, 1247.0, 927.0], "vx": 120.5, "vy": -5.0, "h_rate": 0.113, "in_corridor": true, "heading_in": false, "ttc": 8.841, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 11.0, "cls": "bicycle", "xyxy": [1533.0, 744.0, 1626.0, 826.0], "vx": 131.75, "vy": -26.5, "h_rate": 0.187, "in_corridor": false, "heading_in": false, "ttc": 5.357, "t_lat": null, "risk": 0.112}
-{"track_id": 16, "t": 11.2, "cls": "car", "xyxy": [315.0, 764.0, 573.0, 881.0], "vx": 84.25, "vy": 0.25, "h_rate": -0.013, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 2.014, "risk": 0.193}
-{"track_id": 21, "t": 11.2, "cls": "car", "xyxy": [800.0, 749.0, 1276.0, 927.0], "vx": 124.5, "vy": -6.5, "h_rate": 0.098, "in_corridor": true, "heading_in": false, "ttc": 10.167, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 11.2, "cls": "bicycle", "xyxy": [1573.0, 744.0, 1654.0, 822.0], "vx": 139.0, "vy": -21.0, "h_rate": -0.049, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 11.4, "cls": "car", "xyxy": [329.0, 764.0, 592.0, 883.0], "vx": 87.25, "vy": 3.0, "h_rate": 0.043, "in_corridor": false, "heading_in": true, "ttc": 23.479, "t_lat": 1.74, "risk": 0.227}
-{"track_id": 21, "t": 11.4, "cls": "car", "xyxy": [829.0, 746.0, 1308.0, 927.0], "vx": 134.5, "vy": -7.75, "h_rate": 0.105, "in_corridor": true, "heading_in": false, "ttc": 9.487, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 11.4, "cls": "bicycle", "xyxy": [1599.0, 741.0, 1678.0, 816.0], "vx": 140.0, "vy": -22.0, "h_rate": -0.025, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 11.6, "cls": "car", "xyxy": [343.0, 766.0, 603.0, 883.0], "vx": 79.5, "vy": 5.75, "h_rate": 0.021, "in_corridor": false, "heading_in": true, "ttc": 46.838, "t_lat": 1.752, "risk": 0.225}
-{"track_id": 21, "t": 11.6, "cls": "car", "xyxy": [844.0, 743.0, 1328.0, 927.0], "vx": 121.75, "vy": -8.25, "h_rate": 0.092, "in_corridor": true, "heading_in": false, "ttc": 10.849, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 11.6, "cls": "bicycle", "xyxy": [1621.0, 736.0, 1700.0, 814.0], "vx": 134.0, "vy": -17.25, "h_rate": -0.095, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 11.8, "cls": "car", "xyxy": [352.0, 765.0, 614.0, 882.0], "vx": 56.25, "vy": -0.0, "h_rate": -0.042, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 2.311, "risk": 0.157}
-{"track_id": 21, "t": 11.8, "cls": "car", "xyxy": [856.0, 739.0, 1347.0, 928.0], "vx": 82.5, "vy": -7.5, "h_rate": 0.108, "in_corridor": true, "heading_in": false, "ttc": 9.249, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 11.8, "cls": "bicycle", "xyxy": [1635.0, 736.0, 1716.0, 811.0], "vx": 92.5, "vy": -12.5, "h_rate": -0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 12.0, "cls": "car", "xyxy": [357.0, 765.0, 621.0, 883.0], "vx": 47.75, "vy": 0.25, "h_rate": -0.013, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 2.582, "risk": 0.129}
-{"track_id": 21, "t": 12.0, "cls": "car", "xyxy": [862.0, 740.0, 1357.0, 928.0], "vx": 69.25, "vy": -4.5, "h_rate": 0.07, "in_corridor": true, "heading_in": false, "ttc": 14.22, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 12.0, "cls": "bicycle", "xyxy": [1639.0, 750.0, 1729.0, 811.0], "vx": 75.75, "vy": 2.25, "h_rate": -0.33, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 12.2, "cls": "car", "xyxy": [358.0, 766.0, 622.0, 883.0], "vx": 28.5, "vy": 0.25, "h_rate": 0.004, "in_corridor": false, "heading_in": true, "ttc": 234.999, "t_lat": 4.291, "risk": 0.073}
-{"track_id": 21, "t": 12.2, "cls": "car", "xyxy": [866.0, 740.0, 1362.0, 929.0], "vx": 46.0, "vy": -0.5, "h_rate": 0.038, "in_corridor": true, "heading_in": false, "ttc": 26.621, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 12.2, "cls": "bicycle", "xyxy": [1648.0, 742.0, 1732.0, 810.0], "vx": 48.5, "vy": 5.0, "h_rate": -0.309, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 12.4, "cls": "car", "xyxy": [359.0, 767.0, 623.0, 883.0], "vx": 12.5, "vy": 2.5, "h_rate": -0.017, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 12.4, "cls": "car", "xyxy": [867.0, 740.0, 1361.0, 929.0], "vx": 21.0, "vy": 1.75, "h_rate": 0.003, "in_corridor": true, "heading_in": false, "ttc": 376.999, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 12.4, "cls": "bicycle", "xyxy": [1648.0, 743.0, 1733.0, 809.0], "vx": 25.5, "vy": 1.5, "h_rate": -0.137, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 12.6, "cls": "car", "xyxy": [359.0, 767.0, 622.0, 885.0], "vx": 2.75, "vy": 3.25, "h_rate": -0.004, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 12.6, "cls": "car", "xyxy": [866.0, 740.0, 1361.0, 929.0], "vx": 6.0, "vy": 0.75, "h_rate": 0.008, "in_corridor": true, "heading_in": false, "ttc": 125.666, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 12.6, "cls": "bicycle", "xyxy": [1648.0, 744.0, 1733.0, 809.0], "vx": 10.0, "vy": -6.0, "h_rate": 0.08, "in_corridor": false, "heading_in": false, "ttc": 12.447, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 12.8, "cls": "car", "xyxy": [359.0, 767.0, 623.0, 885.0], "vx": 0.0, "vy": 2.5, "h_rate": 0.043, "in_corridor": false, "heading_in": false, "ttc": 23.399, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 12.8, "cls": "car", "xyxy": [867.0, 740.0, 1361.0, 929.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 12.8, "cls": "bicycle", "xyxy": [1647.0, 747.0, 1733.0, 810.0], "vx": -1.25, "vy": 6.25, "h_rate": -0.116, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 13.0, "cls": "car", "xyxy": [359.0, 768.0, 623.0, 885.0], "vx": 0.25, "vy": 2.25, "h_rate": 0.013, "in_corridor": false, "heading_in": false, "ttc": 77.666, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 13.0, "cls": "car", "xyxy": [867.0, 741.0, 1362.0, 929.0], "vx": 1.0, "vy": 0.75, "h_rate": -0.008, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 13.0, "cls": "bicycle", "xyxy": [1647.0, 747.0, 1732.0, 810.0], "vx": -1.75, "vy": 4.75, "h_rate": -0.085, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 21, "t": 13.2, "cls": "car", "xyxy": [868.0, 741.0, 1362.0, 929.0], "vx": 2.5, "vy": 1.0, "h_rate": -0.011, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 13.2, "cls": "bicycle", "xyxy": [1648.0, 744.0, 1731.0, 809.0], "vx": -1.75, "vy": 0.0, "h_rate": -0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 30, "t": 13.2, "cls": "car", "xyxy": [1786.0, 700.0, 1918.0, 848.0], "vx": -165.0, "vy": 45.0, "h_rate": 0.648, "in_corridor": false, "heading_in": true, "ttc": 1.542, "t_lat": 3.441, "risk": 0.394}
-{"track_id": 21, "t": 13.4, "cls": "car", "xyxy": [868.0, 741.0, 1361.0, 929.0], "vx": 1.0, "vy": 0.75, "h_rate": -0.008, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 29, "t": 13.4, "cls": "bicycle", "xyxy": [1649.0, 741.0, 1729.0, 808.0], "vx": -1.5, "vy": -7.0, "h_rate": 0.108, "in_corridor": false, "heading_in": false, "ttc": 9.262, "t_lat": null, "risk": 0.1}
-{"track_id": 30, "t": 13.4, "cls": "car", "xyxy": [1708.0, 647.0, 1918.0, 878.0], "vx": -180.0, "vy": -6.25, "h_rate": 1.437, "in_corridor": false, "heading_in": true, "ttc": 0.696, "t_lat": 2.826, "risk": 0.448}
-{"track_id": 16, "t": 13.6, "cls": "car", "xyxy": [359.0, 768.0, 623.0, 885.0], "vx": -0.25, "vy": 0.75, "h_rate": 0.004, "in_corridor": false, "heading_in": false, "ttc": 234.999, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 13.6, "cls": "car", "xyxy": [868.0, 741.0, 1362.0, 929.0], "vx": 0.5, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 13.6, "cls": "car", "xyxy": [1615.0, 639.0, 1918.0, 908.0], "vx": -197.25, "vy": 7.0, "h_rate": 1.313, "in_corridor": false, "heading_in": true, "ttc": 0.761, "t_lat": 2.241, "risk": 0.502}
-{"track_id": 16, "t": 13.8, "cls": "car", "xyxy": [359.0, 767.0, 623.0, 885.0], "vx": 0.0, "vy": -2.5, "h_rate": 0.0, "in_corridor": false, "heading_in": false, "ttc": 1.604064702061703e+16, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 13.8, "cls": "car", "xyxy": [868.0, 741.0, 1361.0, 929.0], "vx": -0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 13.8, "cls": "car", "xyxy": [1508.0, 636.0, 1918.0, 936.0], "vx": -250.0, "vy": 58.75, "h_rate": 0.653, "in_corridor": false, "heading_in": true, "ttc": 1.53, "t_lat": 1.479, "risk": 0.567}
-{"track_id": 16, "t": 14.0, "cls": "car", "xyxy": [359.0, 768.0, 622.0, 885.0], "vx": -0.75, "vy": -1.0, "h_rate": -0.009, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 14.0, "cls": "car", "xyxy": [868.0, 740.0, 1361.0, 929.0], "vx": -0.25, "vy": -0.75, "h_rate": 0.008, "in_corridor": true, "heading_in": false, "ttc": 125.666, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 14.0, "cls": "car", "xyxy": [1381.0, 655.0, 1919.0, 961.0], "vx": -271.25, "vy": 74.5, "h_rate": 0.476, "in_corridor": false, "heading_in": true, "ttc": 2.1, "t_lat": 1.069, "risk": 0.561}
-{"track_id": 16, "t": 14.2, "cls": "car", "xyxy": [359.0, 768.0, 622.0, 885.0], "vx": -1.0, "vy": 0.25, "h_rate": -0.004, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 14.2, "cls": "car", "xyxy": [868.0, 739.0, 1358.0, 928.0], "vx": -3.0, "vy": -2.5, "h_rate": 0.011, "in_corridor": true, "heading_in": false, "ttc": 94.25, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 14.2, "cls": "car", "xyxy": [1242.0, 682.0, 1917.0, 991.0], "vx": -312.0, "vy": 105.5, "h_rate": 0.218, "in_corridor": false, "heading_in": true, "ttc": 4.59, "t_lat": 0.639, "risk": 0.337}
-{"track_id": 16, "t": 14.4, "cls": "car", "xyxy": [359.0, 768.0, 622.0, 885.0], "vx": -0.75, "vy": 0.75, "h_rate": -0.013, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 14.4, "cls": "car", "xyxy": [867.0, 738.0, 1344.0, 929.0], "vx": -14.25, "vy": -2.75, "h_rate": 0.024, "in_corridor": true, "heading_in": false, "ttc": 42.11, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 14.4, "cls": "car", "xyxy": [1092.0, 700.0, 1832.0, 1006.0], "vx": -411.75, "vy": 114.75, "h_rate": 0.035, "in_corridor": false, "heading_in": true, "ttc": 28.917, "t_lat": 0.174, "risk": 0.314}
-{"track_id": 21, "t": 14.6, "cls": "car", "xyxy": [869.0, 739.0, 1292.0, 923.0], "vx": -54.75, "vy": -5.25, "h_rate": -0.035, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 4.64, "risk": 0.371}
-{"track_id": 30, "t": 14.6, "cls": "car", "xyxy": [944.0, 725.0, 1723.0, 1005.0], "vx": -533.5, "vy": 93.75, "h_rate": -0.138, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.105, "risk": 0.614}
-{"track_id": 31, "t": 14.6, "cls": "car", "xyxy": [915.0, 893.0, 1918.0, 1073.0], "vx": -395.0, "vy": 2.5, "h_rate": -0.137, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.048, "risk": 0.615}
-{"track_id": 16, "t": 14.8, "cls": "car", "xyxy": [361.0, 768.0, 626.0, 886.0], "vx": 7.5, "vy": 1.25, "h_rate": 0.021, "in_corridor": false, "heading_in": false, "ttc": 47.0, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 14.8, "cls": "car", "xyxy": [796.0, 744.0, 1585.0, 1005.0], "vx": 212.5, "vy": 102.5, "h_rate": 0.781, "in_corridor": true, "heading_in": false, "ttc": 1.281, "t_lat": null, "risk": 0.692}
-{"track_id": 32, "t": 14.8, "cls": "bicycle", "xyxy": [1653.0, 733.0, 1733.0, 810.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 15.0, "cls": "car", "xyxy": [365.0, 768.0, 630.0, 885.0], "vx": 11.0, "vy": 0.25, "h_rate": 0.004, "in_corridor": false, "heading_in": false, "ttc": 234.999, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 15.0, "cls": "car", "xyxy": [674.0, 741.0, 1428.0, 1007.0], "vx": -26.75, "vy": 82.5, "h_rate": 0.672, "in_corridor": true, "heading_in": true, "ttc": 1.489, "t_lat": 12.709, "risk": 0.684}
-{"track_id": 32, "t": 15.0, "cls": "bicycle", "xyxy": [1658.0, 734.0, 1737.0, 809.0], "vx": 22.5, "vy": 0.0, "h_rate": -0.132, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 16, "t": 15.2, "cls": "car", "xyxy": [365.0, 769.0, 632.0, 884.0], "vx": 11.0, "vy": -0.25, "h_rate": -0.03, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 15.2, "cls": "car", "xyxy": [571.0, 767.0, 1266.0, 1009.0], "vx": -312.75, "vy": 85.25, "h_rate": 0.42, "in_corridor": true, "heading_in": false, "ttc": 2.378, "t_lat": null, "risk": 0.618}
-{"track_id": 33, "t": 15.2, "cls": "car", "xyxy": [1076.0, 738.0, 1377.0, 926.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 15.4, "cls": "car", "xyxy": [479.0, 768.0, 1123.0, 1004.0], "vx": -650.5, "vy": 24.25, "h_rate": -0.198, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 15.4, "cls": "car", "xyxy": [1024.0, 738.0, 1388.0, 927.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 32, "t": 15.4, "cls": "bicycle", "xyxy": [1675.0, 720.0, 1755.0, 809.0], "vx": 37.679, "vy": -12.5, "h_rate": 0.268, "in_corridor": false, "heading_in": false, "ttc": 3.731, "t_lat": null, "risk": 0.191}
-{"track_id": 21, "t": 15.6, "cls": "car", "xyxy": [415.0, 771.0, 992.0, 991.0], "vx": -580.0, "vy": 9.5, "h_rate": -0.297, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 15.6, "cls": "car", "xyxy": [965.0, 737.0, 1408.0, 935.0], "vx": -97.5, "vy": 17.5, "h_rate": 0.233, "in_corridor": true, "heading_in": true, "ttc": 4.299, "t_lat": 1.601, "risk": 0.59}
-{"track_id": 32, "t": 15.6, "cls": "bicycle", "xyxy": [1692.0, 722.0, 1773.0, 807.0], "vx": 56.25, "vy": -12.5, "h_rate": 0.24, "in_corridor": false, "heading_in": false, "ttc": 4.168, "t_lat": null, "risk": 0.156}
-{"track_id": 21, "t": 15.8, "cls": "car", "xyxy": [355.0, 764.0, 872.0, 972.0], "vx": -468.75, "vy": -45.0, "h_rate": -0.316, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 15.8, "cls": "car", "xyxy": [927.0, 733.0, 1437.0, 936.0], "vx": -60.0, "vy": 5.0, "h_rate": 0.179, "in_corridor": true, "heading_in": true, "ttc": 5.598, "t_lat": 2.688, "risk": 0.429}
-{"track_id": 32, "t": 15.8, "cls": "bicycle", "xyxy": [1718.0, 719.0, 1795.0, 802.0], "vx": 103.75, "vy": -10.0, "h_rate": -0.174, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 25, "t": 16.0, "cls": "car", "xyxy": [231.0, 732.0, 397.0, 829.0], "vx": 65.0, "vy": -3.0, "h_rate": -0.166, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 5.147, "risk": 0.07}
-{"track_id": 30, "t": 16.0, "cls": "car", "xyxy": [948.0, 726.0, 1471.0, 937.0], "vx": 3.0, "vy": -2.25, "h_rate": 0.178, "in_corridor": true, "heading_in": false, "ttc": 5.629, "t_lat": null, "risk": 0.378}
-{"track_id": 32, "t": 16.0, "cls": "bicycle", "xyxy": [1748.0, 722.0, 1822.0, 794.0], "vx": 117.0, "vy": -11.75, "h_rate": -0.33, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 30, "t": 16.2, "cls": "car", "xyxy": [975.0, 720.0, 1504.0, 933.0], "vx": 93.25, "vy": -15.75, "h_rate": 0.129, "in_corridor": true, "heading_in": false, "ttc": 7.76, "t_lat": null, "risk": 0.37}
-{"track_id": 34, "t": 16.2, "cls": "car", "xyxy": [544.0, 766.0, 711.0, 890.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 35, "t": 16.2, "cls": "car", "xyxy": [396.0, 901.0, 1915.0, 1076.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 16.4, "cls": "car", "xyxy": [993.0, 713.0, 1530.0, 932.0], "vx": 134.25, "vy": -20.5, "h_rate": 0.119, "in_corridor": true, "heading_in": false, "ttc": 8.438, "t_lat": null, "risk": 0.37}
-{"track_id": 34, "t": 16.4, "cls": "car", "xyxy": [519.0, 765.0, 725.0, 892.0], "vx": -27.5, "vy": 2.5, "h_rate": 0.12, "in_corridor": true, "heading_in": false, "ttc": 8.366, "t_lat": null, "risk": 0.37}
-{"track_id": 35, "t": 16.4, "cls": "car", "xyxy": [398.0, 886.0, 1914.0, 1075.0], "vx": 2.5, "vy": -40.0, "h_rate": 0.385, "in_corridor": true, "heading_in": false, "ttc": 2.599, "t_lat": null, "risk": 0.594}
-{"track_id": 30, "t": 16.6, "cls": "car", "xyxy": [1004.0, 709.0, 1542.0, 933.0], "vx": 106.25, "vy": -17.75, "h_rate": 0.104, "in_corridor": true, "heading_in": false, "ttc": 9.655, "t_lat": null, "risk": 0.37}
-{"track_id": 32, "t": 16.6, "cls": "bicycle", "xyxy": [1809.0, 709.0, 1875.0, 779.0], "vx": 95.25, "vy": -24.25, "h_rate": -0.049, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 34, "t": 16.6, "cls": "car", "xyxy": [501.0, 768.0, 734.0, 893.0], "vx": -25.0, "vy": 6.25, "h_rate": 0.02, "in_corridor": true, "heading_in": false, "ttc": 49.8, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 16.8, "cls": "car", "xyxy": [205.0, 731.0, 464.0, 875.0], "vx": -238.5, "vy": -54.25, "h_rate": -0.345, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 16.8, "cls": "car", "xyxy": [1009.0, 708.0, 1551.0, 934.0], "vx": 66.5, "vy": -9.0, "h_rate": 0.1, "in_corridor": true, "heading_in": false, "ttc": 9.985, "t_lat": null, "risk": 0.37}
-{"track_id": 34, "t": 16.8, "cls": "car", "xyxy": [457.0, 769.0, 738.0, 892.0], "vx": -47.25, "vy": 4.75, "h_rate": -0.02, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 21, "t": 17.0, "cls": "car", "xyxy": [184.0, 731.0, 438.0, 861.0], "vx": -191.25, "vy": -42.5, "h_rate": -0.496, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 25, "t": 17.0, "cls": "car", "xyxy": [315.0, 731.0, 449.0, 842.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 17.0, "cls": "car", "xyxy": [1008.0, 708.0, 1552.0, 935.0], "vx": 31.25, "vy": -1.5, "h_rate": 0.058, "in_corridor": true, "heading_in": false, "ttc": 17.164, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 17.2, "cls": "car", "xyxy": [165.0, 728.0, 372.0, 852.0], "vx": -173.75, "vy": -38.0, "h_rate": -0.452, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 25, "t": 17.2, "cls": "car", "xyxy": [311.0, 732.0, 454.0, 844.0], "vx": 2.5, "vy": 7.5, "h_rate": 0.045, "in_corridor": false, "heading_in": false, "ttc": 22.3, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 17.2, "cls": "car", "xyxy": [1008.0, 708.0, 1553.0, 935.0], "vx": 11.25, "vy": 1.0, "h_rate": 0.022, "in_corridor": true, "heading_in": false, "ttc": 45.119, "t_lat": null, "risk": 0.37}
-{"track_id": 25, "t": 17.4, "cls": "car", "xyxy": [289.0, 731.0, 445.0, 844.0], "vx": -37.5, "vy": 2.5, "h_rate": 0.045, "in_corridor": false, "heading_in": false, "ttc": 22.399, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 17.4, "cls": "car", "xyxy": [1008.0, 708.0, 1553.0, 936.0], "vx": 1.0, "vy": 1.5, "h_rate": 0.013, "in_corridor": true, "heading_in": false, "ttc": 75.666, "t_lat": null, "risk": 0.37}
-{"track_id": 37, "t": 17.4, "cls": "car", "xyxy": [434.0, 891.0, 1910.0, 1075.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 17.6, "cls": "car", "xyxy": [137.0, 724.0, 299.0, 835.0], "vx": -152.75, "vy": -28.5, "h_rate": -0.275, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 25, "t": 17.6, "cls": "car", "xyxy": [283.0, 733.0, 451.0, 842.0], "vx": -30.25, "vy": 1.25, "h_rate": -0.023, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 17.6, "cls": "car", "xyxy": [1008.0, 708.0, 1553.0, 936.0], "vx": 0.75, "vy": 1.0, "h_rate": 0.009, "in_corridor": true, "heading_in": false, "ttc": 113.75, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 17.8, "cls": "car", "xyxy": [127.0, 722.0, 272.0, 828.0], "vx": -115.5, "vy": -24.0, "h_rate": -0.253, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 17.8, "cls": "car", "xyxy": [1011.0, 710.0, 1548.0, 936.0], "vx": -1.5, "vy": 2.25, "h_rate": -0.007, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 37, "t": 17.8, "cls": "car", "xyxy": [417.0, 906.0, 1914.0, 1076.0], "vx": -16.25, "vy": 20.0, "h_rate": -0.198, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 18.0, "cls": "car", "xyxy": [119.0, 721.0, 254.0, 818.0], "vx": -92.5, "vy": -21.75, "h_rate": -0.278, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 18.0, "cls": "car", "xyxy": [1013.0, 716.0, 1512.0, 938.0], "vx": -27.5, "vy": 8.0, "h_rate": -0.044, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 2.987, "risk": 0.401}
-{"track_id": 39, "t": 18.0, "cls": "car", "xyxy": [1258.0, 564.0, 1919.0, 1010.0], "vx": -627.5, "vy": 102.5, "h_rate": 0.894, "in_corridor": false, "heading_in": true, "ttc": 1.119, "t_lat": 0.312, "risk": 0.639}
-{"track_id": 21, "t": 18.2, "cls": "car", "xyxy": [110.0, 721.0, 235.0, 814.0], "vx": -74.75, "vy": -20.75, "h_rate": -0.31, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.07}
-{"track_id": 25, "t": 18.2, "cls": "car", "xyxy": [272.0, 733.0, 460.0, 843.0], "vx": 1.5, "vy": 1.25, "h_rate": 0.014, "in_corridor": false, "heading_in": false, "ttc": 72.999, "t_lat": null, "risk": 0.07}
-{"track_id": 30, "t": 18.2, "cls": "car", "xyxy": [1011.0, 623.0, 1860.0, 1019.0], "vx": 224.0, "vy": 0.5, "h_rate": 0.819, "in_corridor": false, "heading_in": false, "ttc": 1.221, "t_lat": null, "risk": 0.394}
-{"track_id": 30, "t": 18.4, "cls": "car", "xyxy": [822.0, 660.0, 1654.0, 1020.0], "vx": 24.25, "vy": 22.5, "h_rate": 0.988, "in_corridor": true, "heading_in": false, "ttc": 1.012, "t_lat": null, "risk": 0.701}
-{"track_id": 34, "t": 18.4, "cls": "car", "xyxy": [467.0, 771.0, 751.0, 895.0], "vx": 22.75, "vy": -1.75, "h_rate": -0.004, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.209, "risk": 0.613}
-{"track_id": 41, "t": 18.4, "cls": "bicycle", "xyxy": [1832.0, 705.0, 1898.0, 777.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 30, "t": 18.6, "cls": "car", "xyxy": [671.0, 688.0, 1436.0, 1015.0], "vx": -412.25, "vy": 46.25, "h_rate": 0.533, "in_corridor": true, "heading_in": true, "ttc": 1.875, "t_lat": 0.832, "risk": 0.89}
-{"track_id": 34, "t": 18.6, "cls": "car", "xyxy": [477.0, 771.0, 746.0, 896.0], "vx": 23.25, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": true, "ttc": 1.4027942261376134e+16, "t_lat": 0.341, "risk": 0.611}
-{"track_id": 41, "t": 18.6, "cls": "bicycle", "xyxy": [1848.0, 706.0, 1918.0, 772.0], "vx": 90.0, "vy": -10.0, "h_rate": -0.435, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 30, "t": 18.8, "cls": "car", "xyxy": [560.0, 705.0, 1252.0, 1018.0], "vx": -886.5, "vy": 66.5, "h_rate": -0.401, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 41, "t": 18.8, "cls": "bicycle", "xyxy": [1873.0, 708.0, 1918.0, 764.0], "vx": 76.25, "vy": -12.5, "h_rate": -0.628, "in_corridor": false, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.1}
-{"track_id": 42, "t": 18.8, "cls": "car", "xyxy": [1231.0, 698.0, 1630.0, 923.0], "vx": -255.0, "vy": -17.5, "h_rate": 0.204, "in_corridor": false, "heading_in": true, "ttc": 4.899, "t_lat": 0.376, "risk": 0.332}
-{"track_id": 25, "t": 19.0, "cls": "car", "xyxy": [328.0, 739.0, 519.0, 849.0], "vx": 92.25, "vy": 10.0, "h_rate": -0.009, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 2.294, "risk": 0.159}
-{"track_id": 30, "t": 19.0, "cls": "car", "xyxy": [489.0, 713.0, 1091.0, 1011.0], "vx": -745.75, "vy": 38.0, "h_rate": -0.305, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 42, "t": 19.0, "cls": "car", "xyxy": [1113.0, 690.0, 1686.0, 942.0], "vx": -205.0, "vy": 5.0, "h_rate": 0.385, "in_corridor": false, "heading_in": true, "ttc": 2.595, "t_lat": 0.255, "risk": 0.537}
-{"track_id": 25, "t": 19.2, "cls": "car", "xyxy": [363.0, 743.0, 534.0, 845.0], "vx": 123.75, "vy": 9.25, "h_rate": -0.136, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 1.53, "risk": 0.25}
-{"track_id": 30, "t": 19.2, "cls": "car", "xyxy": [447.0, 720.0, 972.0, 992.0], "vx": -574.0, "vy": 7.0, "h_rate": -0.301, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 42, "t": 19.2, "cls": "car", "xyxy": [1175.0, 675.0, 1759.0, 948.0], "vx": -37.25, "vy": -1.0, "h_rate": 0.408, "in_corridor": false, "heading_in": true, "ttc": 2.451, "t_lat": 3.105, "risk": 0.335}
-{"track_id": 25, "t": 19.4, "cls": "car", "xyxy": [407.0, 745.0, 520.0, 839.0], "vx": 115.25, "vy": 0.0, "h_rate": -0.301, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 1.548, "risk": 0.248}
-{"track_id": 30, "t": 19.4, "cls": "car", "xyxy": [424.0, 726.0, 900.0, 972.0], "vx": -406.25, "vy": -21.75, "h_rate": -0.407, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 42, "t": 19.4, "cls": "car", "xyxy": [1255.0, 659.0, 1845.0, 952.0], "vx": 213.0, "vy": -9.75, "h_rate": 0.436, "in_corridor": false, "heading_in": false, "ttc": 2.293, "t_lat": null, "risk": 0.327}
-{"track_id": 30, "t": 19.6, "cls": "car", "xyxy": [437.0, 723.0, 834.0, 955.0], "vx": -255.5, "vy": -38.0, "h_rate": -0.426, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 42, "t": 19.6, "cls": "car", "xyxy": [1355.0, 634.0, 1919.0, 955.0], "vx": 397.75, "vy": -35.25, "h_rate": 0.398, "in_corridor": false, "heading_in": false, "ttc": 2.51, "t_lat": null, "risk": 0.304}
-{"track_id": 43, "t": 19.6, "cls": "car", "xyxy": [802.0, 780.0, 1009.0, 921.0], "vx": 0.0, "vy": 0.0, "h_rate": 0.0, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 21, "t": 19.8, "cls": "car", "xyxy": [301.0, 750.0, 384.0, 813.0], "vx": 233.5, "vy": 25.0, "h_rate": -0.25, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 1.357, "risk": 0.266}
-{"track_id": 30, "t": 19.8, "cls": "car", "xyxy": [462.0, 732.0, 815.0, 943.0], "vx": -119.75, "vy": -32.75, "h_rate": -0.41, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 43, "t": 19.8, "cls": "car", "xyxy": [802.0, 784.0, 1102.0, 934.0], "vx": 232.5, "vy": 42.5, "h_rate": 0.309, "in_corridor": true, "heading_in": true, "ttc": 3.232, "t_lat": 1.608, "risk": 0.688}
-{"track_id": 21, "t": 20.0, "cls": "car", "xyxy": [368.0, 766.0, 447.0, 826.0], "vx": 283.5, "vy": 47.25, "h_rate": -0.283, "in_corridor": false, "heading_in": true, "ttc": null, "t_lat": 0.857, "risk": 0.297}
-{"track_id": 30, "t": 20.0, "cls": "car", "xyxy": [501.0, 746.0, 818.0, 942.0], "vx": -2.25, "vy": -8.25, "h_rate": -0.388, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 43, "t": 20.0, "cls": "car", "xyxy": [831.0, 787.0, 1209.0, 946.0], "vx": 286.25, "vy": 40.0, "h_rate": 0.3, "in_corridor": true, "heading_in": false, "ttc": 3.329, "t_lat": null, "risk": 0.505}
-{"track_id": 30, "t": 20.2, "cls": "car", "xyxy": [551.0, 759.0, 831.0, 943.0], "vx": 93.75, "vy": 21.25, "h_rate": -0.385, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 1.269, "risk": 0.573}
-{"track_id": 43, "t": 20.2, "cls": "car", "xyxy": [926.0, 790.0, 1329.0, 959.0], "vx": 367.0, "vy": 39.75, "h_rate": 0.301, "in_corridor": true, "heading_in": false, "ttc": 3.324, "t_lat": null, "risk": 0.505}
-{"track_id": 47, "t": 20.2, "cls": "car", "xyxy": [168.0, 750.0, 274.0, 842.0], "vx": -25.0, "vy": 130.0, "h_rate": 1.366, "in_corridor": false, "heading_in": false, "ttc": 0.732, "t_lat": null, "risk": 0.407}
-{"track_id": 30, "t": 20.4, "cls": "car", "xyxy": [617.0, 760.0, 883.0, 936.0], "vx": 183.0, "vy": 19.25, "h_rate": -0.304, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.947, "risk": 0.593}
-{"track_id": 43, "t": 20.4, "cls": "car", "xyxy": [1034.0, 781.0, 1467.0, 964.0], "vx": 501.5, "vy": 24.25, "h_rate": 0.329, "in_corridor": true, "heading_in": false, "ttc": 3.042, "t_lat": null, "risk": 0.54}
-{"track_id": 48, "t": 20.4, "cls": "car", "xyxy": [842.0, 776.0, 1019.0, 907.0], "vx": 375.0, "vy": 10.0, "h_rate": 0.397, "in_corridor": true, "heading_in": true, "ttc": 2.519, "t_lat": 0.891, "risk": 0.828}
-{"track_id": 21, "t": 20.6, "cls": "car", "xyxy": [612.0, 798.0, 688.0, 845.0], "vx": 403.75, "vy": 40.75, "h_rate": -0.403, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.03, "risk": 0.615}
-{"track_id": 30, "t": 20.6, "cls": "car", "xyxy": [689.0, 763.0, 928.0, 932.0], "vx": 253.0, "vy": 3.75, "h_rate": -0.245, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.906, "risk": 0.595}
-{"track_id": 48, "t": 20.6, "cls": "car", "xyxy": [915.0, 771.0, 1136.0, 912.0], "vx": 425.0, "vy": 5.0, "h_rate": 0.382, "in_corridor": true, "heading_in": false, "ttc": 2.615, "t_lat": null, "risk": 0.592}
-{"track_id": 21, "t": 20.8, "cls": "car", "xyxy": [693.0, 798.0, 774.0, 849.0], "vx": 422.25, "vy": 15.5, "h_rate": -0.191, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.233, "risk": 0.613}
-{"track_id": 30, "t": 20.8, "cls": "car", "xyxy": [760.0, 767.0, 986.0, 923.0], "vx": 302.25, "vy": -9.25, "h_rate": -0.268, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 0.951, "risk": 0.593}
-{"track_id": 51, "t": 20.8, "cls": "car", "xyxy": [355.0, 768.0, 496.0, 870.0], "vx": 150.0, "vy": 52.5, "h_rate": 0.736, "in_corridor": false, "heading_in": true, "ttc": 1.359, "t_lat": 1.304, "risk": 0.59}
-{"track_id": 21, "t": 21.0, "cls": "car", "xyxy": [761.0, 795.0, 834.0, 848.0], "vx": 395.75, "vy": 4.75, "h_rate": 0.069, "in_corridor": true, "heading_in": true, "ttc": 14.407, "t_lat": 0.409, "risk": 0.61}
-{"track_id": 48, "t": 21.0, "cls": "car", "xyxy": [1065.0, 754.0, 1353.0, 920.0], "vx": 462.0, "vy": -7.0, "h_rate": 0.386, "in_corridor": true, "heading_in": false, "ttc": 2.59, "t_lat": null, "risk": 0.595}
-{"track_id": 54, "t": 21.0, "cls": "car", "xyxy": [537.0, 782.0, 607.0, 861.0], "vx": 132.5, "vy": 72.5, "h_rate": 1.053, "in_corridor": false, "heading_in": true, "ttc": 0.95, "t_lat": 0.416, "risk": 0.642}
-{"track_id": 21, "t": 21.2, "cls": "car", "xyxy": [812.0, 796.0, 885.0, 847.0], "vx": 329.75, "vy": -1.0, "h_rate": 0.142, "in_corridor": true, "heading_in": true, "ttc": 7.055, "t_lat": 0.643, "risk": 0.606}
-{"track_id": 48, "t": 21.2, "cls": "car", "xyxy": [1138.0, 744.0, 1449.0, 922.0], "vx": 449.5, "vy": -14.75, "h_rate": 0.4, "in_corridor": true, "heading_in": false, "ttc": 2.499, "t_lat": null, "risk": 0.605}
-{"track_id": 50, "t": 21.2, "cls": "car", "xyxy": [571.0, 785.0, 651.0, 865.0], "vx": 2.5, "vy": 85.0, "h_rate": 1.116, "in_corridor": false, "heading_in": false, "ttc": 0.896, "t_lat": null, "risk": 0.403}
-{"track_id": 21, "t": 21.4, "cls": "car", "xyxy": [857.0, 795.0, 914.0, 848.0], "vx": 253.5, "vy": -3.0, "h_rate": 0.038, "in_corridor": true, "heading_in": true, "ttc": 25.997, "t_lat": 0.985, "risk": 0.591}
-{"track_id": 50, "t": 21.4, "cls": "car", "xyxy": [599.0, 784.0, 684.0, 868.0], "vx": 77.5, "vy": 45.0, "h_rate": 0.68, "in_corridor": true, "heading_in": true, "ttc": 1.471, "t_lat": 0.247, "risk": 0.927}
-{"track_id": 55, "t": 21.4, "cls": "car", "xyxy": [650.0, 779.0, 726.0, 850.0], "vx": 170.0, "vy": 12.5, "h_rate": 0.216, "in_corridor": true, "heading_in": true, "ttc": 4.633, "t_lat": 0.315, "risk": 0.643}
-{"track_id": 21, "t": 21.6, "cls": "car", "xyxy": [881.0, 796.0, 942.0, 847.0], "vx": 189.5, "vy": 0.0, "h_rate": -0.038, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 1.451, "risk": 0.557}
-{"track_id": 50, "t": 21.6, "cls": "car", "xyxy": [605.0, 781.0, 706.0, 870.0], "vx": 82.75, "vy": 26.75, "h_rate": 0.519, "in_corridor": true, "heading_in": true, "ttc": 1.927, "t_lat": 0.416, "risk": 0.898}
-{"track_id": 55, "t": 21.6, "cls": "car", "xyxy": [673.0, 777.0, 746.0, 848.0], "vx": 138.75, "vy": 1.25, "h_rate": 0.108, "in_corridor": true, "heading_in": true, "ttc": 9.265, "t_lat": 0.531, "risk": 0.607}
-{"track_id": 21, "t": 21.8, "cls": "car", "xyxy": [897.0, 796.0, 956.0, 846.0], "vx": 130.0, "vy": -0.75, "h_rate": -0.049, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 2.226, "risk": 0.467}
-{"track_id": 50, "t": 21.8, "cls": "car", "xyxy": [602.0, 782.0, 714.0, 879.0], "vx": 77.5, "vy": 8.0, "h_rate": 0.318, "in_corridor": true, "heading_in": true, "ttc": 3.145, "t_lat": 0.555, "risk": 0.764}
-{"track_id": 55, "t": 21.8, "cls": "car", "xyxy": [679.0, 779.0, 760.0, 851.0], "vx": 109.0, "vy": 3.5, "h_rate": 0.086, "in_corridor": true, "heading_in": true, "ttc": 11.663, "t_lat": 0.786, "risk": 0.6}
-{"track_id": 21, "t": 22.0, "cls": "car", "xyxy": [909.0, 795.0, 956.0, 847.0], "vx": 78.0, "vy": -1.0, "h_rate": -0.038, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 3.795, "risk": 0.377}
-{"track_id": 50, "t": 22.0, "cls": "car", "xyxy": [600.0, 782.0, 715.0, 881.0], "vx": 25.25, "vy": 10.75, "h_rate": 0.289, "in_corridor": true, "heading_in": true, "ttc": 3.454, "t_lat": 1.737, "risk": 0.647}
-{"track_id": 55, "t": 22.0, "cls": "car", "xyxy": [679.0, 776.0, 764.0, 856.0], "vx": 55.25, "vy": 3.5, "h_rate": 0.186, "in_corridor": true, "heading_in": true, "ttc": 5.376, "t_lat": 1.648, "risk": 0.549}
-{"track_id": 21, "t": 22.2, "cls": "car", "xyxy": [915.0, 795.0, 957.0, 847.0], "vx": 39.75, "vy": -0.75, "h_rate": 0.049, "in_corridor": true, "heading_in": true, "ttc": 20.518, "t_lat": 7.535, "risk": 0.37}
-{"track_id": 50, "t": 22.2, "cls": "car", "xyxy": [576.0, 782.0, 708.0, 888.0], "vx": -20.5, "vy": 14.75, "h_rate": 0.272, "in_corridor": true, "heading_in": false, "ttc": 3.671, "t_lat": null, "risk": 0.467}
-{"track_id": 55, "t": 22.2, "cls": "car", "xyxy": [672.0, 776.0, 764.0, 862.0], "vx": 13.75, "vy": 10.25, "h_rate": 0.34, "in_corridor": true, "heading_in": false, "ttc": 2.94, "t_lat": null, "risk": 0.553}
-{"track_id": 50, "t": 22.4, "cls": "car", "xyxy": [538.0, 781.0, 692.0, 891.0], "vx": -72.25, "vy": 10.0, "h_rate": 0.223, "in_corridor": true, "heading_in": false, "ttc": 4.488, "t_lat": null, "risk": 0.407}
-{"track_id": 55, "t": 22.4, "cls": "car", "xyxy": [659.0, 774.0, 758.0, 863.0], "vx": -18.25, "vy": 6.75, "h_rate": 0.354, "in_corridor": true, "heading_in": false, "ttc": 2.824, "t_lat": null, "risk": 0.567}
-{"track_id": 58, "t": 22.4, "cls": "car", "xyxy": [735.0, 784.0, 790.0, 844.0], "vx": -35.0, "vy": -17.5, "h_rate": 0.256, "in_corridor": true, "heading_in": false, "ttc": 3.899, "t_lat": null, "risk": 0.446}
-{"track_id": 55, "t": 22.6, "cls": "car", "xyxy": [640.0, 776.0, 750.0, 868.0], "vx": -44.5, "vy": 8.75, "h_rate": 0.227, "in_corridor": true, "heading_in": false, "ttc": 4.409, "t_lat": null, "risk": 0.411}
-{"track_id": 59, "t": 22.6, "cls": "car", "xyxy": [791.0, 791.0, 843.0, 830.0], "vx": 16.25, "vy": 1.25, "h_rate": 0.065, "in_corridor": true, "heading_in": false, "ttc": 15.399, "t_lat": null, "risk": 0.37}
-{"track_id": 60, "t": 22.6, "cls": "car", "xyxy": [247.0, 902.0, 1919.0, 1075.0], "vx": -25.0, "vy": -25.0, "h_rate": 0.117, "in_corridor": true, "heading_in": true, "ttc": 8.55, "t_lat": 14.146, "risk": 0.37}
-{"track_id": 30, "t": 22.8, "cls": "car", "xyxy": [935.0, 764.0, 1090.0, 896.0], "vx": -25.0, "vy": -4.5, "h_rate": -0.06, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 12.157, "risk": 0.37}
-{"track_id": 55, "t": 22.8, "cls": "car", "xyxy": [622.0, 770.0, 742.0, 867.0], "vx": -60.75, "vy": 1.0, "h_rate": 0.197, "in_corridor": true, "heading_in": false, "ttc": 5.073, "t_lat": null, "risk": 0.387}
-{"track_id": 58, "t": 22.8, "cls": "car", "xyxy": [727.0, 783.0, 782.0, 846.0], "vx": -23.25, "vy": -3.0, "h_rate": 0.133, "in_corridor": true, "heading_in": false, "ttc": 7.509, "t_lat": null, "risk": 0.371}
-{"track_id": 30, "t": 23.0, "cls": "car", "xyxy": [931.0, 763.0, 1086.0, 895.0], "vx": -21.5, "vy": -5.25, "h_rate": -0.011, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 14.291, "risk": 0.37}
-{"track_id": 55, "t": 23.0, "cls": "car", "xyxy": [600.0, 768.0, 731.0, 873.0], "vx": -71.0, "vy": 1.25, "h_rate": 0.274, "in_corridor": true, "heading_in": false, "ttc": 3.644, "t_lat": null, "risk": 0.47}
-{"track_id": 58, "t": 23.0, "cls": "car", "xyxy": [715.0, 781.0, 778.0, 846.0], "vx": -27.25, "vy": -2.0, "h_rate": 0.161, "in_corridor": true, "heading_in": false, "ttc": 6.195, "t_lat": null, "risk": 0.374}
-{"track_id": 30, "t": 23.2, "cls": "car", "xyxy": [929.0, 765.0, 1082.0, 895.0], "vx": -18.5, "vy": -5.0, "h_rate": -0.023, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 55, "t": 23.2, "cls": "car", "xyxy": [569.0, 766.0, 721.0, 877.0], "vx": -83.25, "vy": 0.25, "h_rate": 0.321, "in_corridor": true, "heading_in": false, "ttc": 3.113, "t_lat": null, "risk": 0.531}
-{"track_id": 58, "t": 23.2, "cls": "car", "xyxy": [702.0, 781.0, 772.0, 851.0], "vx": -40.0, "vy": -2.0, "h_rate": 0.298, "in_corridor": true, "heading_in": false, "ttc": 3.359, "t_lat": null, "risk": 0.501}
-{"track_id": 55, "t": 23.4, "cls": "car", "xyxy": [539.0, 766.0, 706.0, 885.0], "vx": -99.5, "vy": 11.0, "h_rate": 0.334, "in_corridor": true, "heading_in": false, "ttc": 2.99, "t_lat": null, "risk": 0.546}
-{"track_id": 58, "t": 23.4, "cls": "car", "xyxy": [690.0, 782.0, 767.0, 854.0], "vx": -43.75, "vy": 6.5, "h_rate": 0.237, "in_corridor": true, "heading_in": false, "ttc": 4.213, "t_lat": null, "risk": 0.423}
-{"track_id": 62, "t": 23.4, "cls": "car", "xyxy": [1064.0, 791.0, 1119.0, 845.0], "vx": 0.0, "vy": -2.5, "h_rate": 0.912, "in_corridor": true, "heading_in": false, "ttc": 1.097, "t_lat": null, "risk": 0.698}
-{"track_id": 58, "t": 23.6, "cls": "car", "xyxy": [675.0, 779.0, 763.0, 858.0], "vx": -45.5, "vy": 8.5, "h_rate": 0.307, "in_corridor": true, "heading_in": false, "ttc": 3.261, "t_lat": null, "risk": 0.513}
-{"track_id": 59, "t": 23.6, "cls": "car", "xyxy": [764.0, 792.0, 817.0, 833.0], "vx": -16.5, "vy": 6.75, "h_rate": 0.088, "in_corridor": true, "heading_in": false, "ttc": 11.321, "t_lat": null, "risk": 0.37}
-{"track_id": 62, "t": 23.6, "cls": "car", "xyxy": [1061.0, 792.0, 1128.0, 847.0], "vx": 7.5, "vy": 2.5, "h_rate": 0.502, "in_corridor": true, "heading_in": false, "ttc": 1.993, "t_lat": null, "risk": 0.653}
-{"track_id": 50, "t": 23.8, "cls": "car", "xyxy": [76.0, 736.0, 469.0, 970.0], "vx": -303.0, "vy": 10.75, "h_rate": 0.592, "in_corridor": false, "heading_in": false, "ttc": 1.689, "t_lat": null, "risk": 0.373}
-{"track_id": 58, "t": 23.8, "cls": "car", "xyxy": [662.0, 775.0, 754.0, 858.0], "vx": -48.25, "vy": 1.0, "h_rate": 0.302, "in_corridor": true, "heading_in": false, "ttc": 3.312, "t_lat": null, "risk": 0.507}
-{"track_id": 62, "t": 23.8, "cls": "car", "xyxy": [1066.0, 788.0, 1139.0, 849.0], "vx": 18.0, "vy": 0.75, "h_rate": 0.465, "in_corridor": true, "heading_in": false, "ttc": 2.148, "t_lat": null, "risk": 0.64}
-{"track_id": 58, "t": 24.0, "cls": "car", "xyxy": [648.0, 774.0, 744.0, 859.0], "vx": -54.25, "vy": -3.25, "h_rate": 0.274, "in_corridor": true, "heading_in": false, "ttc": 3.654, "t_lat": null, "risk": 0.469}
-{"track_id": 62, "t": 24.0, "cls": "car", "xyxy": [1071.0, 788.0, 1149.0, 848.0], "vx": 31.75, "vy": -0.5, "h_rate": 0.21, "in_corridor": true, "heading_in": false, "ttc": 4.766, "t_lat": null, "risk": 0.396}
-{"track_id": 63, "t": 24.0, "cls": "car", "xyxy": [769.0, 784.0, 840.0, 829.0], "vx": -28.75, "vy": -1.25, "h_rate": 0.294, "in_corridor": true, "heading_in": false, "ttc": 3.396, "t_lat": null, "risk": 0.497}
-{"track_id": 58, "t": 24.2, "cls": "car", "xyxy": [630.0, 774.0, 738.0, 862.0], "vx": -58.5, "vy": -0.75, "h_rate": 0.174, "in_corridor": true, "heading_in": false, "ttc": 5.756, "t_lat": null, "risk": 0.377}
-{"track_id": 59, "t": 24.2, "cls": "car", "xyxy": [754.0, 788.0, 814.0, 835.0], "vx": -10.75, "vy": -2.25, "h_rate": 0.242, "in_corridor": true, "heading_in": false, "ttc": 4.134, "t_lat": null, "risk": 0.428}
-{"track_id": 62, "t": 24.2, "cls": "car", "xyxy": [1075.0, 784.0, 1160.0, 852.0], "vx": 38.25, "vy": -2.5, "h_rate": 0.31, "in_corridor": true, "heading_in": false, "ttc": 3.226, "t_lat": null, "risk": 0.517}
-{"track_id": 58, "t": 24.4, "cls": "car", "xyxy": [609.0, 773.0, 731.0, 867.0], "vx": -63.0, "vy": 6.0, "h_rate": 0.204, "in_corridor": true, "heading_in": false, "ttc": 4.901, "t_lat": null, "risk": 0.392}
-{"track_id": 59, "t": 24.4, "cls": "car", "xyxy": [752.0, 791.0, 816.0, 837.0], "vx": -4.0, "vy": 2.5, "h_rate": 0.304, "in_corridor": true, "heading_in": false, "ttc": 3.291, "t_lat": null, "risk": 0.509}
-{"track_id": 62, "t": 24.4, "cls": "car", "xyxy": [1074.0, 787.0, 1177.0, 856.0], "vx": 38.25, "vy": 4.5, "h_rate": 0.247, "in_corridor": true, "heading_in": false, "ttc": 4.042, "t_lat": null, "risk": 0.434}
-{"track_id": 58, "t": 24.6, "cls": "car", "xyxy": [585.0, 771.0, 722.0, 870.0], "vx": -70.75, "vy": 7.0, "h_rate": 0.262, "in_corridor": true, "heading_in": false, "ttc": 3.821, "t_lat": null, "risk": 0.453}
-{"track_id": 59, "t": 24.6, "cls": "car", "xyxy": [750.0, 794.0, 814.0, 838.0], "vx": -3.75, "vy": 8.75, "h_rate": 0.059, "in_corridor": true, "heading_in": false, "ttc": 16.941, "t_lat": null, "risk": 0.37}
-{"track_id": 62, "t": 24.6, "cls": "car", "xyxy": [1074.0, 784.0, 1193.0, 859.0], "vx": 39.25, "vy": 7.0, "h_rate": 0.342, "in_corridor": true, "heading_in": false, "ttc": 2.924, "t_lat": null, "risk": 0.555}
-{"track_id": 30, "t": 24.8, "cls": "car", "xyxy": [929.0, 767.0, 1088.0, 906.0], "vx": 11.25, "vy": 4.5, "h_rate": 0.051, "in_corridor": true, "heading_in": false, "ttc": 19.57, "t_lat": null, "risk": 0.37}
-{"track_id": 58, "t": 24.8, "cls": "car", "xyxy": [557.0, 764.0, 713.0, 871.0], "vx": -81.75, "vy": -0.5, "h_rate": 0.319, "in_corridor": true, "heading_in": false, "ttc": 3.133, "t_lat": null, "risk": 0.528}
-{"track_id": 62, "t": 24.8, "cls": "car", "xyxy": [1100.0, 782.0, 1210.0, 860.0], "vx": 60.25, "vy": 4.5, "h_rate": 0.247, "in_corridor": true, "heading_in": false, "ttc": 4.041, "t_lat": null, "risk": 0.435}
-{"track_id": 30, "t": 25.0, "cls": "car", "xyxy": [929.0, 762.0, 1091.0, 908.0], "vx": 12.75, "vy": 0.75, "h_rate": 0.11, "in_corridor": true, "heading_in": false, "ttc": 9.088, "t_lat": null, "risk": 0.37}
-{"track_id": 62, "t": 25.0, "cls": "car", "xyxy": [1097.0, 781.0, 1227.0, 861.0], "vx": 65.5, "vy": -1.0, "h_rate": 0.241, "in_corridor": true, "heading_in": false, "ttc": 4.141, "t_lat": null, "risk": 0.427}
-{"track_id": 65, "t": 25.0, "cls": "car", "xyxy": [818.0, 782.0, 866.0, 826.0], "vx": -14.167, "vy": -3.333, "h_rate": 0.244, "in_corridor": true, "heading_in": false, "ttc": 4.093, "t_lat": null, "risk": 0.431}
-{"track_id": 62, "t": 25.2, "cls": "car", "xyxy": [1108.0, 781.0, 1247.0, 865.0], "vx": 69.5, "vy": 2.25, "h_rate": 0.183, "in_corridor": true, "heading_in": false, "ttc": 5.475, "t_lat": null, "risk": 0.38}
-{"track_id": 65, "t": 25.2, "cls": "car", "xyxy": [818.0, 783.0, 868.0, 829.0], "vx": 5.0, "vy": 10.0, "h_rate": 0.222, "in_corridor": true, "heading_in": false, "ttc": 4.499, "t_lat": null, "risk": 0.407}
-{"track_id": 66, "t": 25.2, "cls": "car", "xyxy": [903.0, 775.0, 945.0, 817.0], "vx": 10.0, "vy": 7.5, "h_rate": 0.371, "in_corridor": true, "heading_in": false, "ttc": 2.699, "t_lat": null, "risk": 0.582}
-{"track_id": 62, "t": 25.4, "cls": "car", "xyxy": [1120.0, 778.0, 1268.0, 869.0], "vx": 66.25, "vy": 4.75, "h_rate": 0.256, "in_corridor": true, "heading_in": false, "ttc": 3.912, "t_lat": null, "risk": 0.445}
-{"track_id": 66, "t": 25.4, "cls": "car", "xyxy": [903.0, 773.0, 953.0, 815.0], "vx": 15.0, "vy": -1.25, "h_rate": 0.185, "in_corridor": true, "heading_in": false, "ttc": 5.398, "t_lat": null, "risk": 0.381}
-{"track_id": 68, "t": 25.4, "cls": "car", "xyxy": [1091.0, 782.0, 1142.0, 837.0], "vx": 20.0, "vy": 5.0, "h_rate": 0.185, "in_corridor": true, "heading_in": false, "ttc": 5.399, "t_lat": null, "risk": 0.381}
-{"track_id": 59, "t": 25.6, "cls": "car", "xyxy": [729.0, 784.0, 811.0, 840.0], "vx": -14.5, "vy": -4.5, "h_rate": 0.315, "in_corridor": true, "heading_in": false, "ttc": 3.17, "t_lat": null, "risk": 0.524}
-{"track_id": 62, "t": 25.6, "cls": "car", "xyxy": [1131.0, 773.0, 1292.0, 869.0], "vx": 82.5, "vy": 0.25, "h_rate": 0.314, "in_corridor": true, "heading_in": false, "ttc": 3.19, "t_lat": null, "risk": 0.521}
-{"track_id": 68, "t": 25.6, "cls": "car", "xyxy": [1097.0, 776.0, 1155.0, 836.0], "vx": 33.75, "vy": -6.25, "h_rate": 0.31, "in_corridor": true, "heading_in": false, "ttc": 3.224, "t_lat": null, "risk": 0.517}
-{"track_id": 59, "t": 25.8, "cls": "car", "xyxy": [721.0, 781.0, 806.0, 839.0], "vx": -18.5, "vy": -9.0, "h_rate": 0.341, "in_corridor": true, "heading_in": false, "ttc": 2.937, "t_lat": null, "risk": 0.553}
-{"track_id": 62, "t": 25.8, "cls": "car", "xyxy": [1139.0, 769.0, 1315.0, 874.0], "vx": 83.0, "vy": -3.5, "h_rate": 0.361, "in_corridor": true, "heading_in": false, "ttc": 2.767, "t_lat": null, "risk": 0.574}
-{"track_id": 68, "t": 25.8, "cls": "car", "xyxy": [1104.0, 776.0, 1162.0, 838.0], "vx": 35.5, "vy": -4.0, "h_rate": 0.279, "in_corridor": true, "heading_in": false, "ttc": 3.587, "t_lat": null, "risk": 0.476}
-{"track_id": 59, "t": 26.0, "cls": "car", "xyxy": [712.0, 782.0, 801.0, 841.0], "vx": -29.5, "vy": -6.25, "h_rate": 0.266, "in_corridor": true, "heading_in": false, "ttc": 3.762, "t_lat": null, "risk": 0.458}
-{"track_id": 62, "t": 26.0, "cls": "car", "xyxy": [1148.0, 767.0, 1337.0, 876.0], "vx": 80.5, "vy": -2.75, "h_rate": 0.316, "in_corridor": true, "heading_in": false, "ttc": 3.169, "t_lat": null, "risk": 0.524}
-{"track_id": 66, "t": 26.0, "cls": "car", "xyxy": [893.0, 766.0, 950.0, 814.0], "vx": -12.25, "vy": -5.75, "h_rate": 0.232, "in_corridor": true, "heading_in": false, "ttc": 4.312, "t_lat": null, "risk": 0.417}
-{"track_id": 62, "t": 26.2, "cls": "car", "xyxy": [1164.0, 762.0, 1363.0, 881.0], "vx": 85.75, "vy": 0.75, "h_rate": 0.341, "in_corridor": true, "heading_in": false, "ttc": 2.934, "t_lat": null, "risk": 0.553}
-{"track_id": 66, "t": 26.2, "cls": "car", "xyxy": [890.0, 760.0, 951.0, 815.0], "vx": -15.0, "vy": -4.0, "h_rate": 0.258, "in_corridor": true, "heading_in": false, "ttc": 3.88, "t_lat": null, "risk": 0.448}
-{"track_id": 68, "t": 26.2, "cls": "car", "xyxy": [1107.0, 768.0, 1180.0, 839.0], "vx": 29.25, "vy": -5.0, "h_rate": 0.244, "in_corridor": true, "heading_in": false, "ttc": 4.092, "t_lat": null, "risk": 0.431}
-{"track_id": 62, "t": 26.4, "cls": "car", "xyxy": [1173.0, 760.0, 1392.0, 888.0], "vx": 93.75, "vy": 3.75, "h_rate": 0.341, "in_corridor": true, "heading_in": false, "ttc": 2.933, "t_lat": null, "risk": 0.553}
-{"track_id": 66, "t": 26.4, "cls": "car", "xyxy": [877.0, 761.0, 947.0, 822.0], "vx": -19.25, "vy": 0.25, "h_rate": 0.397, "in_corridor": true, "heading_in": false, "ttc": 2.521, "t_lat": null, "risk": 0.603}
-{"track_id": 68, "t": 26.4, "cls": "car", "xyxy": [1122.0, 773.0, 1195.0, 841.0], "vx": 40.5, "vy": -0.5, "h_rate": 0.214, "in_corridor": true, "heading_in": false, "ttc": 4.663, "t_lat": null, "risk": 0.4}
-{"track_id": 62, "t": 26.6, "cls": "car", "xyxy": [1190.0, 756.0, 1426.0, 895.0], "vx": 107.75, "vy": 7.25, "h_rate": 0.401, "in_corridor": true, "heading_in": false, "ttc": 2.493, "t_lat": null, "risk": 0.606}
-{"track_id": 66, "t": 26.6, "cls": "car", "xyxy": [874.0, 755.0, 944.0, 823.0], "vx": -23.0, "vy": 0.5, "h_rate": 0.574, "in_corridor": true, "heading_in": false, "ttc": 1.741, "t_lat": null, "risk": 0.67}
-{"track_id": 68, "t": 26.6, "cls": "car", "xyxy": [1117.0, 769.0, 1201.0, 843.0], "vx": 37.5, "vy": 4.0, "h_rate": 0.268, "in_corridor": true, "heading_in": false, "ttc": 3.729, "t_lat": null, "risk": 0.461}
-{"track_id": 63, "t": 26.8, "cls": "car", "xyxy": [747.0, 775.0, 824.0, 839.0], "vx": -27.75, "vy": 10.25, "h_rate": 0.264, "in_corridor": true, "heading_in": false, "ttc": 3.79, "t_lat": null, "risk": 0.456}
-{"track_id": 65, "t": 26.8, "cls": "car", "xyxy": [805.0, 776.0, 860.0, 827.0], "vx": -28.333, "vy": 2.5, "h_rate": 0.246, "in_corridor": true, "heading_in": false, "ttc": 4.064, "t_lat": null, "risk": 0.433}
-{"track_id": 66, "t": 26.8, "cls": "car", "xyxy": [860.0, 758.0, 943.0, 831.0], "vx": -30.0, "vy": 9.25, "h_rate": 0.479, "in_corridor": true, "heading_in": false, "ttc": 2.088, "t_lat": null, "risk": 0.645}
-{"track_id": 63, "t": 27.0, "cls": "car", "xyxy": [742.0, 772.0, 823.0, 836.0], "vx": -24.25, "vy": 8.75, "h_rate": 0.294, "in_corridor": true, "heading_in": false, "ttc": 3.4, "t_lat": null, "risk": 0.496}
-{"track_id": 66, "t": 27.0, "cls": "car", "xyxy": [848.0, 753.0, 946.0, 840.0], "vx": -26.25, "vy": 10.25, "h_rate": 0.568, "in_corridor": true, "heading_in": false, "ttc": 1.76, "t_lat": null, "risk": 0.669}
-{"track_id": 68, "t": 27.0, "cls": "car", "xyxy": [1128.0, 771.0, 1232.0, 852.0], "vx": 39.0, "vy": 9.0, "h_rate": 0.269, "in_corridor": true, "heading_in": false, "ttc": 3.716, "t_lat": null, "risk": 0.463}
-{"track_id": 63, "t": 27.2, "cls": "car", "xyxy": [737.0, 776.0, 816.0, 842.0], "vx": -24.75, "vy": 12.0, "h_rate": 0.246, "in_corridor": true, "heading_in": false, "ttc": 4.058, "t_lat": null, "risk": 0.433}
-{"track_id": 68, "t": 27.2, "cls": "car", "xyxy": [1129.0, 770.0, 1245.0, 857.0], "vx": 45.75, "vy": 11.75, "h_rate": 0.281, "in_corridor": true, "heading_in": false, "ttc": 3.556, "t_lat": null, "risk": 0.479}
-{"track_id": 73, "t": 27.2, "cls": "truck", "xyxy": [829.0, 753.0, 946.0, 848.0], "vx": -42.5, "vy": 15.0, "h_rate": 0.44, "in_corridor": true, "heading_in": false, "ttc": 2.274, "t_lat": null, "risk": 0.628}
-{"track_id": 59, "t": 27.4, "cls": "car", "xyxy": [628.0, 783.0, 753.0, 863.0], "vx": -48.0, "vy": 10.75, "h_rate": 0.262, "in_corridor": true, "heading_in": false, "ttc": 3.81, "t_lat": null, "risk": 0.454}
-{"track_id": 68, "t": 27.4, "cls": "car", "xyxy": [1143.0, 771.0, 1255.0, 862.0], "vx": 43.25, "vy": 10.0, "h_rate": 0.326, "in_corridor": true, "heading_in": false, "ttc": 3.069, "t_lat": null, "risk": 0.536}
-{"track_id": 73, "t": 27.4, "cls": "truck", "xyxy": [809.0, 750.0, 933.0, 859.0], "vx": -62.5, "vy": 17.5, "h_rate": 0.564, "in_corridor": true, "heading_in": false, "ttc": 1.774, "t_lat": null, "risk": 0.668}
-{"track_id": 59, "t": 27.6, "cls": "car", "xyxy": [612.0, 785.0, 747.0, 865.0], "vx": -51.75, "vy": 15.5, "h_rate": 0.198, "in_corridor": true, "heading_in": false, "ttc": 5.047, "t_lat": null, "risk": 0.388}
-{"track_id": 68, "t": 27.6, "cls": "car", "xyxy": [1146.0, 773.0, 1275.0, 867.0], "vx": 51.75, "vy": 14.25, "h_rate": 0.246, "in_corridor": true, "heading_in": false, "ttc": 4.069, "t_lat": null, "risk": 0.432}
-{"track_id": 73, "t": 27.6, "cls": "truck", "xyxy": [775.0, 746.0, 925.0, 871.0], "vx": -77.25, "vy": 18.5, "h_rate": 0.612, "in_corridor": true, "heading_in": false, "ttc": 1.633, "t_lat": null, "risk": 0.677}
-{"track_id": 59, "t": 27.8, "cls": "car", "xyxy": [597.0, 784.0, 736.0, 869.0], "vx": -59.5, "vy": 10.0, "h_rate": 0.148, "in_corridor": true, "heading_in": false, "ttc": 6.745, "t_lat": null, "risk": 0.372}
-{"track_id": 68, "t": 27.8, "cls": "car", "xyxy": [1152.0, 771.0, 1287.0, 867.0], "vx": 54.5, "vy": 10.0, "h_rate": 0.164, "in_corridor": true, "heading_in": false, "ttc": 6.102, "t_lat": null, "risk": 0.374}
-{"track_id": 73, "t": 27.8, "cls": "truck", "xyxy": [736.0, 737.0, 915.0, 887.0], "vx": -103.5, "vy": 19.25, "h_rate": 0.754, "in_corridor": true, "heading_in": false, "ttc": 1.327, "t_lat": null, "risk": 0.691}
-{"track_id": 59, "t": 28.0, "cls": "car", "xyxy": [583.0, 782.0, 686.0, 871.0], "vx": -90.5, "vy": 6.0, "h_rate": 0.19, "in_corridor": true, "heading_in": false, "ttc": 5.257, "t_lat": null, "risk": 0.383}
-{"track_id": 73, "t": 28.0, "cls": "truck", "xyxy": [675.0, 726.0, 899.0, 906.0], "vx": -138.25, "vy": 19.0, "h_rate": 0.844, "in_corridor": true, "heading_in": false, "ttc": 1.185, "t_lat": null, "risk": 0.696}
-{"track_id": 76, "t": 28.0, "cls": "car", "xyxy": [676.0, 726.0, 900.0, 907.0], "vx": -182.5, "vy": 25.0, "h_rate": 0.906, "in_corridor": true, "heading_in": false, "ttc": 1.104, "t_lat": null, "risk": 0.698}
-{"track_id": 30, "t": 28.2, "cls": "car", "xyxy": [950.0, 752.0, 1129.0, 912.0], "vx": 6.25, "vy": -0.5, "h_rate": -0.091, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 68, "t": 28.2, "cls": "car", "xyxy": [1166.0, 769.0, 1314.0, 874.0], "vx": 48.75, "vy": 3.0, "h_rate": 0.191, "in_corridor": true, "heading_in": false, "ttc": 5.225, "t_lat": null, "risk": 0.384}
-{"track_id": 76, "t": 28.2, "cls": "car", "xyxy": [568.0, 705.0, 881.0, 938.0], "vx": -250.0, "vy": 25.0, "h_rate": 1.084, "in_corridor": true, "heading_in": false, "ttc": 0.922, "t_lat": null, "risk": 0.703}
-{"track_id": 68, "t": 28.4, "cls": "car", "xyxy": [1172.0, 769.0, 1326.0, 880.0], "vx": 50.0, "vy": 8.75, "h_rate": 0.237, "in_corridor": true, "heading_in": false, "ttc": 4.216, "t_lat": null, "risk": 0.422}
-{"track_id": 73, "t": 28.4, "cls": "truck", "xyxy": [434.0, 677.0, 854.0, 990.0], "vx": -310.357, "vy": 36.964, "h_rate": 1.248, "in_corridor": true, "heading_in": false, "ttc": 0.801, "t_lat": null, "risk": 0.705}
-{"track_id": 76, "t": 28.4, "cls": "car", "xyxy": [433.0, 676.0, 854.0, 989.0], "vx": -303.25, "vy": 34.0, "h_rate": 1.22, "in_corridor": true, "heading_in": false, "ttc": 0.82, "t_lat": null, "risk": 0.705}
-{"track_id": 30, "t": 28.6, "cls": "car", "xyxy": [950.0, 758.0, 1121.0, 906.0], "vx": -5.25, "vy": -0.75, "h_rate": -0.17, "in_corridor": true, "heading_in": false, "ttc": null, "t_lat": null, "risk": 0.37}
-{"track_id": 68, "t": 28.6, "cls": "car", "xyxy": [1177.0, 772.0, 1338.0, 887.0], "vx": 48.0, "vy": 15.0, "h_rate": 0.223, "in_corridor": true, "heading_in": false, "ttc": 4.494, "t_lat": null, "risk": 0.407}
-{"track_id": 76, "t": 28.6, "cls": "car", "xyxy": [148.0, 614.0, 805.0, 1030.0], "vx": -507.75, "vy": 13.75, "h_rate": 1.396, "in_corridor": false, "heading_in": false, "ttc": 0.716, "t_lat": null, "risk": 0.407}
-{"track_id": 68, "t": 28.8, "cls": "car", "xyxy": [1182.0, 771.0, 1349.0, 892.0], "vx": 42.5, "vy": 17.5, "h_rate": 0.23, "in_corridor": true, "heading_in": false, "ttc": 4.339, "t_lat": null, "risk": 0.415}
-{"track_id": 76, "t": 28.8, "cls": "car", "xyxy": [1.0, 438.0, 728.0, 1059.0], "vx": -623.5, "vy": -114.75, "h_rate": 1.613, "in_corridor": false, "heading_in": false, "ttc": 0.62, "t_lat": null, "risk": 0.409}
-{"track_id": 78, "t": 28.8, "cls": "car", "xyxy": [760.0, 780.0, 838.0, 849.0], "vx": -122.5, "vy": 2.5, "h_rate": 0.222, "in_corridor": true, "heading_in": false, "ttc": 4.499, "t_lat": null, "risk": 0.407}
-{"track_id": 68, "t": 29.0, "cls": "car", "xyxy": [1186.0, 773.0, 1368.0, 893.0], "vx": 46.0, "vy": 13.75, "h_rate": 0.142, "in_corridor": true, "heading_in": false, "ttc": 7.024, "t_lat": null, "risk": 0.371}
-{"track_id": 79, "t": 29.0, "cls": "truck", "xyxy": [1.0, 184.0, 512.0, 994.0], "vx": -522.5, "vy": -735.0, "h_rate": 1.568, "in_corridor": false, "heading_in": false, "ttc": 0.638, "t_lat": null, "risk": 0.408}
-{"track_id": 80, "t": 29.0, "cls": "car", "xyxy": [648.0, 775.0, 769.0, 866.0], "vx": -172.5, "vy": -2.5, "h_rate": 0.283, "in_corridor": true, "heading_in": false, "ttc": 3.539, "t_lat": null, "risk": 0.481}
-{"track_id": 30, "t": 29.2, "cls": "car", "xyxy": [948.0, 765.0, 1100.0, 898.0], "vx": -19.5, "vy": -0.75, "h_rate": -0.182, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 15.065, "risk": 0.37}
-{"track_id": 68, "t": 29.2, "cls": "car", "xyxy": [1193.0, 771.0, 1380.0, 901.0], "vx": 49.25, "vy": 10.5, "h_rate": 0.18, "in_corridor": true, "heading_in": false, "ttc": 5.563, "t_lat": null, "risk": 0.379}
-{"track_id": 80, "t": 29.2, "cls": "car", "xyxy": [635.0, 778.0, 761.0, 866.0], "vx": -112.5, "vy": 2.5, "h_rate": 0.057, "in_corridor": true, "heading_in": false, "ttc": 17.399, "t_lat": null, "risk": 0.37}
-{"track_id": 30, "t": 29.4, "cls": "car", "xyxy": [945.0, 767.0, 1091.0, 896.0], "vx": -22.75, "vy": 1.0, "h_rate": -0.183, "in_corridor": true, "heading_in": true, "ttc": null, "t_lat": 13.118, "risk": 0.37}
-{"track_id": 68, "t": 29.4, "cls": "car", "xyxy": [1196.0, 769.0, 1401.0, 907.0], "vx": 54.25, "vy": 11.25, "h_rate": 0.237, "in_corridor": true, "heading_in": false, "ttc": 4.216, "t_lat": null, "risk": 0.422}
-{"track_id": 80, "t": 29.4, "cls": "car", "xyxy": [622.0, 776.0, 748.0, 866.0], "vx": -92.25, "vy": 0.75, "h_rate": 0.051, "in_corridor": true, "heading_in": false, "ttc": 19.443, "t_lat": null, "risk": 0.37}
-{"track_id": 68, "t": 29.6, "cls": "car", "xyxy": [1205.0, 767.0, 1413.0, 914.0], "vx": 54.0, "vy": 12.25, "h_rate": 0.334, "in_corridor": true, "heading_in": false, "ttc": 2.992, "t_lat": null, "risk": 0.546}
-{"track_id": 78, "t": 29.6, "cls": "car", "xyxy": [725.0, 780.0, 812.0, 851.0], "vx": -41.75, "vy": 3.25, "h_rate": 0.095, "in_corridor": true, "heading_in": false, "ttc": 10.545, "t_lat": null, "risk": 0.37}
-{"track_id": 80, "t": 29.6, "cls": "car", "xyxy": [606.0, 774.0, 738.0, 869.0], "vx": -61.25, "vy": 1.0, "h_rate": 0.076, "in_corridor": true, "heading_in": false, "ttc": 13.199, "t_lat": null, "risk": 0.37}
-{"track_id": 68, "t": 29.8, "cls": "car", "xyxy": [1213.0, 766.0, 1445.0, 920.0], "vx": 69.0, "vy": 11.75, "h_rate": 0.286, "in_corridor": true, "heading_in": false, "ttc": 3.5, "t_lat": null, "risk": 0.485}
-{"track_id": 80, "t": 29.8, "cls": "car", "xyxy": [590.0, 774.0, 735.0, 875.0], "vx": -59.75, "vy": 4.0, "h_rate": 0.234, "in_corridor": true, "heading_in": false, "ttc": 4.279, "t_lat": null, "risk": 0.419}
-{"track_id": 86, "t": 29.8, "cls": "car", "xyxy": [804.0, 792.0, 848.0, 838.0], "vx": -40.0, "vy": 7.5, "h_rate": 0.337, "in_corridor": true, "heading_in": false, "ttc": 2.966, "t_lat": null, "risk": 0.549}
+{"t":0,"xyxy":[622,780,910,887]}
+{"t":0,"xyxy":[1025,784,1366,898]}
+{"t":0,"xyxy":[1567,482,1766,943]}
+{"t":0.2,"xyxy":[621,780,910,886]}
+{"t":0.2,"xyxy":[940,788,1289,902]}
+{"t":0.2,"xyxy":[1659,432,1855,940]}
+{"t":0.4,"xyxy":[618,780,907,882]}
+{"t":0.4,"xyxy":[846,792,1208,907]}
+{"t":0.4,"xyxy":[1759,355,1919,939]}
+{"t":0.6,"xyxy":[614,778,896,880]}
+{"t":0.6,"xyxy":[763,793,1124,905]}
+{"t":0.6,"xyxy":[1121,799,1196,855]}
+{"t":0.8,"xyxy":[638,784,1038,906]}
+{"t":0.8,"xyxy":[1653,715,1808,803]}
+{"t":0.8,"xyxy":[1133,801,1200,854]}
+{"t":1,"xyxy":[587,779,941,906]}
+{"t":1,"xyxy":[1842,687,1905,751]}
+{"t":1,"xyxy":[1132,798,1199,855]}
+{"t":1.2,"xyxy":[500,790,857,906]}
+{"t":1.2,"xyxy":[1133,799,1199,856]}
+{"t":1.2,"xyxy":[720,780,904,873]}
+{"t":1.4,"xyxy":[1133,798,1199,856]}
+{"t":1.4,"xyxy":[695,778,903,890]}
+{"t":1.4,"xyxy":[0,614,86,934]}
+{"t":1.6,"xyxy":[1134,808,1202,858]}
+{"t":1.6,"xyxy":[650,778,903,891]}
+{"t":1.6,"xyxy":[1,616,100,944]}
+{"t":1.8,"xyxy":[1135,801,1202,857]}
+{"t":1.8,"xyxy":[593,778,902,892]}
+{"t":1.8,"xyxy":[4,601,80,947]}
+{"t":2,"xyxy":[1133,797,1216,857]}
+{"t":2,"xyxy":[589,775,903,890]}
+{"t":2,"xyxy":[3,604,106,955]}
+{"t":2.2,"xyxy":[1140,800,1208,856]}
+{"t":2.2,"xyxy":[584,774,901,892]}
+{"t":2.2,"xyxy":[5,596,122,948]}
+{"t":2.4,"xyxy":[1141,797,1214,856]}
+{"t":2.4,"xyxy":[577,774,901,893]}
+{"t":2.4,"xyxy":[1860,675,1919,745]}
+{"t":2.6,"xyxy":[1141,799,1217,855]}
+{"t":2.6,"xyxy":[571,772,900,893]}
+{"t":2.6,"xyxy":[6,577,132,958]}
+{"t":2.8,"xyxy":[1149,786,1228,851]}
+{"t":2.8,"xyxy":[567,766,900,889]}
+{"t":2.8,"xyxy":[7,565,133,957]}
+{"t":3,"xyxy":[1149,784,1227,851]}
+{"t":3,"xyxy":[564,766,898,890]}
+{"t":3,"xyxy":[11,550,165,954]}
+{"t":3.2,"xyxy":[563,766,898,893]}
+{"t":3.2,"xyxy":[28,554,220,960]}
+{"t":3.2,"xyxy":[1865,669,1919,742]}
+{"t":3.4,"xyxy":[1153,787,1227,851]}
+{"t":3.4,"xyxy":[561,766,900,894]}
+{"t":3.4,"xyxy":[0,686,73,779]}
+{"t":3.6,"xyxy":[1154,786,1227,851]}
+{"t":3.6,"xyxy":[562,766,898,893]}
+{"t":3.6,"xyxy":[3,688,131,786]}
+{"t":3.8,"xyxy":[1152,785,1228,851]}
+{"t":3.8,"xyxy":[563,767,900,894]}
+{"t":3.8,"xyxy":[194,559,343,972]}
+{"t":4,"xyxy":[1152,785,1228,851]}
+{"t":4,"xyxy":[563,767,900,893]}
+{"t":4,"xyxy":[280,584,448,978]}
+{"t":4.2,"xyxy":[1149,786,1226,851]}
+{"t":4.2,"xyxy":[563,767,898,892]}
+{"t":4.2,"xyxy":[384,574,532,992]}
+{"t":4.4,"xyxy":[1143,786,1225,852]}
+{"t":4.4,"xyxy":[613,767,897,891]}
+{"t":4.4,"xyxy":[475,586,708,1027]}
+{"t":4.6,"xyxy":[1146,787,1226,852]}
+{"t":4.6,"xyxy":[570,766,897,893]}
+{"t":4.6,"xyxy":[592,604,799,1028]}
+{"t":4.8,"xyxy":[1152,785,1231,852]}
+{"t":4.8,"xyxy":[704,584,861,1025]}
+{"t":4.8,"xyxy":[830,772,899,874]}
+{"t":5,"xyxy":[1152,786,1227,851]}
+{"t":5,"xyxy":[802,611,1040,1027]}
+{"t":5,"xyxy":[10,697,298,870]}
+{"t":5.2,"xyxy":[1151,787,1227,851]}
+{"t":5.2,"xyxy":[563,767,898,892]}
+{"t":5.2,"xyxy":[61,716,412,896]}
+{"t":5.4,"xyxy":[1148,786,1226,851]}
+{"t":5.4,"xyxy":[562,766,898,892]}
+{"t":5.4,"xyxy":[1,690,142,791]}
+{"t":5.6,"xyxy":[569,767,899,893]}
+{"t":5.6,"xyxy":[1088,625,1275,1019]}
+{"t":5.6,"xyxy":[222,746,694,946]}
+{"t":5.8,"xyxy":[666,769,899,886]}
+{"t":5.8,"xyxy":[1201,616,1337,1017]}
+{"t":5.8,"xyxy":[330,759,856,962]}
+{"t":6,"xyxy":[1153,781,1266,853]}
+{"t":6,"xyxy":[728,770,897,835]}
+{"t":6,"xyxy":[460,771,1027,970]}
+{"t":6.2,"xyxy":[1308,625,1533,1013]}
+{"t":6.2,"xyxy":[604,773,1194,968]}
+{"t":6.2,"xyxy":[561,769,833,874]}
+{"t":6.4,"xyxy":[1410,618,1566,1000]}
+{"t":6.4,"xyxy":[769,773,1349,970]}
+{"t":6.4,"xyxy":[558,769,877,882]}
+{"t":6.6,"xyxy":[1475,612,1595,993]}
+{"t":6.6,"xyxy":[941,766,1478,969]}
+{"t":6.6,"xyxy":[559,768,899,895]}
+{"t":6.8,"xyxy":[1538,619,1656,966]}
+{"t":6.8,"xyxy":[1097,749,1557,955]}
+{"t":6.8,"xyxy":[557,767,900,895]}
+{"t":7,"xyxy":[1741,684,1867,793]}
+{"t":7,"xyxy":[1608,599,1728,944]}
+{"t":7,"xyxy":[556,767,901,895]}
+{"t":7.2,"xyxy":[1647,597,1795,938]}
+{"t":7.2,"xyxy":[0,687,130,789]}
+{"t":7.2,"xyxy":[555,767,902,895]}
+{"t":7.4,"xyxy":[1721,599,1838,943]}
+{"t":7.4,"xyxy":[553,766,903,897]}
+{"t":7.4,"xyxy":[1162,792,1243,855]}
+{"t":7.6,"xyxy":[554,769,904,902]}
+{"t":7.6,"xyxy":[1440,705,1709,847]}
+{"t":7.6,"xyxy":[1167,794,1245,856]}
+{"t":7.8,"xyxy":[1716,678,1858,837]}
+{"t":7.8,"xyxy":[554,770,910,905]}
+{"t":7.8,"xyxy":[1172,798,1251,859]}
+{"t":8,"xyxy":[556,769,918,905]}
+{"t":8,"xyxy":[1186,788,1264,858]}
+{"t":8,"xyxy":[0,718,99,830]}
+{"t":8.2,"xyxy":[0,684,156,855]}
+{"t":8.2,"xyxy":[560,766,928,906]}
+{"t":8.2,"xyxy":[1200,784,1296,856]}
+{"t":8.4,"xyxy":[0,687,237,885]}
+{"t":8.4,"xyxy":[565,766,942,907]}
+{"t":8.4,"xyxy":[1217,784,1299,853]}
+{"t":8.6,"xyxy":[1,695,345,918]}
+{"t":8.6,"xyxy":[576,766,957,909]}
+{"t":8.6,"xyxy":[1239,787,1316,854]}
+{"t":8.8,"xyxy":[55,721,500,961]}
+{"t":8.8,"xyxy":[590,769,979,912]}
+{"t":8.8,"xyxy":[1261,776,1345,854]}
+{"t":9,"xyxy":[135,736,711,1014]}
+{"t":9,"xyxy":[608,768,1003,915]}
+{"t":9,"xyxy":[19,698,159,802]}
+{"t":9.2,"xyxy":[255,755,995,1027]}
+{"t":9.2,"xyxy":[713,769,1025,895]}
+{"t":9.2,"xyxy":[29,700,171,807]}
+{"t":9.4,"xyxy":[199,755,433,865]}
+{"t":9.4,"xyxy":[429,766,1330,1029]}
+{"t":9.4,"xyxy":[40,701,184,810]}
+{"t":9.6,"xyxy":[214,756,448,867]}
+{"t":9.6,"xyxy":[698,760,1665,1028]}
+{"t":9.6,"xyxy":[660,765,971,908]}
+{"t":9.8,"xyxy":[225,757,460,868]}
+{"t":9.8,"xyxy":[1044,721,1906,1021]}
+{"t":9.8,"xyxy":[675,765,1099,922]}
+{"t":10,"xyxy":[236,757,473,869]}
+{"t":10,"xyxy":[1396,633,1918,991]}
+{"t":10,"xyxy":[691,763,1121,924]}
+{"t":10.2,"xyxy":[246,758,488,872]}
+{"t":10.2,"xyxy":[1678,634,1919,927]}
+{"t":10.2,"xyxy":[707,763,1141,925]}
+{"t":10.4,"xyxy":[718,762,1166,924]}
+{"t":10.4,"xyxy":[1768,629,1919,792]}
+{"t":10.4,"xyxy":[1461,767,1541,837]}
+{"t":10.6,"xyxy":[271,763,516,881]}
+{"t":10.6,"xyxy":[740,758,1189,926]}
+{"t":10.6,"xyxy":[1485,753,1572,836]}
+{"t":10.8,"xyxy":[283,764,534,880]}
+{"t":10.8,"xyxy":[754,756,1219,926]}
+{"t":10.8,"xyxy":[1512,755,1601,830]}
+{"t":11,"xyxy":[299,763,552,879]}
+{"t":11,"xyxy":[783,753,1247,927]}
+{"t":11,"xyxy":[1533,744,1626,826]}
+{"t":11.2,"xyxy":[315,764,573,881]}
+{"t":11.2,"xyxy":[800,749,1276,927]}
+{"t":11.2,"xyxy":[1573,744,1654,822]}
+{"t":11.4,"xyxy":[329,764,592,883]}
+{"t":11.4,"xyxy":[829,746,1308,927]}
+{"t":11.4,"xyxy":[1599,741,1678,816]}
+{"t":11.6,"xyxy":[343,766,603,883]}
+{"t":11.6,"xyxy":[844,743,1328,927]}
+{"t":11.6,"xyxy":[1621,736,1700,814]}
+{"t":11.8,"xyxy":[352,765,614,882]}
+{"t":11.8,"xyxy":[856,739,1347,928]}
+{"t":11.8,"xyxy":[1635,736,1716,811]}
+{"t":12,"xyxy":[357,765,621,883]}
+{"t":12,"xyxy":[862,740,1357,928]}
+{"t":12,"xyxy":[1639,750,1729,811]}
+{"t":12.2,"xyxy":[358,766,622,883]}
+{"t":12.2,"xyxy":[866,740,1362,929]}
+{"t":12.2,"xyxy":[1648,742,1732,810]}
+{"t":12.4,"xyxy":[359,767,623,883]}
+{"t":12.4,"xyxy":[867,740,1361,929]}
+{"t":12.4,"xyxy":[1648,743,1733,809]}
+{"t":12.6,"xyxy":[359,767,622,885]}
+{"t":12.6,"xyxy":[866,740,1361,929]}
+{"t":12.6,"xyxy":[1648,744,1733,809]}
+{"t":12.8,"xyxy":[359,767,623,885]}
+{"t":12.8,"xyxy":[867,740,1361,929]}
+{"t":12.8,"xyxy":[1647,747,1733,810]}
+{"t":13,"xyxy":[359,768,623,885]}
+{"t":13,"xyxy":[867,741,1362,929]}
+{"t":13,"xyxy":[1647,747,1732,810]}
+{"t":13.2,"xyxy":[868,741,1362,929]}
+{"t":13.2,"xyxy":[1648,744,1731,809]}
+{"t":13.2,"xyxy":[1786,700,1918,848]}
+{"t":13.4,"xyxy":[868,741,1361,929]}
+{"t":13.4,"xyxy":[1649,741,1729,808]}
+{"t":13.4,"xyxy":[1708,647,1918,878]}
+{"t":13.6,"xyxy":[359,768,623,885]}
+{"t":13.6,"xyxy":[868,741,1362,929]}
+{"t":13.6,"xyxy":[1615,639,1918,908]}
+{"t":13.8,"xyxy":[359,767,623,885]}
+{"t":13.8,"xyxy":[868,741,1361,929]}
+{"t":13.8,"xyxy":[1508,636,1918,936]}
+{"t":14,"xyxy":[359,768,622,885]}
+{"t":14,"xyxy":[868,740,1361,929]}
+{"t":14,"xyxy":[1381,655,1919,961]}
+{"t":14.2,"xyxy":[359,768,622,885]}
+{"t":14.2,"xyxy":[868,739,1358,928]}
+{"t":14.2,"xyxy":[1242,682,1917,991]}
+{"t":14.4,"xyxy":[359,768,622,885]}
+{"t":14.4,"xyxy":[867,738,1344,929]}
+{"t":14.4,"xyxy":[1092,700,1832,1006]}
+{"t":14.6,"xyxy":[869,739,1292,923]}
+{"t":14.6,"xyxy":[944,725,1723,1005]}
+{"t":14.6,"xyxy":[915,893,1918,1073]}
+{"t":14.8,"xyxy":[361,768,626,886]}
+{"t":14.8,"xyxy":[796,744,1585,1005]}
+{"t":14.8,"xyxy":[1653,733,1733,810]}
+{"t":15,"xyxy":[365,768,630,885]}
+{"t":15,"xyxy":[674,741,1428,1007]}
+{"t":15,"xyxy":[1658,734,1737,809]}
+{"t":15.2,"xyxy":[365,769,632,884]}
+{"t":15.2,"xyxy":[571,767,1266,1009]}
+{"t":15.2,"xyxy":[1076,738,1377,926]}
+{"t":15.4,"xyxy":[479,768,1123,1004]}
+{"t":15.4,"xyxy":[1024,738,1388,927]}
+{"t":15.4,"xyxy":[1675,720,1755,809]}
+{"t":15.6,"xyxy":[415,771,992,991]}
+{"t":15.6,"xyxy":[965,737,1408,935]}
+{"t":15.6,"xyxy":[1692,722,1773,807]}
+{"t":15.8,"xyxy":[355,764,872,972]}
+{"t":15.8,"xyxy":[927,733,1437,936]}
+{"t":15.8,"xyxy":[1718,719,1795,802]}
+{"t":16,"xyxy":[231,732,397,829]}
+{"t":16,"xyxy":[948,726,1471,937]}
+{"t":16,"xyxy":[1748,722,1822,794]}
+{"t":16.2,"xyxy":[975,720,1504,933]}
+{"t":16.2,"xyxy":[544,766,711,890]}
+{"t":16.2,"xyxy":[396,901,1915,1076]}
+{"t":16.4,"xyxy":[993,713,1530,932]}
+{"t":16.4,"xyxy":[519,765,725,892]}
+{"t":16.4,"xyxy":[398,886,1914,1075]}
+{"t":16.6,"xyxy":[1004,709,1542,933]}
+{"t":16.6,"xyxy":[1809,709,1875,779]}
+{"t":16.6,"xyxy":[501,768,734,893]}
+{"t":16.8,"xyxy":[205,731,464,875]}
+{"t":16.8,"xyxy":[1009,708,1551,934]}
+{"t":16.8,"xyxy":[457,769,738,892]}
+{"t":17,"xyxy":[184,731,438,861]}
+{"t":17,"xyxy":[315,731,449,842]}
+{"t":17,"xyxy":[1008,708,1552,935]}
+{"t":17.2,"xyxy":[165,728,372,852]}
+{"t":17.2,"xyxy":[311,732,454,844]}
+{"t":17.2,"xyxy":[1008,708,1553,935]}
+{"t":17.4,"xyxy":[289,731,445,844]}
+{"t":17.4,"xyxy":[1008,708,1553,936]}
+{"t":17.4,"xyxy":[434,891,1910,1075]}
+{"t":17.6,"xyxy":[137,724,299,835]}
+{"t":17.6,"xyxy":[283,733,451,842]}
+{"t":17.6,"xyxy":[1008,708,1553,936]}
+{"t":17.8,"xyxy":[127,722,272,828]}
+{"t":17.8,"xyxy":[1011,710,1548,936]}
+{"t":17.8,"xyxy":[417,906,1914,1076]}
+{"t":18,"xyxy":[119,721,254,818]}
+{"t":18,"xyxy":[1013,716,1512,938]}
+{"t":18,"xyxy":[1258,564,1919,1010]}
+{"t":18.2,"xyxy":[110,721,235,814]}
+{"t":18.2,"xyxy":[272,733,460,843]}
+{"t":18.2,"xyxy":[1011,623,1860,1019]}
+{"t":18.4,"xyxy":[822,660,1654,1020]}
+{"t":18.4,"xyxy":[467,771,751,895]}
+{"t":18.4,"xyxy":[1832,705,1898,777]}
+{"t":18.6,"xyxy":[671,688,1436,1015]}
+{"t":18.6,"xyxy":[477,771,746,896]}
+{"t":18.6,"xyxy":[1848,706,1918,772]}
+{"t":18.8,"xyxy":[560,705,1252,1018]}
+{"t":18.8,"xyxy":[1873,708,1918,764]}
+{"t":18.8,"xyxy":[1231,698,1630,923]}
+{"t":19,"xyxy":[328,739,519,849]}
+{"t":19,"xyxy":[489,713,1091,1011]}
+{"t":19,"xyxy":[1113,690,1686,942]}
+{"t":19.2,"xyxy":[363,743,534,845]}
+{"t":19.2,"xyxy":[447,720,972,992]}
+{"t":19.2,"xyxy":[1175,675,1759,948]}
+{"t":19.4,"xyxy":[407,745,520,839]}
+{"t":19.4,"xyxy":[424,726,900,972]}
+{"t":19.4,"xyxy":[1255,659,1845,952]}
+{"t":19.6,"xyxy":[437,723,834,955]}
+{"t":19.6,"xyxy":[1355,634,1919,955]}
+{"t":19.6,"xyxy":[802,780,1009,921]}
+{"t":19.8,"xyxy":[301,750,384,813]}
+{"t":19.8,"xyxy":[462,732,815,943]}
+{"t":19.8,"xyxy":[802,784,1102,934]}
+{"t":20,"xyxy":[368,766,447,826]}
+{"t":20,"xyxy":[501,746,818,942]}
+{"t":20,"xyxy":[831,787,1209,946]}
+{"t":20.2,"xyxy":[551,759,831,943]}
+{"t":20.2,"xyxy":[926,790,1329,959]}
+{"t":20.2,"xyxy":[168,750,274,842]}
+{"t":20.4,"xyxy":[617,760,883,936]}
+{"t":20.4,"xyxy":[1034,781,1467,964]}
+{"t":20.4,"xyxy":[842,776,1019,907]}
+{"t":20.6,"xyxy":[612,798,688,845]}
+{"t":20.6,"xyxy":[689,763,928,932]}
+{"t":20.6,"xyxy":[915,771,1136,912]}
+{"t":20.8,"xyxy":[693,798,774,849]}
+{"t":20.8,"xyxy":[760,767,986,923]}
+{"t":20.8,"xyxy":[355,768,496,870]}
+{"t":21,"xyxy":[761,795,834,848]}
+{"t":21,"xyxy":[1065,754,1353,920]}
+{"t":21,"xyxy":[537,782,607,861]}
+{"t":21.2,"xyxy":[812,796,885,847]}
+{"t":21.2,"xyxy":[1138,744,1449,922]}
+{"t":21.2,"xyxy":[571,785,651,865]}
+{"t":21.4,"xyxy":[857,795,914,848]}
+{"t":21.4,"xyxy":[599,784,684,868]}
+{"t":21.4,"xyxy":[650,779,726,850]}
+{"t":21.6,"xyxy":[881,796,942,847]}
+{"t":21.6,"xyxy":[605,781,706,870]}
+{"t":21.6,"xyxy":[673,777,746,848]}
+{"t":21.8,"xyxy":[897,796,956,846]}
+{"t":21.8,"xyxy":[602,782,714,879]}
+{"t":21.8,"xyxy":[679,779,760,851]}
+{"t":22,"xyxy":[909,795,956,847]}
+{"t":22,"xyxy":[600,782,715,881]}
+{"t":22,"xyxy":[679,776,764,856]}
+{"t":22.2,"xyxy":[915,795,957,847]}
+{"t":22.2,"xyxy":[576,782,708,888]}
+{"t":22.2,"xyxy":[672,776,764,862]}
+{"t":22.4,"xyxy":[538,781,692,891]}
+{"t":22.4,"xyxy":[659,774,758,863]}
+{"t":22.4,"xyxy":[735,784,790,844]}
+{"t":22.6,"xyxy":[640,776,750,868]}
+{"t":22.6,"xyxy":[791,791,843,830]}
+{"t":22.6,"xyxy":[247,902,1919,1075]}
+{"t":22.8,"xyxy":[935,764,1090,896]}
+{"t":22.8,"xyxy":[622,770,742,867]}
+{"t":22.8,"xyxy":[727,783,782,846]}
+{"t":23,"xyxy":[931,763,1086,895]}
+{"t":23,"xyxy":[600,768,731,873]}
+{"t":23,"xyxy":[715,781,778,846]}
+{"t":23.2,"xyxy":[929,765,1082,895]}
+{"t":23.2,"xyxy":[569,766,721,877]}
+{"t":23.2,"xyxy":[702,781,772,851]}
+{"t":23.4,"xyxy":[539,766,706,885]}
+{"t":23.4,"xyxy":[690,782,767,854]}
+{"t":23.4,"xyxy":[1064,791,1119,845]}
+{"t":23.6,"xyxy":[675,779,763,858]}
+{"t":23.6,"xyxy":[764,792,817,833]}
+{"t":23.6,"xyxy":[1061,792,1128,847]}
+{"t":23.8,"xyxy":[76,736,469,970]}
+{"t":23.8,"xyxy":[662,775,754,858]}
+{"t":23.8,"xyxy":[1066,788,1139,849]}
+{"t":24,"xyxy":[648,774,744,859]}
+{"t":24,"xyxy":[1071,788,1149,848]}
+{"t":24,"xyxy":[769,784,840,829]}
+{"t":24.2,"xyxy":[630,774,738,862]}
+{"t":24.2,"xyxy":[754,788,814,835]}
+{"t":24.2,"xyxy":[1075,784,1160,852]}
+{"t":24.4,"xyxy":[609,773,731,867]}
+{"t":24.4,"xyxy":[752,791,816,837]}
+{"t":24.4,"xyxy":[1074,787,1177,856]}
+{"t":24.6,"xyxy":[585,771,722,870]}
+{"t":24.6,"xyxy":[750,794,814,838]}
+{"t":24.6,"xyxy":[1074,784,1193,859]}
+{"t":24.8,"xyxy":[929,767,1088,906]}
+{"t":24.8,"xyxy":[557,764,713,871]}
+{"t":24.8,"xyxy":[1100,782,1210,860]}
+{"t":25,"xyxy":[929,762,1091,908]}
+{"t":25,"xyxy":[1097,781,1227,861]}
+{"t":25,"xyxy":[818,782,866,826]}
+{"t":25.2,"xyxy":[1108,781,1247,865]}
+{"t":25.2,"xyxy":[818,783,868,829]}
+{"t":25.2,"xyxy":[903,775,945,817]}
+{"t":25.4,"xyxy":[1120,778,1268,869]}
+{"t":25.4,"xyxy":[903,773,953,815]}
+{"t":25.4,"xyxy":[1091,782,1142,837]}
+{"t":25.6,"xyxy":[729,784,811,840]}
+{"t":25.6,"xyxy":[1131,773,1292,869]}
+{"t":25.6,"xyxy":[1097,776,1155,836]}
+{"t":25.8,"xyxy":[721,781,806,839]}
+{"t":25.8,"xyxy":[1139,769,1315,874]}
+{"t":25.8,"xyxy":[1104,776,1162,838]}
+{"t":26,"xyxy":[712,782,801,841]}
+{"t":26,"xyxy":[1148,767,1337,876]}
+{"t":26,"xyxy":[893,766,950,814]}
+{"t":26.2,"xyxy":[1164,762,1363,881]}
+{"t":26.2,"xyxy":[890,760,951,815]}
+{"t":26.2,"xyxy":[1107,768,1180,839]}
+{"t":26.4,"xyxy":[1173,760,1392,888]}
+{"t":26.4,"xyxy":[877,761,947,822]}
+{"t":26.4,"xyxy":[1122,773,1195,841]}
+{"t":26.6,"xyxy":[1190,756,1426,895]}
+{"t":26.6,"xyxy":[874,755,944,823]}
+{"t":26.6,"xyxy":[1117,769,1201,843]}
+{"t":26.8,"xyxy":[747,775,824,839]}
+{"t":26.8,"xyxy":[805,776,860,827]}
+{"t":26.8,"xyxy":[860,758,943,831]}
+{"t":27,"xyxy":[742,772,823,836]}
+{"t":27,"xyxy":[848,753,946,840]}
+{"t":27,"xyxy":[1128,771,1232,852]}
+{"t":27.2,"xyxy":[737,776,816,842]}
+{"t":27.2,"xyxy":[1129,770,1245,857]}
+{"t":27.2,"xyxy":[829,753,946,848]}
+{"t":27.4,"xyxy":[628,783,753,863]}
+{"t":27.4,"xyxy":[1143,771,1255,862]}
+{"t":27.4,"xyxy":[809,750,933,859]}
+{"t":27.6,"xyxy":[612,785,747,865]}
+{"t":27.6,"xyxy":[1146,773,1275,867]}
+{"t":27.6,"xyxy":[775,746,925,871]}
+{"t":27.8,"xyxy":[597,784,736,869]}
+{"t":27.8,"xyxy":[1152,771,1287,867]}
+{"t":27.8,"xyxy":[736,737,915,887]}
+{"t":28,"xyxy":[583,782,686,871]}
+{"t":28,"xyxy":[675,726,899,906]}
+{"t":28,"xyxy":[676,726,900,907]}
+{"t":28.2,"xyxy":[950,752,1129,912]}
+{"t":28.2,"xyxy":[1166,769,1314,874]}
+{"t":28.2,"xyxy":[568,705,881,938]}
+{"t":28.4,"xyxy":[1172,769,1326,880]}
+{"t":28.4,"xyxy":[434,677,854,990]}
+{"t":28.4,"xyxy":[433,676,854,989]}
+{"t":28.6,"xyxy":[950,758,1121,906]}
+{"t":28.6,"xyxy":[1177,772,1338,887]}
+{"t":28.6,"xyxy":[148,614,805,1030]}
+{"t":28.8,"xyxy":[1182,771,1349,892]}
+{"t":28.8,"xyxy":[1,438,728,1059]}
+{"t":28.8,"xyxy":[760,780,838,849]}
+{"t":29,"xyxy":[1186,773,1368,893]}
+{"t":29,"xyxy":[1,184,512,994]}
+{"t":29,"xyxy":[648,775,769,866]}
+{"t":29.2,"xyxy":[948,765,1100,898]}
+{"t":29.2,"xyxy":[1193,771,1380,901]}
+{"t":29.2,"xyxy":[635,778,761,866]}
+{"t":29.4,"xyxy":[945,767,1091,896]}
+{"t":29.4,"xyxy":[1196,769,1401,907]}
+{"t":29.4,"xyxy":[622,776,748,866]}
+{"t":29.6,"xyxy":[1205,767,1413,914]}
+{"t":29.6,"xyxy":[725,780,812,851]}
+{"t":29.6,"xyxy":[606,774,738,869]}
+{"t":29.8,"xyxy":[1213,766,1445,920]}
+{"t":29.8,"xyxy":[590,774,735,875]}
+{"t":29.8,"xyxy":[804,792,848,838]}

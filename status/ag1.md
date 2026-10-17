@@ -6,14 +6,29 @@ Only AG1 edits this file, inside its own PR.
 |---|---|---|---|---|
 | 1 | Merged | ag1/phase-1 | #6 | 2026-10-17 11:05 |
 | 2 | Merged | ag1/phase-2 | #9 | 2026-10-17 11:47 |
-| 3 | PR open | ag1/phase-3 | #20 | 2026-10-17 12:45 |
+| 3 | PR open | ag1/phase-3 | #20 | 2026-10-17 13:30 |
 | 4 | Not started | ag1/phase-4 | | |
 
 ## Now
 
-Doing: Phase 3 PR.
+Doing: Phase 3 PR, snapshot under the 900 KB pod budget.
 Next: stop. Do not start Phase 4.
-Blocked: no blind human file (`data/humans.jsonl` is absent) and only labeller `riyu` has windows, so label sensitivity has no second labeller. `vlm_wb` was not built: Cosmos is not slow and it does not call HAZARD on everything.
+Blocked: only labeller `riyu` has windows, so label sensitivity has no second labeller. `vlm_wb` was not built: Cosmos is not slow and it does not call HAZARD on everything.
+
+### Pod snapshot
+
+`make` is not installed here. The `make snapshot` target is `python -m dh.snapshot`, and that reported **921,143 bytes** (budget 921,600). All 10,811 track rows stay (5 fps, top 3 boxes). All 28 run files stay. The leaderboard is rebuilt for `dev` and includes the blind human rows from `data/humans.jsonl`: `fmd` 4/5 (pct 0.8) and `smoke` 0/5.
+
+Track files keep `t` and `xyxy` only, which is what the watch screen draws. Box coordinates are integers. A whole-second `t` is stored as an integer. Runs and `data/leaderboard.json` are minified. Scores in the run files are unchanged.
+
+| Piece | Bytes |
+|---|---|
+| `data/tracks/` | 391,397 |
+| `data/runs/` | 282,627 |
+| `data/leaderboard.json` | 1,542 |
+| Code, web, and the other JSON | 245,577 |
+| Snapshot | 921,143 |
+| Budget | 921,600 |
 
 ## Phase 3
 
