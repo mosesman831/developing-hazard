@@ -3,10 +3,11 @@
 .PHONY: mine build freeze
 
 mine:
-	@echo "mine: candidate discovery (dh/mine.py) lands in Phase 2"
+	python -m dh.mine
 
 build:
-	@echo "build: clips.json and local joined clips land in Phase 2"
+	python -m dh.mine build
+	python -m dh.frames
 
 freeze:
-	@echo "freeze: test set freeze (POST /api/testset/freeze) lands in Phase 2"
+	python -m dh.api.labels
