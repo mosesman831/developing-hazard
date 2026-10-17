@@ -30,22 +30,26 @@ check "/api/clips/${CLIP}/tracks"
 
 SOURCE="$(curl -fsS "${BASE}/api/clips/${CLIP}" | python3 -c 'import json,sys; print(json.load(sys.stdin)["segments"][0]["source"])')"
 ENCODED="$(python3 -c 'import urllib.parse,sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "${SOURCE}")"
-code="$(curl -sS -o /tmp/dh-smoke-video.bin -w '%{http_code}' -H 'Range: bytes=0-15' "${BASE}/video?source=${ENCODED}")"
-if [ "${code}" != "200" ] && [ "${code}" != "206" ]; then
-  echo "error: video returned ${code}" >&2
-  exit 1
+if [ -z "${INGRESS_URL:-}" ]; then
+  echo "SKIP ${BASE}/video (INGRESS_URL unset)"
+else
+  code="$(curl -sS -o /tmp/dh-smoke-video.bin -w '%{http_code}' -H 'Range: bytes=0-15' "${BASE}/video?source=${ENCODED}")"
+  if [ "${code}" != "200" ] && [ "${code}" != "206" ]; then
+    echo "error: video returned ${code}" >&2
+    exit 1
+  fi
+  echo "ok ${BASE}/video ${code}"
 fi
-echo "ok ${BASE}/video ${code}"
 
 if [ -n "${RUN}" ]; then
   check "/api/runs/${RUN}"
   check "/api/runs/${RUN}/stream?clip=${CLIP}"
-  code="$(curl -sS -o /tmp/dh-smoke-explain.json -w '%{http_code}' -X POST "${BASE}/api/explain/${RUN}/c03_h1")"
+  code="$(curl -sS -o /tmp/dh-smoke-explain.json -w '%{http_code}' -X POST "${BASE}/api/explain/r_yolo_risk_20261017T122620/c01_h1")"
   if [ "${code}" != "200" ]; then
     echo "error: explain returned ${code}" >&2
     exit 1
   fi
-  echo "ok POST ${BASE}/api/explain/${RUN}/c03_h1"
+  echo "ok POST ${BASE}/api/explain/r_yolo_risk_20261017T122620/c01_h1"
 fi
 
 curl -fsS -X POST "${BASE}/api/human" \

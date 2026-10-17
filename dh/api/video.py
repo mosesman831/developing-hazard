@@ -24,6 +24,15 @@ _PASS_HEADERS = (
 )
 
 
+# Missing config or credentials. These are not upstream failures.
+_NOT_CONFIGURED = frozenset(
+    {
+        "INGRESS_URL is not set",
+        "VSS username or password is not set",
+    }
+)
+
+
 def open_upstream(source: str, range_header: str | None):
     """Open the VSS stream. Tests replace this so they do not call the network."""
     client = VSS()
@@ -39,10 +48,12 @@ def get_video(request: Request, source: str | None = None) -> StreamingResponse:
     range_header = request.headers.get("range")
     try:
         upstream = open_upstream(source, range_header)
-    except VSSError:
-        raise HTTPException(status_code=502, detail="video upstream failed")
-    except Exception:
-        raise HTTPException(status_code=502, detail="video upstream failed")
+    except VSSError as exc:
+        if str(exc) in _NOT_CONFIGURED:
+            raise HTTPException(status_code=503, detail="video not configured") from exc
+        raise HTTPException(status_code=502, detail="video upstream failed") from exc
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail="video upstream failed") from exc
 
     status = getattr(upstream, "status_code", 200)
     if status >= 400:
