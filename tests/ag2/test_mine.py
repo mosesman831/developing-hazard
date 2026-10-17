@@ -240,22 +240,25 @@ def test_mine_drops_negated_stopped_and_early_and_ranks_by_caption(monkeypatch, 
     for call in client.search.call_args_list:
         assert call.kwargs["filters"] == {"camera_id": "pie_cam-3"}
         assert call.kwargs["top_k"] == 30
-    client.explore.assert_called_with(location="toronto", limit=48, offset=0)
+    assert client.explore.call_count == 2
+    for call in client.explore.call_args_list:
+        assert call.kwargs == {"location": "toronto", "limit": 48, "offset": 0}
     fetched = [call.args[0] for call in client.segments.call_args_list]
-    assert _uri("set01", 1) not in fetched
-    assert fetched.count(_uri("set03", 5)) == 2
+    assert fetched == [
+        _uri("set03", 5),
+        _uri("set03", 9),
+        _uri("set04", 2),
+    ] * 2
 
     path = tmp_path / "data" / "candidates.jsonl"
     body = path.read_text(encoding="utf-8")
     assert body.endswith("\n")
     assert body.count("\n") == len(rows)
     assert not (tmp_path / "data" / "hazards.json").exists()
-    printed = capsys.readouterr().out.splitlines()
-    assert printed[:5] == ["4", * [row["candidate_id"] for row in rows]]
-    assert "s3://" not in capsys.readouterr().out
-    joined = "\n".join(printed)
-    assert "s3://" not in joined
-    assert "Bearer" not in joined
+    printed = capsys.readouterr().out
+    assert "s3://" not in printed
+    assert "Bearer" not in printed
+    assert printed.splitlines()[:5] == ["4", *[row["candidate_id"] for row in rows]]
 
 
 def test_segment_fetch_is_capped(monkeypatch, tmp_path):
