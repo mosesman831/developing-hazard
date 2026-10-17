@@ -499,6 +499,17 @@ def test_snapshot_under_budget(tmp_path):
     assert not list((tmp_path / "snapshot").rglob("*.mp4"))
 
 
+def test_snapshot_includes_testset_v2(tmp_path):
+    from dh.snapshot import _DATA_FILES, build_snapshot
+
+    assert "testset_v2.json" in _DATA_FILES
+    source = ROOT / "data" / "testset_v2.json"
+    build_snapshot(tmp_path / "snapshot")
+    copied = tmp_path / "snapshot" / "data" / "testset_v2.json"
+    assert copied.is_file()
+    assert copied.read_bytes() == source.read_bytes()
+
+
 def test_snapshot_rejects_over_budget(monkeypatch, tmp_path):
     from dh import snapshot as snapshot_mod
 
