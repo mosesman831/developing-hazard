@@ -11,6 +11,9 @@ from typing import Any
 
 SCHEMA_NAME = "developing_hazard"
 TABLE_NAME = "hazards"
+RUNS_TABLE = "runs"
+HAZARD_SCORES_TABLE = "hazard_scores"
+ALLOWED_TABLES = frozenset({TABLE_NAME, RUNS_TABLE, HAZARD_SCORES_TABLE})
 PROTECTED_TABLES = frozenset({"vss-collection", "vss-prompts-events"})
 
 HAZARD_FIELDS = (
@@ -61,8 +64,8 @@ def refuse(schema: str, table: str, bucket: str) -> None:
     """Raise before a write to an index table or a media bucket."""
     if table in PROTECTED_TABLES or schema in PROTECTED_TABLES:
         raise VastDBError("refusing to write a VSS index table")
-    if schema != SCHEMA_NAME or table != TABLE_NAME:
-        raise VastDBError("refusing to write outside developing_hazard.hazards")
+    if schema != SCHEMA_NAME or table not in ALLOWED_TABLES:
+        raise VastDBError("refusing to write outside developing_hazard allowlist")
     media = {_lookup("S3_CHUNKS_BUCKET"), _lookup("S3_SEGMENTS_BUCKET")}
     media.discard(None)
     if bucket in media:
@@ -93,6 +96,87 @@ def hazard_arrow_schema():
     )
 
 
+RUN_FIELDS = (
+    "run_id",
+    "agent",
+    "agent_config",
+    "testset_id",
+    "testset_sha256",
+    "scorer_version",
+    "pattern_version",
+    "latency_mode",
+    "git_sha",
+    "score",
+    "max",
+    "pct",
+    "hit_rate",
+    "pattern_rate",
+    "lift_vs_chance",
+    "median_reaction_s",
+    "mean_latency_s",
+    "weave_url",
+)
+
+HAZARD_SCORE_FIELDS = (
+    "run_id",
+    "clip_id",
+    "hazard_id",
+    "points",
+    "first_click_t",
+    "window_start",
+    "window_end",
+    "latency_s",
+    "segment_source",
+)
+
+
+def runs_arrow_schema():
+    """PyArrow schema for the runs table. Imported only when called."""
+    import pyarrow as pa
+
+    return pa.schema(
+        [
+            ("run_id", pa.utf8()),
+            ("agent", pa.utf8()),
+            ("agent_config", pa.utf8()),
+            ("testset_id", pa.utf8()),
+            ("testset_sha256", pa.utf8()),
+            ("scorer_version", pa.utf8()),
+            ("pattern_version", pa.utf8()),
+            ("latency_mode", pa.utf8()),
+            ("git_sha", pa.utf8()),
+            ("score", pa.int64()),
+            ("max", pa.int64()),
+            ("pct", pa.float64()),
+            ("hit_rate", pa.float64()),
+            ("pattern_rate", pa.float64()),
+            ("lift_vs_chance", pa.float64()),
+            ("median_reaction_s", pa.float64()),
+            ("mean_latency_s", pa.float64()),
+            ("weave_url", pa.utf8()),
+        ]
+    )
+
+
+def hazard_scores_arrow_schema():
+    """PyArrow schema for the hazard_scores table. Imported only when called."""
+    import pyarrow as pa
+
+    return pa.schema(
+        [
+            ("run_id", pa.utf8()),
+            ("clip_id", pa.utf8()),
+            ("hazard_id", pa.utf8()),
+            ("points", pa.int64()),
+            ("first_click_t", pa.float64()),
+            ("window_start", pa.float64()),
+            ("window_end", pa.float64()),
+            ("latency_s", pa.float64()),
+            ("segment_source", pa.utf8()),
+        ]
+    )
+
+
 def connect():
     """Open a vastdb session on the data VIP. Does not print the keys."""
     import vastdb
@@ -105,22 +189,21 @@ def connect():
     )
 
 
-def insert_hazard_rows(rows: list[dict[str, Any]]) -> int:
-    """Create ``developing_hazard.hazards`` if needed and insert rows.
-
-    Returns the number of rows inserted. An empty list inserts nothing.
-    """
+def _insert_table(
+    table_name: str,
+    rows: list[dict[str, Any]],
+    fields: tuple[str, ...],
+    schema_fn,
+) -> int:
     bucket = _require("VASTDB_BUCKET")
-    refuse(SCHEMA_NAME, TABLE_NAME, bucket)
+    refuse(SCHEMA_NAME, table_name, bucket)
     if not rows:
         return 0
     import pyarrow as pa
     import vastdb
 
-    columns = hazard_arrow_schema()
-    payload = []
-    for row in rows:
-        payload.append({name: row.get(name) for name in HAZARD_FIELDS})
+    columns = schema_fn()
+    payload = [{name: row.get(name) for name in fields} for row in rows]
     arrow = pa.Table.from_pylist(payload, schema=columns)
     session = vastdb.connect(
         endpoint=_endpoint(_require("S3_ENDPOINT")),
@@ -133,8 +216,31 @@ def insert_hazard_rows(rows: list[dict[str, Any]]) -> int:
         schema = stored.schema(SCHEMA_NAME, fail_if_missing=False)
         if schema is None:
             schema = stored.create_schema(SCHEMA_NAME, fail_if_exists=False)
-        table = schema.table(TABLE_NAME, fail_if_missing=False)
+        table = schema.table(table_name, fail_if_missing=False)
         if table is None:
-            table = schema.create_table(TABLE_NAME, columns=columns, fail_if_exists=False)
+            table = schema.create_table(table_name, columns=columns, fail_if_exists=False)
         table.insert(arrow)
     return len(payload)
+
+
+def insert_hazard_rows(rows: list[dict[str, Any]]) -> int:
+    """Create ``developing_hazard.hazards`` if needed and insert rows.
+
+    Returns the number of rows inserted. An empty list inserts nothing.
+    """
+    return _insert_table(TABLE_NAME, rows, HAZARD_FIELDS, hazard_arrow_schema)
+
+
+def insert_run_rows(rows: list[dict[str, Any]]) -> int:
+    """Create ``developing_hazard.runs`` if needed and insert rows."""
+    return _insert_table(RUNS_TABLE, rows, RUN_FIELDS, runs_arrow_schema)
+
+
+def insert_hazard_score_rows(rows: list[dict[str, Any]]) -> int:
+    """Create ``developing_hazard.hazard_scores`` if needed and insert rows."""
+    return _insert_table(
+        HAZARD_SCORES_TABLE,
+        rows,
+        HAZARD_SCORE_FIELDS,
+        hazard_scores_arrow_schema,
+    )

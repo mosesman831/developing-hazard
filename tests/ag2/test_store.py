@@ -46,3 +46,9 @@ def test_refuse_index_tables_and_media_buckets(monkeypatch):
     else:
         raise AssertionError("expected a refusal")
     refuse("developing_hazard", TABLE_NAME, "team-bucket")
+    try:
+        refuse("developing_hazard", "runs", "team-chunks")
+    except VastDBError as exc:
+        assert "media" in str(exc)
+    else:
+        raise AssertionError("expected a refusal")
