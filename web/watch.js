@@ -437,7 +437,7 @@ function paintCurve(svg, row, clipTime, clip) {
   const line = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
   line.setAttribute("points", points.join(" "));
   line.setAttribute("fill", "none");
-  line.setAttribute("stroke", "#22d3ee");
+  line.setAttribute("stroke", "#ffffff");
   line.setAttribute("stroke-width", "1.5");
   svg.append(line);
   if (clipTime != null) {
@@ -499,7 +499,7 @@ function paintBoxes(canvas, video, tracks, clipTime) {
     if (!box || box.length < 4) {
       continue;
     }
-    context.strokeStyle = "#22d3ee";
+    context.strokeStyle = "#ffffff";
     context.lineWidth = 2;
     context.strokeRect(
       box[0] * scaleX,
