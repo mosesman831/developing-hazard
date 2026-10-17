@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spatial Hazard View</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style.css">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;color:var(--text);font:400 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;background-attachment:fixed}
+body.banner{padding-top:30px}
+.pg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.32fr);gap:14px;padding:14px;height:100%}
+.cam{display:flex;flex-direction:column;min-height:0;gap:12px}
+.cam .sp-pane{flex:none}
+.cam .sp-ph b{font:500 12px var(--mono);color:var(--text)}
+.src{margin-left:auto;height:24px;display:inline-flex;align-items:center;padding:0 10px;border-radius:999px;font:500 11px var(--sans);color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--hair)}
+/* the video sits in a recessed screen */
+.stage{position:relative;margin:10px;border-radius:var(--r-m);overflow:hidden;background:#000;box-shadow:inset 0 2px 14px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.05)}
+.stage .empty{position:absolute;left:50%;top:14px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;white-space:nowrap;height:30px;padding:0 14px;border-radius:999px;
+  font-size:12px;color:var(--muted);background:rgba(16,19,25,.78);border:1px solid var(--hair);backdrop-filter:blur(10px);pointer-events:none}
+.stage .empty b{color:var(--text);font-weight:600}
+.loaded .stage .empty{display:none}
+/* transport: neumorphic play key, inset timeline groove */
+.transport{display:flex;align-items:center;gap:14px;padding:4px 16px 12px}
+.play{position:relative;overflow:hidden;width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;color:var(--accent);background:var(--surface);box-shadow:var(--neu-up);
+  transition:box-shadow var(--med) var(--ease),transform var(--fast) var(--ease)}
+.play:hover{box-shadow:var(--neu-up),0 0 18px rgba(138,180,255,.18)}.play:active{box-shadow:var(--neu-in);transform:scale(.97)}
+.play.on{box-shadow:var(--neu-in);color:#fff}
+.play svg{width:15px;height:15px;fill:currentColor}
+.clock{font:500 12px var(--mono);font-variant-numeric:tabular-nums;color:var(--muted);min-width:122px}.clock b{color:var(--text);font-size:15px;font-weight:600}
+.track{position:relative;flex:1;height:34px}
+.groove{position:absolute;left:0;right:0;top:12px;height:10px;border-radius:999px;background:#13161b;box-shadow:var(--neu-in);overflow:hidden}
+.groove i.fill{position:absolute;left:0;top:0;bottom:0;width:var(--p,0%);border-radius:999px;background:linear-gradient(90deg,rgba(138,180,255,.35),rgba(138,180,255,.85));box-shadow:0 0 12px rgba(138,180,255,.45)}
+.marks{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none}
+.marks i{position:absolute;top:0;height:100%}
+.marks .hz{background:rgba(63,185,80,.42)}.marks .ck{width:3px;margin-left:-1px;background:var(--a);box-shadow:0 0 6px rgba(227,160,8,.8)}
+.track input{position:absolute;inset:0;width:100%;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:pointer}
+.track input::-webkit-slider-runnable-track{height:34px;background:transparent}
+.track input::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:8px;border-radius:50%;background:#eef1f5;box-shadow:0 2px 6px rgba(0,0,0,.6),0 0 0 4px rgba(138,180,255,.18)}
+.track input::-moz-range-track{background:transparent}
+.track input::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:#eef1f5;box-shadow:0 2px 6px rgba(0,0,0,.6)}
+.track input:focus-visible{outline:none}.track input:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 3px var(--accent)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:10px 16px 14px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted)}
+.tools .sp-tb{background:var(--surface);box-shadow:var(--neu-up);height:32px;padding:0 13px}
+.tools .sp-tb:active{box-shadow:var(--neu-in)}
+.tools input[type=file]{display:none}
+.keys{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap;font:500 11px var(--sans);color:var(--dim)}
+kbd{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;margin-right:4px;border-radius:5px;font:600 10px var(--mono);color:#c9d1d9;background:var(--surface);box-shadow:2px 2px 4px rgba(0,0,0,.5),-1px -1px 3px rgba(255,255,255,.04)}
+#err{color:#ff8a80;font:12px var(--mono);padding:0 16px 12px}#err:empty{display:none}
+/* scene risk */
+.risk{flex:1;min-height:150px}
+.risk .body{flex:1;min-height:0;margin:0 10px 10px;border-radius:var(--r-m);background:#13161b;box-shadow:var(--neu-in);padding:8px}
+.risk svg{display:block;width:100%;height:100%;cursor:crosshair}
+.risk .ar{fill:url(#ar-grad);stroke:var(--a);stroke-width:1.6;vector-effect:non-scaling-stroke}
+.risk .hz{fill:rgba(63,185,80,.13)}.risk .ck{stroke:var(--a);stroke-width:2;vector-effect:non-scaling-stroke}
+.risk .th{stroke:rgba(248,81,73,.5);stroke-dasharray:4 4;vector-effect:non-scaling-stroke}.risk .cur{stroke:var(--accent);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.lg{display:flex;gap:14px;margin-left:auto;font:500 11px var(--sans);color:var(--muted)}
+.lg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+#sp{min-height:0;height:100%}
+@media(max-width:1180px){.pg{grid-template-columns:1fr;height:auto}#sp{height:auto}.keys{display:none}}
+</style></head>
+<body class="sp-aurora">
+<div class="pg sp">
+  <div class="cam">
+    <section class="sp-pane" id="cam" aria-label="Camera">
+      <header class="sp-ph"><span class="sp-pt">Camera</span><b id="title">-</b><span class="src" id="src"></span></header>
+      <div class="stage"><div id="vbox"></div><div class="empty"><b>No video loaded</b><span>Open an mp4 or stream segments; boxes still follow the timeline.</span></div></div>
+      <div class="transport">
+        <button class="play" id="play" title="Play or pause (P)" aria-label="Play or pause" aria-pressed="false"><svg viewBox="0 0 14 14" id="icon"><path d="M3.5 1.5v11l9-5.5z"/></svg></button>
+        <span class="clock" id="clock"><b>0.00</b> / - s</span>
+        <div class="track"><div class="groove"><i class="fill" id="fill"></i><div class="marks" id="marks"></div></div><input id="scrub" type="range" min="0" max="30" step="0.05" value="0" aria-label="Clip time"></div>
+      </div>
+      <div class="tools">
+        <label class="sp-tb" title="Play a local clip, such as data/clips/<id>.mp4"><svg viewBox="0 0 16 16"><path d="M8 11V2M4.5 5.5L8 2l3.5 3.5M2.5 11v3h11v-3"/></svg><span>Open mp4</span><input id="file" type="file" accept="video/*"></label>
+        <button id="seg" type="button" class="sp-tb" title="Stream the clip's segments through video?source="><svg viewBox="0 0 16 16"><path d="M2 4h12v8H2zM6.5 6.5v3l3-1.5z"/></svg><span>Stream segments</span></button>
+        <span class="keys"><span><kbd>P</kbd>play</span><span><kbd>[</kbd><kbd>]</kbd>events</span><span><kbd>V</kbd>plan / 3D</span><span><kbd>C</kbd>camera</span><span><kbd>Esc</kbd>clear</span></span>
+      </div>
+      <div id="err" role="status"></div>
+    </section>
+    <section class="sp-pane risk" aria-label="Scene risk"><header class="sp-ph"><span class="sp-pt">Scene risk</span><span class="lg"><span><i style="background:var(--a)"></i>max risk over tracks</span><span><i style="background:rgba(63,185,80,.55)"></i>human label</span><span><i style="background:var(--a);width:3px"></i>agent click</span></span></header>
+      <div class="body"><svg id="risk" viewBox="0 0 1000 100" preserveAspectRatio="none" role="img" aria-label="Scene risk over time; click to seek"></svg></div></section>
+  </div>
+  <div id="sp"></div>
+</div>
+<script type="module">
+import { mountSpatial } from './spatial.js';
+import { createPlayer, segmentUrls } from './video.js';
+import { devApi } from './data.js';
+const q = new URLSearchParams(location.search);
+const clipId = q.get('clip') || 'c07', src = q.get('src') || 'dev', runId = q.get('run');
+const $ = (id) => document.getElementById(id);
+$('title').textContent = clipId; $('src').textContent = src + (q.get('debug') ? ' · debug' : '');
+if (src === 'fixtures') document.body.classList.add('banner');
+let panel, dur = 30, t = 0, sim = null;
+const PLAY = 'M3.5 1.5v11l9-5.5z', PAUSE = 'M2.5 1.5h3v11h-3zM8.5 1.5h3v11h-3z';
+const icon = (p) => { $('icon').firstElementChild.setAttribute('d', p ? PAUSE : PLAY); $('play').classList.toggle('on', p); $('play').setAttribute('aria-pressed', String(p)); };
+function setT(v) {
+  t = Math.max(0, Math.min(dur, v));
+  $('scrub').value = t; $('clock').innerHTML = `<b>${t.toFixed(2)}</b> / ${dur.toFixed(2)} s`;
+  $('fill').style.setProperty('--p', `${(100 * t) / dur}%`);
+  panel && panel.setTime(t); moveCur();
+}
+const player = createPlayer($('vbox'), {
+  onTime: setT,
+  onError: (m) => { $('err').textContent = m; },
+  onMeta: (m) => { $('err').textContent = ''; $('cam').classList.add('loaded'); panel && panel.setFrame(m); },
+});
+// without a video, Play advances a wall-clock timeline so the panels can still be reviewed
+function toggle() {
+  if (player.loaded) { player.toggle(); setTimeout(() => icon(!player.video().paused), 0); return; }
+  if (sim) { cancelAnimationFrame(sim); sim = null; icon(false); return; }
+  let last = performance.now();
+  const step = (now) => { setT(t + (now - last) / 1000); last = now; if (t >= dur) { sim = null; icon(false); return; } sim = requestAnimationFrame(step); };
+  if (t >= dur) setT(0);
+  icon(true); sim = requestAnimationFrame(step);
+}
+const NS = 'http://www.w3.org/2000/svg', el = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+let cur = null;
+function riskChart(m) {
+  const X = (v) => (1000 * v) / dur, Y = (v) => 100 - v * 94, by = new Map();
+  for (const r of m.trackRows) by.set(r.t, Math.max(by.get(r.t) ?? 0, r.risk));
+  const pts = [...by].sort((a, b) => a[0] - b[0]);
+  const grad = el('linearGradient', { id: 'ar-grad', x1: 0, y1: 0, x2: 0, y2: 1 }); grad.append(el('stop', { offset: 0, 'stop-color': '#e3a008', 'stop-opacity': 0.4 }), el('stop', { offset: 1, 'stop-color': '#e3a008', 'stop-opacity': 0 }));
+  const defs = el('defs', {}); defs.append(grad);
+  cur = el('line', { class: 'cur', y1: 0, y2: 100 });
+  $('risk').replaceChildren(defs, ...m.hazards.map((z) => el('rect', { class: 'hz', x: X(z.window_start), width: X(z.window_end - z.window_start), y: 0, height: 100 })),
+    el('line', { class: 'th', x1: 0, x2: 1000, y1: Y(0.6), y2: Y(0.6) }),
+    pts.length ? el('path', { class: 'ar', d: 'M' + X(pts[0][0]) + ',100 ' + pts.map(([t, v]) => `L${X(t)},${Y(v)}`).join(' ') + ` L${X(pts.at(-1)[0])},100 Z` }) : el('text', { x: 500, y: 55, 'text-anchor': 'middle', fill: '#98a0aa', 'font-size': 12 }),
+    ...m.clicks.map((c) => el('line', { class: 'ck', x1: X(c.t), x2: X(c.t), y1: 0, y2: 100 })), cur);
+  if (!pts.length) $('risk').querySelector('text').textContent = 'No tracks, so no risk curve yet.';
+  moveCur();
+}
+const moveCur = () => cur && (cur.setAttribute('x1', (1000 * t) / dur), cur.setAttribute('x2', (1000 * t) / dur));
+$('risk').addEventListener('click', (e) => { const r = $('risk').getBoundingClientRect(), v = ((e.clientX - r.left) / r.width) * dur; player.loaded ? player.seek(v) : setT(v); });
+function marks(m) {
+  const pct = (v) => `${(100 * v) / dur}%`;
+  $('marks').replaceChildren(
+    ...m.hazards.map((z) => Object.assign(document.createElement('i'), { className: 'hz', title: `human label ${z.window_start}-${z.window_end} s`, style: `left:${pct(z.window_start)};width:${pct(z.window_end - z.window_start)}` })),
+    ...m.clicks.map((c) => Object.assign(document.createElement('i'), { className: 'ck', title: `agent click ${c.t} s`, style: `left:${pct(c.t)}` })));
+}
+panel = mountSpatial($('sp'), {
+  clipId, api: devApi(), mode: src, runId, debug: !!q.get('debug'), videoEl: player.video(), aurora: false,
+  banner: src === 'fixtures' ? 'Synthetic fixture · not real data' : null,
+  frame: { w: 1920, h: 1080 },
+  onSeek: (v) => (player.loaded ? player.seek(v) : setT(v)),
+  onLoaded: (m) => { if (m.clip) { dur = m.clip.duration_s || m.clip.segments.at(-1).end_s; $('scrub').max = dur; } marks(m); riskChart(m); setT(t); },
+});
+$('file').onchange = (e) => { const f = e.target.files[0]; if (f) { player.loadFile(f); $('err').textContent = ''; } };
+$('seg').onclick = () => { const m = panel.model; if (!m || !m.clip) { $('err').textContent = 'No clip metadata, so no segment URLs to stream.'; return; } player.loadSegments(segmentUrls(m.clip, q.get('vbase') || 'video?source=')); };
+$('play').onclick = toggle;
+// ?video=<relative url> plays one local file without the picker (dev only)
+if (q.get('video')) player.loadSegments([{ url: q.get('video'), start: 0, end: Infinity }]);
+$('scrub').oninput = (e) => { const v = +e.target.value; player.loaded ? player.seek(v) : setT(v); };
+// P = play/pause, as in the app (SPEC 16.1); Space also works on this dev page
+document.addEventListener('keydown', (e) => {
+  if (/input|textarea|select/i.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.key.toLowerCase() === 'p' || (e.code === 'Space' && !/button/i.test(e.target.tagName))) { e.preventDefault(); toggle(); }
+});
+</script>
+</body></html>
