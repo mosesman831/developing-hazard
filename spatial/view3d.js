@@ -343,16 +343,19 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
       for (const f of boxFaces(R.c[0], R.c[2], 0.5, 0.9, R.c[1] - 0.35, R.c[1] + 0.15, env.pose.yaw_deg)) faces.push({ ...f, base: [214, 218, 224] });
     }
     const behind = (p) => !B.ortho && toCam(p)[2] < NEAR;
+    // geometry is cached per class and whole-degree heading at the origin, then moved: an object gliding
+    // across the scene never rebuilds its mesh
     const meshOf = (cls, base, yaw, dims) => {
-      const key = `${resolveClass(cls)}|${Math.round(yaw)}|${dims ? 1 : 0}|${base[0].toFixed(2)}|${base[2].toFixed(2)}`;
+      const y = ((Math.round(yaw) % 360) + 360) % 360, key = `${resolveClass(cls)}|${y}|${dims ? 1 : 0}`;
       let hit = meshCache.get(key);
       if (!hit) {
-        hit = modelFaces(cls, base, yaw, dims);
+        hit = modelFaces(cls, [0, 0, 0], y, dims);
         for (const f of hit.faces) f.n = faceN(f);
-        if (meshCache.size > 280) meshCache.clear();
+        if (meshCache.size > 720) meshCache.clear();
         meshCache.set(key, hit);
       }
-      return hit;
+      const mv = (p) => [p[0] + base[0], p[1], p[2] + base[2]];
+      return { faces: hit.faces.map((f) => ({ pts: f.pts.map(mv), s: f.s, c: f.c, n: f.n })), bounds: { h: hit.bounds.h, foot: hit.bounds.foot.map(mv) } };
     };
     let ego = null;
     if (!fixed) {
@@ -533,6 +536,8 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
       sched();
     },
     redraw() { readFonts(); sched(); },
+    // draw now if a frame is pending, so the scene lands in the same frame as the video overlay
+    flush() { if (raf) { cancelAnimationFrame(raf); draw(); } },
     setView(v) {
       if (v === 'camera') { if (env.kind !== 'fixed') return; if (env.follow === 'video') { chase(); return; } Object.assign(cam, { lock: true, view: 'camera', ortho: false }); sched(); return; }
       if (v === 'persp' && env.kind === 'fixed' && env.rig) {
@@ -557,7 +562,7 @@ export function createView3D(canvas, { onPick = () => {}, onChange = () => {} } 
     frame() { if (env.follow === 'video') { chase(); return; } if (env.kind === 'fixed') { aimActors(scene.objects); api.setView('persp'); } else { cam.target = [...home.target]; cam.dist = home.dist; sched(); } },
     get options() { return { ...opt }; },
     get camera() { return state(); },
-    destroy() { ro.disconnect(); },
+    destroy() { ro.disconnect(); if (raf) cancelAnimationFrame(raf); raf = 0; },
   };
   return api;
 }

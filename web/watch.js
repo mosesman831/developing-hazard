@@ -167,6 +167,9 @@ export function mountWatch(el, runId, clipId, api = {}) {
       api: { getJSON },
       mode: "app",
       videoEl: video,
+      // the panel reads the player's clock itself while the video plays, and boxes the video showing now
+      getClipTime: () => (state.player && typeof state.player.getClipTime === "function" ? state.player.getClipTime() : NaN),
+      getVideo: () => (state.player && state.player.getActiveVideo ? state.player.getActiveVideo() : video),
       frame: video && video.videoWidth ? { w: video.videoWidth, h: video.videoHeight } : { w: 1920, h: 1080 },
       onSeek: (time) => {
         if (state.player && typeof state.player.seek === "function") {
@@ -226,14 +229,16 @@ export function mountWatch(el, runId, clipId, api = {}) {
           autoplay: false,
           playOnce: true,
         });
-        const video = state.player.getActiveVideo ? state.player.getActiveVideo() : null;
-        if (video) {
+        // The player swaps between two <video> elements at every segment end, so listen on both:
+        // listening on the first one only froze the overlay and the spatial view on segments 2, 4 and 6.
+        for (const video of host.querySelectorAll("video")) {
           video.addEventListener("loadedmetadata", () => {
             if (video.videoWidth && state.spatial) {
               state.spatial.setFrame({ w: video.videoWidth, h: video.videoHeight });
             }
           });
           video.addEventListener("timeupdate", paintLive);
+          video.addEventListener("seeked", paintLive);
           if (typeof video.requestVideoFrameCallback === "function") {
             const tick = () => {
               paintLive();

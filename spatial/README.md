@@ -6,13 +6,28 @@ Approximate bird's-eye panel + evidence-backed event list + box overlay, synced 
 
 ```
 node spatial/fixtures/gen.mjs                  # regenerate SYNTHETIC fixtures (UI work only)
-node --test spatial/tests/core.test.mjs        # unit tests, no packages
+node --test spatial/tests/core.test.mjs spatial/tests/stabilize.test.mjs   # unit tests, no packages
 # serve the clone root with any static server, then open:
 spatial/index.html?clip=c07&src=examples       # contracts/examples (placeholder data)
 spatial/index.html?clip=c99&src=fixtures       # synthetic, red banner
 spatial/index.html?clip=c07&src=dev&run=<id>   # real data/ files
 ```
 With no parameters the dev page opens the house-camera fixture. Add `&video=<url>` to play one local file without the picker. Add `&debug=1` to see source file + line for hovered boxes, markers and events. Play a local mp4 with the file picker, or "Load segments" (`video?source=`, override with `&vbase=`). With no video, the slider drives time.
+
+## Real footage: conditioning (`stabilize.js`)
+Real tracker output made the 3D view pop, spin and jump. On the 26 PIE clips on main, the old code showed 3,042 objects popping in or out, 4,258 heading flips of more than 45° in one video frame, and 318 frames where a close box was thrown to the far rim. `loadModel` now runs every clip through one conditioning stage, the same way for every camera, with no per-clip settings:
+1. **Rows without ids** (the pod snapshot trims tracks to `t` and `xyxy`): boxes are linked over time by IoU, classes come from the detections, and risk stays unknown. The Inputs strip says so.
+2. **Split ids:** fragments of one object (same kind, touching in space, less than 1.2 s apart, never overlapping in time) are re-joined. Hazard labels and Cosmos rows are re-pointed. The tracker's id stays on each row (`orig_id`, shown with `?debug=1`).
+3. **Top-3 dropouts:** while the tracker does not rank an object, its own detections (same kind, IoU of at least 0.3, similar size and shape) keep it in the scene, for up to 2 s and up to 1 s past either end. Gaps under 1 s between two tracker samples are bridged. Filled samples carry no risk of their own: the fill colour holds the nearest ranked risk and says so. Events still come only from the tracker's own rows.
+4. **Placement:** smoothed over ±0.4 s of observed samples (a median, then a Gaussian). Dashcam plan positions are continuous on the same scale as the bands. A box cut by the bottom edge stays near, and is marked "range ?". Dashcam metric range is smoothed in log space, and its rate of change is capped at 30 m/s.
+5. **Headings:** taken from the smoothed past 0.6 s, with hysteresis (a reversal must hold for 0.6 s) and a turn-rate limit (people 240°/s, vehicles 70°/s). Nothing snaps back to 0° when it slows.
+6. **Lifecycle:** tracks fade in over 0.25 s and out over 0.45 s. A one- or two-sample blink stays on the video overlay but out of the 3D scene, unless its run carries risk ≥ 0.4, a human label or the selection.
+
+Nothing is extrapolated: every shown position lies between observed samples or is an observed detection, and nothing moves after a track's last sample. Pixel boxes are normalised by the detector's frame (the det file's `frame_wh` row), not by the played video, so a 720p transcode still lines up.
+
+**Glitch meter:** `node spatial/tests/replay.mjs <dataDir> [--follow]` (or `--presets`) replays every clip at 30 fps and counts hard pops, teleports, flips and rim jumps. It exits 1 above `LIMITS` (all 0). Result on 2026-10-17: all 34 clips on main, the trimmed snapshot tracks, both dashcam modes and all 8 presets came out at 0 / 0 / 0 / 0.
+
+**Host wiring:** pass `getClipTime()` and `getVideo()` in `ctx`, and the panel reads the clock itself while the video plays. The overlay canvas takes no pointer events, so the video's own controls keep working, and boxes are fitted to the visible `<video>` element.
 
 ## Inputs (all optional except the clip; missing ones are named in the Inputs strip)
 `clips.json`, `tracks/<id>.jsonl`, `det/<id>.jsonl` (only source of box confidence), `hazards.json`, `runs/<run>/clips.jsonl`, `grid/cosmos_verify_v2/<id>.jsonl` (not in `contracts/`, parsed defensively), `cache/explain/<id>.json` (optional). Confidence = best-IoU (>= 0.5) detection at the same `t`; otherwise "?" (amber). `xyxy` is auto-detected as pixels or 0-1.
@@ -117,7 +132,7 @@ Keys: `V` switches plan and 3D, `C` camera view (fixed cameras), `O` ortho, `F` 
 - Fixed mode assumes flat ground and one radial distortion term. Auto-calibration does not fit `k1`; it uses the file's value or 0. Uncalibrated wide lenses, such as the night street camera tried on 2026-10-17, are least accurate near the image edges.
 - Proximity gaps use typical vehicle sizes and the flat-ground contact point of each box, so a gap under about half a metre means "touching distance, roughly", not a measured clearance.
 - Single camera, no depth, no calibration, no ego speed: positions are ordinal and the corridor assumes straight driving.
-- Tracks hold only the top 3 per frame at 5 fps, so a track can vanish when others outrank it. A dropout hides the track after 0.3 s (not interpolated).
+- Tracks hold only the top 3 per frame at 5 fps. While an object is not ranked, it follows its detections (see "Real footage"); with no detections either, it fades out over 0.45 s.
 - Cosmos rows tint a track red only when the row carries a `track_id`; otherwise it is an event only.
 - Streak length is measured within these top-3 samples, so it can undercount.
-- Not yet tested on real PIE footage or the segment player against a live `video?source=` (no data or server existed when built).
+- Checked against the tracks and detections of all 34 PIE clips on main (replay meter). Not yet watched against the live `video?source=` segment stream.

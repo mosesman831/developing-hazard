@@ -200,6 +200,7 @@ function mount() {
   if (panel) panel.destroy();
   panel = mountSpatial($('sp'), {
     clipId, api, mode: src, runId, debug: !!q.get('debug'), videoEl: player.video(), aurora: false,
+    getVideo: () => player.video(), getClipTime: () => (player.loaded ? player.time : NaN),
     banner: usePreset ? 'Recorded clip · models sit where the detector sees them and face the way they travel' : (src === 'fixtures' ? 'Synthetic fixture · not real data' : null),
     frame: { w: 1920, h: 1080 },
     onSeek: (v) => (player.loaded ? player.seek(v) : setT(v)),

@@ -194,7 +194,7 @@
 /* ---- video host (dev page and AG3) ---- */
 .sp-video{position:relative;background:#000;aspect-ratio:16/9;width:100%}
 .sp-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
-.sp-overlay{position:absolute;inset:0;width:100%;height:100%;cursor:pointer}
+.sp-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
 
 .sp ::-webkit-scrollbar{width:9px;height:9px}.sp ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:9px;border:2px solid transparent;background-clip:padding-box}
 .sp ::-webkit-scrollbar-track{background:transparent}

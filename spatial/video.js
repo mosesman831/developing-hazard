@@ -2,14 +2,14 @@
 export function createPlayer(box, { onTime = () => {}, onError = () => {}, onMeta = () => {} } = {}) {
   box.classList.add('sp-video');
   const vids = [0, 1].map(() => { const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.preload = 'auto'; box.appendChild(v); return v; });
-  let cur = 0, segs = [], idx = 0, want = null;
+  let cur = 0, segs = [], idx = 0, want = null, broken = false;      // broken: the page falls back to its own timeline
   const act = () => vids[cur];
   const show = () => vids.forEach((v, i) => { v.style.visibility = i === cur ? 'visible' : 'hidden'; });
   const clipT = () => (segs[idx] ? segs[idx].start : 0) + act().currentTime;
   const emit = () => onTime(clipT());
   const bind = (v, i) => {
-    v.addEventListener('error', () => { if (i === cur) onError(`video error (segment ${idx + 1}): ${(v.error && v.error.message) || 'cannot load ' + (v.currentSrc || 'source')}`); });
-    v.addEventListener('loadedmetadata', () => { if (i === cur) { onMeta({ w: v.videoWidth, h: v.videoHeight }); if (want != null) { v.currentTime = want; want = null; } } });
+    v.addEventListener('error', () => { if (i === cur) { broken = true; onError(`video error (segment ${idx + 1}): ${(v.error && v.error.message) || 'cannot load ' + (v.currentSrc || 'source')}. The timeline still plays without it.`); } });
+    v.addEventListener('loadedmetadata', () => { if (i === cur) { broken = false; onMeta({ w: v.videoWidth, h: v.videoHeight }); if (want != null) { v.currentTime = want; want = null; } } });
     v.addEventListener('timeupdate', () => { if (i === cur) emit(); });
     v.addEventListener('seeked', () => { if (i === cur) emit(); });
     v.addEventListener('ended', () => { if (i === cur && idx + 1 < segs.length) { idx++; cur = 1 - cur; show(); act().play().catch(() => {}); preload(idx + 1); } });
@@ -18,7 +18,7 @@ export function createPlayer(box, { onTime = () => {}, onError = () => {}, onMet
   vids.forEach(bind);
   function preload(i) { if (segs[i]) { const o = vids[1 - cur]; o.src = segs[i].url; o.load(); } }
   function goto(i, t) {
-    idx = i; want = t; const v = act(); v.src = segs[i].url; v.load(); preload(i + 1);
+    idx = i; want = t; broken = false; const v = act(); v.src = segs[i].url; v.load(); preload(i + 1);
   }
   show();
   return {
@@ -34,7 +34,7 @@ export function createPlayer(box, { onTime = () => {}, onError = () => {}, onMet
     },
     toggle() { const v = act(); v.paused ? v.play().catch(() => {}) : v.pause(); },
     get time() { return clipT(); },
-    get loaded() { return segs.length > 0; },
+    get loaded() { return segs.length > 0 && !broken; },
   };
 }
 // Build segment urls from a clip. Relative URL via the app's /video?source= proxy (SPEC 11.1).

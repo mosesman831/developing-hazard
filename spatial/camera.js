@@ -69,8 +69,20 @@ export function visibleGround(R, n = 12) {
   }
   return out;
 }
-// bottom-centre of a normalised box -> ground contact point (flat ground assumed)
-export const groundPoint = (R, nb) => imageToGround(R, (nb[0] + nb[2]) / 2, nb[3]);
+// bottom-centre of a normalised box -> ground contact point (flat ground assumed). A box cut by the bottom of
+// the frame does not show its contact point, so it is placed from its top edge instead: the ground point whose
+// object of typical class height has its top where the box top is (bisection below the frame edge).
+export function groundPoint(R, nb, cls = null) {
+  const u = (nb[0] + nb[2]) / 2;
+  if (nb[3] < 0.99 || !cls) return imageToGround(R, u, nb[3]);
+  const h = (METRIC[resolveClass(cls)] || METRIC.generic)[2];
+  const topAt = (v) => { const g = imageToGround(R, u, v), p = g && worldToImage(R, [g[0], h, g[1]]); return p ? p[1] : null; };
+  let lo = nb[3], hi = 3.0;
+  const tLo = topAt(lo);
+  if (tLo == null || tLo <= nb[1]) return imageToGround(R, u, nb[3]);   // the visible box already fits: not really cut
+  for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2, tm = topAt(mid); if (tm == null || tm < nb[1]) hi = mid; else lo = mid; }
+  return imageToGround(R, u, (lo + hi) / 2);
+}
 // Dashcam placement. The foot-ray of this fisheye piles every box a few metres ahead, so a car
 // never travels and a person crossing has nowhere to walk. Range comes from how tall the box is
 // for that class; bearing comes from where it sits across the frame (PIE's lens is ~157°).
@@ -82,6 +94,22 @@ export function appearancePoint(nb, cls, hfov = 157) {
   const range = Math.max(1.8, Math.min(42, h / (2 * Math.tan(ang / 2))));
   const bearing = ((nb[0] + nb[2]) / 2 - 0.5) * hfov * (Math.PI / 180);
   return [range * Math.sin(bearing), range * Math.cos(bearing)];
+}
+// a parked object with no observed motion faces along the nearest lane (or road edge) within 8 m, else the camera
+export function laneYaw(scenery, R, pos) {
+  const sc = scenery || {}, lines = [];
+  for (const l of sc.lane_lines || []) if (l && Array.isArray(l.pts) && l.pts.length > 1) lines.push(l.pts);
+  for (const road of sc.roads || []) if (Array.isArray(road) && road.length > 1) lines.push(road);
+  let best = 8, heading = null;
+  for (const pts of lines) for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i], dx = b[0] - a[0], dz = b[1] - a[1], L2 = dx * dx + dz * dz;
+    if (L2 < 0.25) continue;
+    const u = Math.max(0, Math.min(1, ((pos[0] - a[0]) * dx + (pos[1] - a[1]) * dz) / L2));
+    const d = Math.hypot(pos[0] - (a[0] + dx * u), pos[1] - (a[1] + dz * u));
+    if (d < best) { best = d; heading = (Math.atan2(dx, dz) * 180) / Math.PI; }
+  }
+  if (heading != null) return heading;
+  return R ? (Math.atan2(R.c[0] - pos[0], R.c[2] - pos[1]) * 180) / Math.PI : 0;
 }
 // heading (deg, 0 = +z) and speed (m/s) from the track's own ground positions over the last `win` seconds
 export function groundMotion(samples, t, win = 1.0) {
